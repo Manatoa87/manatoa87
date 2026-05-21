@@ -1177,8 +1177,8 @@ body.discret>*:not(#discret-screen){display:none!important}
 const MOTS=["Tu n'as pas à traverser ça seul·e. Des gens que tu ne connais pas encore pensent à toi et te soutiennent.","Ta douleur est réelle. Ta force l'est aussi — même si tu ne la vois pas encore.","Chaque journée difficile traversée est une preuve de ton courage.","Tu mérites d'être en sécurité, d'être aimé·e, d'être respecté·e.","Demander de l'aide n'est pas une faiblesse. C'est l'acte le plus courageux qui soit.","Quelque part, quelqu'un pense à toi et espère que tu vas bien.","Ta vie a de la valeur. Tu as de la valeur. N'oublie jamais ça."];
 function getMotDuJour(){const el=document.getElementById('motDuJour');if(el)el.textContent=MOTS[new Date().getDate()%MOTS.length]}
 
-// ── Messages ──
-const DEFAULT_MSGS=["Ce que tu traverses est réel. Ta douleur est réelle. Et ta force aussi — même si tu ne la vois pas encore.","Tu mérites d'être en sécurité. Tu mérites d'être aimé·e. N'oublie jamais ça.","Je ne te connais pas, mais je pense à toi. Quelque part, quelqu'un porte Manatoa en pensant à des gens comme toi.","Même dans le silence le plus lourd, tu n'es pas seul·e. On est là.","Chaque journée difficile que tu traverses est une preuve de ta force.","Tu n'as pas à avoir honte de ce que tu vis. Demander de l'aide, c'est le plus grand acte de courage.","Je m'en suis sortie. Aujourd'hui j'ai une vie que j'aurais jamais cru possible. Tu peux y arriver aussi.","Il y a eu un avant et un après. L'après est plus beau que tout ce que j'imaginais."];
+// ── Messages ──Je ne te connais pas, mais je pense à t
+const DEFAULT_MSGS=["essai numéro deux"];
 function getMsgs(){try{const s=localStorage.getItem('manatoa_f3');return s?JSON.parse(s):[...DEFAULT_MSGS]}catch(e){return[...DEFAULT_MSGS]}}
 function saveMsgs(m){try{localStorage.setItem('manatoa_f3',JSON.stringify(m))}catch(e){}}
 
