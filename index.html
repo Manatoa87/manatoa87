@@ -1,0 +1,2001 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Manatoa</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --white:#FFFFFF;--white2:#FDFBF8;--white3:#F8F4EF;
+  --gold:#C9A84C;--gold-l:#E2C070;--gold-d:#A88830;
+  --gold-p:rgba(201,168,76,.09);--gold-p2:rgba(201,168,76,.16);
+  --rose:#C4857A;--rose-l:#D9A89F;--rose-d:#A86B60;
+  --rose-p:rgba(196,133,122,.09);--rose-p2:rgba(196,133,122,.16);
+  --ink:#1C1810;--ink2:#3A2E22;--muted:#9A8878;
+  --line:rgba(201,168,76,.16);--line2:rgba(28,24,16,.06);
+}
+
+/* BARRE LANGUES */
+.lang-bar{position:fixed;top:0;left:0;right:0;z-index:500;background:rgba(255,255,255,.97);backdrop-filter:blur(12px);border-bottom:1px solid var(--line2);padding:7px 14px;display:flex;align-items:center;gap:6px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+.lang-bar::-webkit-scrollbar{display:none}
+.lang-btn{padding:5px 10px;border-radius:100px;border:1px solid var(--line2);background:transparent;font-family:'DM Sans',sans-serif;font-size:11px;color:var(--muted);cursor:pointer;white-space:nowrap;transition:all .2s;flex-shrink:0}
+.lang-btn.on{background:linear-gradient(135deg,var(--gold),var(--rose));color:white;border-color:transparent;font-weight:600}
+#home{padding-top:90px}
+.page-wrap{padding-top:90px}
+.back-btn{top:42px}
+.page-band{top:34px}
+[dir="rtl"]{text-align:right}
+[dir="rtl"] .choice{flex-direction:row-reverse}
+[dir="rtl"] .choice:hover{transform:translateX(-5px);box-shadow:3px 0 0 var(--gold)}
+html{scroll-behavior:smooth}
+body{font-family:'DM Sans',sans-serif;background:var(--white);color:var(--ink);overflow-x:hidden}
+.page{display:none;min-height:100vh}.page.active{display:block}
+
+body.discret #discret-screen{display:flex!important}
+body.discret>*:not(#discret-screen){display:none!important}
+#discret-screen{display:none;position:fixed;inset:0;background:white;z-index:99999;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:40px 24px}
+.discret-fake-title{font-family:Georgia,serif;font-size:22px;color:#333}
+.discret-fake-text{font-size:14px;color:#888;line-height:1.7;text-align:center;max-width:300px}
+.discret-exit{margin-top:20px;padding:10px 24px;background:#f0f0f0;border-radius:100px;font-size:12px;color:#888;cursor:pointer;font-family:sans-serif;border:none}
+
+.back-btn{position:fixed;top:20px;left:20px;z-index:200;display:none;align-items:center;gap:8px;background:rgba(255,255,255,.96);backdrop-filter:blur(12px);border:1px solid var(--line);border-radius:100px;padding:10px 20px;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:500;color:var(--rose-d);transition:all .2s;box-shadow:0 4px 20px rgba(196,133,122,.1)}
+.back-btn.show{display:flex}
+.back-btn:hover{background:linear-gradient(135deg,var(--gold),var(--rose));color:white;border-color:transparent}
+.discret-btn{position:fixed;top:20px;right:20px;z-index:300;background:rgba(255,255,255,.9);border:1px solid var(--line2);border-radius:100px;padding:8px 16px;font-size:11px;color:var(--muted);cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .2s}
+.discret-btn:hover{background:var(--ink);color:white}
+
+/* ══ HOME ══ */
+#home{min-height:100vh;background:var(--white);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:60px 24px 80px;position:relative;overflow:hidden}
+.home-bg{position:absolute;inset:0;z-index:0;pointer-events:none;background:radial-gradient(ellipse 60% 50% at 5% 5%,rgba(201,168,76,.05) 0%,transparent 60%),radial-gradient(ellipse 50% 45% at 95% 95%,rgba(196,133,122,.07) 0%,transparent 60%),var(--white)}
+.deco-top{position:absolute;top:0;left:50%;transform:translateX(-50%);width:1px;height:110px;background:linear-gradient(to bottom,var(--gold),transparent);opacity:.3;z-index:1}
+.home-center{position:relative;z-index:2;text-align:center;max-width:420px;width:100%}
+.gold-sep{display:flex;align-items:center;gap:14px;margin-bottom:24px}
+.gs-line{flex:1;height:1px;background:linear-gradient(to right,transparent,var(--gold-l),var(--rose-l),transparent)}
+.gs-diamond{width:5px;height:5px;background:linear-gradient(135deg,var(--gold),var(--rose));transform:rotate(45deg)}
+.logo-name{font-family:'Playfair Display',serif;font-size:52px;font-weight:900;letter-spacing:.1em;text-transform:uppercase;background:linear-gradient(135deg,var(--gold-d) 0%,var(--gold) 35%,var(--gold-l) 55%,var(--rose-l) 75%,var(--rose) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:12px;animation:fadeUp .9s .1s both}
+.logo-tagline{font-size:12px;color:var(--muted);line-height:1.9;margin-bottom:16px;padding:0 8px;animation:fadeUp .9s .2s both}
+.logo-tagline em{font-style:italic;color:var(--rose-d);font-weight:500}
+.mot-du-jour{background:linear-gradient(135deg,var(--gold-p2),var(--rose-p));border:1px solid var(--line);border-radius:14px;padding:14px 18px;margin-bottom:28px;text-align:left;animation:fadeUp .9s .25s both;position:relative;overflow:hidden}
+.mot-du-jour::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(to right,var(--gold),var(--rose))}
+.mdj-label{font-size:9px;letter-spacing:.22em;text-transform:uppercase;background:linear-gradient(135deg,var(--gold-d),var(--rose-d));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;font-weight:600;margin-bottom:5px}
+.mdj-text{font-family:'Playfair Display',serif;font-size:14px;font-style:italic;color:var(--ink2);line-height:1.7}
+.home-title{font-family:'Playfair Display',serif;font-size:clamp(22px,5vw,30px);font-weight:400;font-style:italic;color:var(--muted);line-height:1.4;margin-bottom:6px;animation:fadeUp .9s .3s both}
+.home-title strong{font-style:normal;font-weight:800;color:var(--ink)}
+.home-sub{font-size:13px;color:var(--muted);margin-bottom:28px;line-height:1.7;animation:fadeUp .9s .35s both}
+@keyframes fadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+
+.choices{display:flex;flex-direction:column;gap:10px;animation:fadeUp .9s .45s both}
+.choice{display:flex;align-items:center;gap:16px;padding:18px 20px;border-radius:16px;cursor:pointer;border:1px solid var(--line2);text-align:left;background:var(--white2);transition:all .28s cubic-bezier(.22,1,.36,1);position:relative;overflow:hidden}
+.choice::before{content:'';position:absolute;left:0;top:0;bottom:0;width:0;background:linear-gradient(to right,rgba(201,168,76,.07),transparent);transition:width .3s}
+.choice:hover::before{width:100%}
+.choice:hover{border-color:rgba(201,168,76,.3);transform:translateX(5px);box-shadow:-3px 0 0 var(--gold)}
+.ch-ico{width:48px;height:48px;border-radius:14px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:22px;background:var(--white3);border:1px solid var(--line);transition:transform .25s}
+.choice:hover .ch-ico{transform:scale(1.06) rotate(-4deg)}
+.ch-body{flex:1}
+.ch-num{font-size:9px;letter-spacing:.24em;text-transform:uppercase;font-weight:500;background:linear-gradient(135deg,var(--gold-d),var(--rose-d));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:3px}
+.ch-label{font-family:'Playfair Display',serif;font-size:17px;font-weight:700;color:var(--ink);margin-bottom:2px}
+.ch-desc{font-size:12px;color:var(--muted);line-height:1.5}
+.ch-arr{width:34px;height:34px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;border:1px solid var(--line);color:var(--gold-d);font-size:16px;transition:all .22s;background:var(--gold-p)}
+.choice:hover .ch-arr{background:linear-gradient(135deg,var(--gold),var(--rose));color:white;border-color:transparent}
+.home-stats{display:flex;gap:0;margin-top:28px;border:1px solid var(--line);border-radius:14px;overflow:hidden;animation:fadeUp .9s .6s both;background:var(--white2)}
+.hs-item{flex:1;padding:12px 8px;text-align:center;border-right:1px solid var(--line)}
+.hs-item:last-child{border-right:none}
+.hs-n{font-family:'Playfair Display',serif;font-size:16px;font-weight:700;background:linear-gradient(135deg,var(--gold),var(--rose));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hs-l{font-size:9px;color:var(--muted);margin-top:1px}
+
+/* ══ INNER ══ */
+.page-wrap{min-height:100vh;padding:80px 24px 60px;display:flex;flex-direction:column;align-items:center;animation:fadeUp .45s ease both;background:var(--white)}
+.inner{max-width:460px;width:100%}
+.page-band{position:fixed;top:0;left:0;right:0;height:2px;z-index:100;background:linear-gradient(to right,transparent,var(--gold),var(--rose-l),var(--gold-l),transparent)}
+.eyebrow{display:inline-flex;align-items:center;gap:10px;font-size:10px;letter-spacing:.26em;text-transform:uppercase;font-weight:500;margin-bottom:12px;background:linear-gradient(135deg,var(--gold-d),var(--rose-d));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.p-title{font-family:'Playfair Display',serif;font-size:clamp(28px,7vw,42px);font-weight:900;line-height:1.1;margin-bottom:12px;color:var(--ink)}
+.p-title em{font-style:italic;background:linear-gradient(135deg,var(--gold),var(--rose));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.p-intro{font-size:14px;color:var(--muted);line-height:1.9;margin-bottom:24px}
+.divider{display:flex;align-items:center;gap:12px;margin:22px 0}
+.div-line{flex:1;height:1px;background:linear-gradient(to right,transparent,var(--line),transparent)}
+.div-txt{font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);white-space:nowrap}
+
+/* ══ MESSAGES ══ */
+.write-tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}
+.wtab{padding:11px 6px;border-radius:12px;border:1px solid var(--line2);background:var(--white2);font-family:'DM Sans',sans-serif;font-size:11px;color:var(--muted);cursor:pointer;transition:all .2s;display:flex;flex-direction:column;align-items:center;gap:4px}
+.wtab.on{background:linear-gradient(135deg,var(--gold-p2),var(--rose-p2));border-color:var(--line);color:var(--gold-d);font-weight:600}
+.wtab-ico{font-size:16px}
+.write-box{background:var(--white2);border:1px solid var(--line2);border-radius:16px;padding:4px;margin-bottom:10px;transition:all .2s}
+.write-box:focus-within{border-color:rgba(196,133,122,.35);box-shadow:0 0 0 3px var(--rose-p)}
+.write-area{width:100%;padding:16px 18px;background:transparent;border:none;font-family:'Playfair Display',serif;font-size:17px;color:var(--ink);line-height:1.7;resize:none;min-height:140px;outline:none}
+.write-area::placeholder{color:var(--muted);font-style:italic}
+.write-count{font-size:10px;color:var(--muted);text-align:right;padding:0 14px 10px}
+.write-note{background:linear-gradient(135deg,var(--gold-p),var(--rose-p));border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin-bottom:14px;display:flex;gap:10px;align-items:flex-start;font-size:12px;color:var(--muted);line-height:1.6}
+.write-submit{width:100%;padding:17px;background:linear-gradient(135deg,var(--gold-d),var(--gold),var(--rose-l),var(--rose));color:white;border:none;border-radius:100px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:700;cursor:pointer;transition:all .28s;letter-spacing:.08em;text-transform:uppercase;display:flex;align-items:center;justify-content:center;gap:10px;box-shadow:0 8px 28px rgba(196,133,122,.2)}
+.write-submit:hover{transform:translateY(-2px)}
+.write-submit:disabled{opacity:.4;cursor:not-allowed;transform:none}
+.success-card{display:none;text-align:center;padding:44px 24px;background:linear-gradient(135deg,var(--gold-p),var(--rose-p));border:1px solid var(--line);border-radius:22px}
+.success-card.show{display:block;animation:fadeUp .5s ease}
+.success-ico{font-size:44px;margin-bottom:16px}
+.success-title{font-family:'Playfair Display',serif;font-size:24px;font-weight:700;font-style:italic;color:var(--ink);margin-bottom:10px}
+.success-txt{font-size:14px;color:var(--muted);line-height:1.85}
+
+.msgs-banner{background:linear-gradient(135deg,var(--gold-p),var(--rose-p));border:1px solid var(--line);border-radius:16px;padding:18px 20px;margin-bottom:14px;text-align:center}
+.msgs-banner-title{font-family:'Playfair Display',serif;font-size:18px;font-weight:700;color:var(--ink);margin-bottom:4px}
+.msgs-banner-sub{font-size:12px;color:var(--muted)}
+.msgs-count-badge{display:inline-block;background:linear-gradient(135deg,var(--gold),var(--rose));border-radius:100px;padding:4px 14px;font-size:11px;font-weight:600;color:white;margin-top:8px}
+.msgs-list{display:flex;flex-direction:column;gap:10px}
+.msg-card{background:var(--white2);border:1px solid var(--line2);border-radius:16px;padding:18px 20px;transition:all .22s;position:relative;overflow:hidden}
+.msg-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:2px;background:linear-gradient(to bottom,var(--gold),var(--rose));opacity:0;transition:opacity .25s}
+.msg-card:hover::before{opacity:1}
+.msg-card:hover{border-color:rgba(196,133,122,.2);transform:translateX(4px)}
+.msg-quote{font-family:'Playfair Display',serif;font-size:32px;font-weight:900;background:linear-gradient(135deg,var(--gold),var(--rose));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;opacity:.3;line-height:.8;margin-bottom:8px}
+.msg-text{font-family:'Playfair Display',serif;font-size:15px;font-style:italic;font-weight:400;line-height:1.8;color:var(--ink2);margin-bottom:10px}
+.msg-meta{font-size:10px;color:var(--muted);display:flex;align-items:center;gap:8px}
+.msg-dot{width:4px;height:4px;background:var(--rose);border-radius:50%;opacity:.5}
+
+/* ══ TEMOIN ══ */
+.temoin-options{display:flex;flex-direction:column;gap:10px;margin-bottom:16px}
+.temoin-option{padding:16px 18px;border:1px solid var(--line2);border-radius:14px;cursor:pointer;background:var(--white2);transition:all .22s;text-align:left;font-family:'DM Sans',sans-serif}
+.temoin-option:hover{border-color:rgba(201,168,76,.3);background:linear-gradient(135deg,var(--gold-p2),var(--rose-p));transform:translateX(4px)}
+.temoin-option-label{font-family:'Playfair Display',serif;font-size:16px;font-weight:700;color:var(--ink);margin-bottom:3px}
+.temoin-option-desc{font-size:12px;color:var(--muted)}
+.temoin-result{display:none;background:linear-gradient(135deg,var(--gold-p),var(--rose-p));border:1px solid var(--line);border-radius:16px;padding:20px;margin-bottom:16px}
+.temoin-result.show{display:block;animation:fadeUp .4s ease}
+.temoin-result-title{font-family:'Playfair Display',serif;font-size:17px;font-weight:700;color:var(--ink);margin-bottom:14px}
+.temoin-step{display:flex;gap:10px;margin-bottom:10px;font-size:13px;color:var(--ink2);line-height:1.6;align-items:flex-start}
+.temoin-step-num{width:22px;height:22px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--rose));color:white;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;margin-top:1px}
+
+/* ══ ACCORDÉON COMPRENDRE ══ */
+.comprendre-section{margin-bottom:10px}
+.comprendre-category{margin-bottom:20px}
+.comprendre-cat-title{font-family:'Playfair Display',serif;font-size:18px;font-weight:700;color:var(--ink);margin-bottom:12px;padding-left:4px;border-left:3px solid var(--gold);padding-left:12px}
+.accordion-item{border:1px solid var(--line2);border-radius:14px;overflow:hidden;margin-bottom:8px;background:var(--white2)}
+.accordion-header{display:flex;align-items:center;justify-content:space-between;padding:16px 18px;cursor:pointer;transition:all .2s}
+.accordion-header:hover{background:linear-gradient(135deg,var(--gold-p),var(--rose-p))}
+.accordion-question{font-size:14px;font-weight:600;color:var(--ink);line-height:1.4;flex:1;padding-right:12px}
+.accordion-arrow{font-size:18px;color:var(--gold);transition:transform .3s;flex-shrink:0}
+.accordion-item.open .accordion-arrow{transform:rotate(180deg)}
+.accordion-body{display:none;padding:0 18px 18px}
+.accordion-item.open .accordion-body{display:block;animation:fadeUp .3s ease}
+.accordion-short{font-size:14px;color:var(--rose-d);font-weight:500;line-height:1.6;margin-bottom:12px;padding:10px 14px;background:linear-gradient(135deg,var(--gold-p),var(--rose-p));border-radius:10px}
+.accordion-long{font-size:13px;color:var(--ink2);line-height:1.9;margin-bottom:12px}
+.accordion-long p{margin-bottom:8px}
+.accordion-long strong{color:var(--ink)}
+.accordion-signs{display:flex;flex-direction:column;gap:6px;margin-bottom:12px}
+.accordion-sign{display:flex;align-items:flex-start;gap:10px;font-size:13px;color:var(--ink2);line-height:1.5}
+.sign-dot{width:6px;height:6px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--rose));flex-shrink:0;margin-top:5px}
+.accordion-note{font-size:12px;color:var(--muted);font-style:italic;line-height:1.6;padding:10px 12px;background:rgba(255,255,255,.6);border-radius:8px;border-left:2px solid var(--rose-l)}
+.accordion-more{display:none;margin-top:10px}
+.accordion-item.open .accordion-more{display:block}
+.read-more-btn{background:none;border:none;font-family:'DM Sans',sans-serif;font-size:12px;color:var(--gold-d);cursor:pointer;text-decoration:underline;padding:0;margin-top:6px}
+
+/* ══ RESPIRATION ══ */
+.breath-card{background:linear-gradient(135deg,var(--gold-p2),var(--rose-p));border:1px solid var(--line);border-radius:18px;padding:24px 22px;text-align:center}
+.breath-title{font-family:'Playfair Display',serif;font-size:18px;font-weight:700;color:var(--ink);margin-bottom:6px}
+.breath-sub{font-size:12px;color:var(--muted);margin-bottom:18px;line-height:1.6}
+.breath-circle{width:96px;height:96px;border-radius:50%;background:linear-gradient(135deg,var(--gold-p2),var(--rose-p2));border:3px solid var(--gold-l);margin:0 auto 12px;display:flex;align-items:center;justify-content:center;transition:all 4s ease-in-out}
+.breath-circle.inhale{transform:scale(1.4);border-color:var(--rose-l)}
+.breath-circle.exhale{transform:scale(1);border-color:var(--gold-l)}
+.breath-count{font-family:'Playfair Display',serif;font-size:30px;font-weight:700;background:linear-gradient(135deg,var(--gold),var(--rose));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.breath-instruction{font-size:13px;color:var(--muted);margin-bottom:14px;min-height:20px}
+.breath-btn{padding:12px 28px;background:linear-gradient(135deg,var(--gold-d),var(--gold),var(--rose));color:white;border:none;border-radius:100px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;cursor:pointer;transition:all .2s;box-shadow:0 6px 20px rgba(196,133,122,.2)}
+
+/* ══ NUMÉROS ══ */
+.num-grid{display:flex;flex-direction:column;gap:8px}
+.num-card{display:flex;align-items:center;gap:16px;padding:14px 18px;border-radius:14px;text-decoration:none;background:var(--white2);border:1px solid var(--line2);transition:all .22s;position:relative;overflow:hidden}
+.num-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:0;background:linear-gradient(to right,rgba(196,133,122,.08),transparent);transition:width .3s}
+.num-card:hover::before{width:100%}
+.num-card:hover{border-color:rgba(196,133,122,.3);transform:translateX(5px);box-shadow:-2px 0 0 var(--rose)}
+.num-ico{width:46px;height:46px;border-radius:13px;flex-shrink:0;background:linear-gradient(135deg,var(--gold-p),var(--rose-p));border:1px solid var(--line);display:flex;align-items:center;justify-content:center;font-size:18px}
+.num-body{flex:1}
+.num-name{font-size:12px;font-weight:500;color:var(--muted);margin-bottom:1px}
+.num-number{font-family:'Playfair Display',serif;font-size:28px;font-weight:900;line-height:1;background:linear-gradient(135deg,var(--gold-d),var(--rose-d));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.num-detail{font-size:10px;color:var(--muted);margin-top:1px}
+.num-arr{color:var(--rose);opacity:.4;font-size:16px;transition:all .2s}
+.num-card:hover .num-arr{opacity:1;transform:translateX(3px)}
+
+/* ══ URGENCE ══ */
+.urgence-card{background:linear-gradient(135deg,var(--rose-p2),rgba(196,133,122,.04));border:1px solid rgba(196,133,122,.2);border-radius:18px;padding:22px;text-align:center;position:relative;overflow:hidden}
+.urgence-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(to right,transparent,var(--rose-l),var(--gold-l),transparent)}
+.urg-pulse{width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,rgba(196,133,122,.12),rgba(201,168,76,.08));border:1px solid rgba(196,133,122,.2);margin:0 auto 12px;display:flex;align-items:center;justify-content:center;font-size:20px;animation:urgPulse 3s ease-in-out infinite}
+@keyframes urgPulse{0%,100%{box-shadow:0 0 0 0 rgba(196,133,122,.2)}50%{box-shadow:0 0 0 12px rgba(196,133,122,0)}}
+.urg-title{font-family:'Playfair Display',serif;font-size:18px;font-weight:700;color:var(--ink);margin-bottom:6px}
+.urg-sub{font-size:12px;color:var(--muted);line-height:1.7;margin-bottom:14px}
+.urg-btn{display:inline-flex;align-items:center;gap:10px;background:linear-gradient(135deg,var(--rose-d),var(--rose));color:white;border:none;border-radius:100px;padding:12px 22px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;cursor:pointer;transition:all .2s;box-shadow:0 6px 20px rgba(196,133,122,.22)}
+
+/* ══ PLAN ══ */
+.plan-card{background:var(--white2);border:1px solid var(--line2);border-radius:16px;padding:20px;margin-bottom:10px}
+.plan-question{font-family:'Playfair Display',serif;font-size:16px;font-weight:700;color:var(--ink);margin-bottom:12px}
+.plan-options{display:flex;flex-direction:column;gap:8px}
+.plan-option{padding:12px 16px;border:1px solid var(--line2);border-radius:11px;cursor:pointer;font-size:13px;color:var(--ink2);background:var(--white);transition:all .2s;text-align:left;font-family:'DM Sans',sans-serif}
+.plan-option:hover,.plan-option.selected{background:linear-gradient(135deg,var(--gold-p2),var(--rose-p));border-color:rgba(201,168,76,.35)}
+.plan-result{display:none;background:linear-gradient(135deg,var(--gold-p),var(--rose-p));border:1px solid var(--line);border-radius:16px;padding:20px;margin-top:10px}
+.plan-result.show{display:block;animation:fadeUp .4s ease}
+.plan-result-title{font-family:'Playfair Display',serif;font-size:17px;font-weight:700;color:var(--ink);margin-bottom:12px}
+.plan-step{display:flex;gap:10px;margin-bottom:10px;font-size:13px;color:var(--ink2);line-height:1.6;align-items:flex-start}
+.plan-step-num{width:22px;height:22px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--rose));color:white;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;margin-top:1px}
+
+/* ══ PROCHES ══ */
+.contacts-box{background:linear-gradient(135deg,var(--gold-p),var(--rose-p));border:1px solid var(--line);border-radius:16px;padding:20px}
+.contacts-box-title{font-family:'Playfair Display',serif;font-size:17px;font-weight:700;color:var(--ink);margin-bottom:4px}
+.contacts-box-sub{font-size:12px;color:var(--muted);line-height:1.6;margin-bottom:14px}
+.contact-list{display:flex;flex-direction:column;gap:8px;margin-bottom:12px}
+.contact-item{display:flex;align-items:center;gap:12px;padding:11px 14px;background:rgba(255,255,255,.8);border:1px solid var(--line2);border-radius:11px}
+.contact-info{flex:1}
+.contact-name{font-size:13px;font-weight:600;color:var(--ink)}
+.contact-num{font-size:11px;color:var(--muted)}
+.contact-actions{display:flex;gap:6px}
+.contact-call{padding:6px 12px;background:linear-gradient(135deg,var(--rose-d),var(--rose));color:white;border:none;border-radius:100px;font-size:11px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif}
+.contact-del{padding:6px 10px;background:transparent;border:1px solid var(--line2);color:var(--muted);border-radius:100px;font-size:11px;cursor:pointer;font-family:'DM Sans',sans-serif}
+.add-contact-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px}
+.contact-input{padding:10px 13px;border:1px solid var(--line2);border-radius:10px;font-family:'DM Sans',sans-serif;font-size:13px;color:var(--ink);background:rgba(255,255,255,.8);outline:none;transition:all .2s;width:100%}
+.contact-input:focus{border-color:var(--rose);box-shadow:0 0 0 3px var(--rose-p)}
+.add-contact-btn{width:100%;padding:11px;background:linear-gradient(135deg,var(--gold-d),var(--gold),var(--rose));color:white;border:none;border-radius:10px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;cursor:pointer}
+
+/* ══ BOUTIQUE ══ */
+.boutique-hero{background:linear-gradient(135deg,var(--gold-p2),var(--rose-p));border:1px solid var(--line);border-radius:20px;padding:26px 22px;text-align:center;margin-bottom:18px;position:relative;overflow:hidden}
+.boutique-hero::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(to right,transparent,var(--gold),var(--rose-l),transparent)}
+.boutique-title{font-family:'Playfair Display',serif;font-size:22px;font-weight:700;color:var(--ink);margin-bottom:8px}
+.boutique-sub{font-size:13px;color:var(--muted);line-height:1.7;margin-bottom:18px}
+.boutique-btn{display:inline-flex;align-items:center;gap:10px;background:linear-gradient(135deg,var(--gold-d),var(--gold),var(--rose-l),var(--rose));color:white;border:none;border-radius:100px;padding:13px 26px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:700;cursor:pointer;text-decoration:none;transition:all .22s;box-shadow:0 8px 24px rgba(196,133,122,.2);letter-spacing:.06em}
+.boutique-btn:hover{transform:scale(1.04)}
+.impact-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px}
+.impact-card{background:var(--white2);border:1px solid var(--line2);border-radius:14px;padding:18px 14px;text-align:center;transition:all .22s;position:relative;overflow:hidden}
+.impact-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(to right,var(--gold),var(--rose));opacity:0;transition:opacity .25s}
+.impact-card:hover::before{opacity:1}
+.impact-card:hover{border-color:rgba(196,133,122,.2);transform:translateY(-2px)}
+.impact-n{font-family:'Playfair Display',serif;font-size:26px;font-weight:900;line-height:1;margin-bottom:5px;background:linear-gradient(135deg,var(--gold-d),var(--rose-d));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.impact-l{font-size:11px;color:var(--muted);line-height:1.4}
+.mission-card{background:var(--white2);border:1px solid var(--line);border-radius:18px;padding:24px 20px;position:relative;overflow:hidden}
+.mission-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(to right,transparent,var(--gold),var(--rose-l),transparent)}
+.mission-quote{border-left:2px solid var(--rose);padding-left:16px;margin-top:16px}
+.mq-mark{font-family:'Playfair Display',serif;font-size:32px;font-weight:900;background:linear-gradient(135deg,var(--gold),var(--rose));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;opacity:.4;line-height:.8;margin-bottom:8px}
+.mq-txt{font-family:'Playfair Display',serif;font-size:15px;font-style:italic;color:var(--ink2);line-height:1.8;margin-bottom:10px}
+.mq-auth{font-size:10px;color:var(--rose-d);letter-spacing:.16em;text-transform:uppercase;font-weight:600}
+.legal-note{margin-top:20px;padding:14px 16px;background:var(--white2);border:1px solid var(--line2);border-radius:12px;font-size:11px;color:var(--muted);line-height:1.7;text-align:center}
+
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(10px);background:var(--ink);color:var(--white);padding:12px 24px;border-radius:100px;font-size:13px;opacity:0;transition:all .3s;z-index:600;pointer-events:none;white-space:nowrap;box-shadow:0 8px 28px rgba(26,24,16,.15)}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+</style>
+</head>
+<body>
+
+<div id="discret-screen">
+<div style="width:100%;max-width:400px;font-family:Arial,sans-serif;background:#1a0533;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding-bottom:30px">
+  <div style="width:100%;background:linear-gradient(180deg,#6b1fa0,#4a0f7a);padding:14px 20px 10px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 3px 10px rgba(0,0,0,.4)">
+    <div style="text-align:center"><div style="font-size:10px;color:#f9d849;font-weight:700">NIVEAU</div><div style="font-size:26px;font-weight:900;color:white;line-height:1">247</div></div>
+    <div style="text-align:center"><div style="font-size:22px;font-weight:900;background:linear-gradient(135deg,#f9d849,#ff9f43);-webkit-background-clip:text;-webkit-text-fill-color:transparent">CandyBlast</div><div style="font-size:10px;color:#c084fc">★★★ Objectif: 15 000 pts</div></div>
+    <div style="text-align:center"><div style="font-size:10px;color:#f9d849;font-weight:700">VIES</div><div style="font-size:20px">❤️❤️❤️</div></div>
+  </div>
+  <div style="background:rgba(255,255,255,.07);border-radius:14px;margin:14px 16px 0;padding:10px 20px;width:calc(100% - 32px);text-align:center;border:1px solid rgba(255,255,255,.1)">
+    <div style="font-size:10px;color:#c084fc;font-weight:600;letter-spacing:.1em">SCORE</div>
+    <div style="font-size:36px;font-weight:900;color:#f9d849;cursor:pointer" id="fakeScore" onclick="scoreTripleTap()">12 480</div>
+    <div style="height:6px;background:rgba(255,255,255,.1);border-radius:100px;margin-top:8px;overflow:hidden"><div style="height:100%;width:83%;background:linear-gradient(to right,#f9d849,#ff6b9d);border-radius:100px"></div></div>
+  </div>
+  <div id="tapMsg" style="margin:10px 16px 0;width:calc(100% - 32px);text-align:center;font-size:12px;color:rgba(255,255,255,.7);background:rgba(255,255,255,.08);border-radius:10px;padding:8px 12px;transition:opacity .5s">
+    👆 Appuie <strong>3 fois</strong> sur le score pour revenir au site
+  </div>
+  <div style="margin:12px 16px 0;width:calc(100% - 32px)"><div style="display:grid;grid-template-columns:repeat(7,1fr);gap:4px" id="candyGrid"></div></div>
+  <div style="margin:12px 16px 0;width:calc(100% - 32px);display:flex;gap:8px;justify-content:center">
+    <div style="background:rgba(255,255,255,.08);border-radius:12px;padding:10px;text-align:center;flex:1;border:1px solid rgba(255,255,255,.1)"><div style="font-size:22px">🍭</div><div style="font-size:9px;color:#c084fc">Lolipop</div><div style="font-size:11px;font-weight:700;color:white">x3</div></div>
+    <div style="background:rgba(255,255,255,.08);border-radius:12px;padding:10px;text-align:center;flex:1;border:1px solid rgba(255,255,255,.1)"><div style="font-size:22px">🍫</div><div style="font-size:9px;color:#c084fc">Choco</div><div style="font-size:11px;font-weight:700;color:white">x1</div></div>
+    <div style="background:rgba(255,255,255,.08);border-radius:12px;padding:10px;text-align:center;flex:1;border:1px solid rgba(255,255,255,.1)"><div style="font-size:22px">🌈</div><div style="font-size:9px;color:#c084fc">Arc-en-ciel</div><div style="font-size:11px;font-weight:700;color:white">x2</div></div>
+    <div style="background:rgba(255,255,255,.08);border-radius:12px;padding:10px;text-align:center;flex:1;border:1px solid rgba(255,255,255,.1)"><div style="font-size:22px">⭐</div><div style="font-size:9px;color:#c084fc">Étoile</div><div style="font-size:11px;font-weight:700;color:white">x5</div></div>
+  </div>
+  <div style="margin:12px 16px 0;width:calc(100% - 32px)">
+    <button onclick="fakeTap()" style="width:100%;padding:15px;background:linear-gradient(135deg,#ff6b9d,#c44dff);border:none;border-radius:100px;font-size:16px;font-weight:800;color:white;box-shadow:0 6px 20px rgba(196,77,255,.4);cursor:pointer;font-family:Arial">🎮 JOUER !</button>
+  </div>
+  <div style="margin:14px 16px 0;width:calc(100% - 32px)">
+    <div style="font-size:10px;color:#c084fc;font-weight:600;margin-bottom:8px">MES AMIS</div>
+    <div style="display:flex;gap:10px">
+      <div style="text-align:center"><div style="width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#ff6b9d,#c44dff);display:flex;align-items:center;justify-content:center;font-size:20px;border:2px solid #f9d849">😊</div><div style="font-size:9px;color:#c084fc;margin-top:2px">Sophie</div><div style="font-size:8px;color:#f9d849">Niv.312</div></div>
+      <div style="text-align:center"><div style="width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#f9d849,#ff9f43);display:flex;align-items:center;justify-content:center;font-size:20px;border:2px solid rgba(255,255,255,.2)">🌸</div><div style="font-size:9px;color:#c084fc;margin-top:2px">Marie</div><div style="font-size:8px;color:#c084fc">Niv.198</div></div>
+      <div style="text-align:center"><div style="width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#4ecdc4,#44a8b3);display:flex;align-items:center;justify-content:center;font-size:20px;border:2px solid rgba(255,255,255,.2)">🦋</div><div style="font-size:9px;color:#c084fc;margin-top:2px">Léa</div><div style="font-size:8px;color:#c084fc">Niv.156</div></div>
+      <div style="text-align:center"><div style="width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#ff9f43,#ee5a24);display:flex;align-items:center;justify-content:center;font-size:20px;border:2px solid rgba(255,255,255,.2)">🌺</div><div style="font-size:9px;color:#c084fc;margin-top:2px">Clara</div><div style="font-size:8px;color:#c084fc">Niv.89</div></div>
+    </div>
+  </div>
+</div>
+</div>
+
+<div class="lang-bar" id="langBar"></div>
+<button class="back-btn" id="back" onclick="goHome()">← Retour</button>
+<div style="position:fixed;bottom:46px;right:14px;z-index:400;text-align:right;max-width:200px">
+  <div style="font-size:10px;color:rgba(100,100,100,.7);font-family:'DM Sans',sans-serif;line-height:1.5;margin-bottom:4px">
+    🎮 Mode discret — protège ta navigation si tu n'es pas seul·e.<br><span style="opacity:.8">Appuie 3× sur le score pour revenir.</span>
+  </div>
+</div>
+<button onclick="enterDiscret()" style="position:fixed;bottom:18px;right:14px;z-index:400;background:rgba(255,255,255,.9);border:1px solid rgba(0,0,0,.15);border-radius:20px;padding:5px 11px;font-size:10px;color:#999;cursor:pointer;font-family:sans-serif;white-space:nowrap;box-shadow:0 1px 4px rgba(0,0,0,.1)">🎮 Discret</button>
+
+<!-- ════ ACCUEIL ════ -->
+<div id="home" class="page active">
+  <div class="home-bg"></div>
+  <div class="deco-top"></div>
+  <div class="home-center">
+    <div class="gold-sep"><div class="gs-line"></div><div class="gs-diamond"></div><div class="gs-line"></div></div>
+    <div class="logo-name">Manatoa</div>
+    <div class="logo-tagline">
+      Fondée par une maman solo, d'origine tahitienne,<br>
+      <em>survivante de plusieurs années de violences conjugales.</em><br>
+      Qui soutient une association qui aide les victimes de violences conjugales.
+    </div>
+    <div class="mot-du-jour">
+      <div class="mdj-label">✦ Mot du jour</div>
+      <div class="mdj-text" id="motDuJour">Chargement…</div>
+    </div>
+    <h1 class="home-title">Aujourd'hui,<br>tu es <strong>plutôt…</strong></h1>
+    <p class="home-sub">Ce site existe pour toi — que tu traverses quelque chose, que tu aies vu quelque chose, ou que tu veuilles aider.</p>
+    <div class="choices">
+      <button class="choice" onclick="go('give')">
+        <div class="ch-ico">✨</div>
+        <div class="ch-body"><p class="ch-num">01</p><p class="ch-label">J'encourage / Je témoigne</p><p class="ch-desc">Laisser un mot, une lettre, ou agir en tant que témoin</p></div>
+        <div class="ch-arr">›</div>
+      </button>
+      <button class="choice" onclick="go('support')">
+        <div class="ch-ico">🤲</div>
+        <div class="ch-body"><p class="ch-num">02</p><p class="ch-label">J'ai besoin de soutien</p><p class="ch-desc">Mots, exercices, aide, numéros et plan personnalisé</p></div>
+        <div class="ch-arr">›</div>
+      </button>
+      <button class="choice" onclick="go('comprendre')">
+        <div class="ch-ico">🧠</div>
+        <div class="ch-body"><p class="ch-num">03</p><p class="ch-label">Comprendre</p><p class="ch-desc">L'emprise, les signes, les cycles, la reconstruction</p></div>
+        <div class="ch-arr">›</div>
+      </button>
+      <button class="choice" onclick="go('boutique')">
+        <div class="ch-ico">🌿</div>
+        <div class="ch-body"><p class="ch-num">04</p><p class="ch-label">Découvrir Manatoa</p><p class="ch-desc">La boutique, la mission, l'association</p></div>
+        <div class="ch-arr">›</div>
+      </button>
+    </div>
+    <div class="home-stats">
+      <div class="hs-item"><div class="hs-n" id="msgCount">0</div><div class="hs-l">Messages d'espoir</div></div>
+      <div class="hs-item"><div class="hs-n">10€</div><div class="hs-l">Reversés par vente</div></div>
+      <div class="hs-item"><div class="hs-n">🛡️</div><div class="hs-l">QR Protecteur</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ════ 01 — ENCOURAGER / TÉMOIN ════ -->
+<div id="give" class="page">
+  <div class="page-band"></div>
+  <div class="page-wrap"><div class="inner">
+    <p class="eyebrow">Agir ensemble</p>
+    <h2 class="p-title">Chaque geste<br><em>compte.</em></h2>
+    <p class="p-intro">Que tu veuilles encourager, partager ton expérience, ou agir en tant que témoin — ta voix a de la valeur.</p>
+
+    <!-- Écrire un message -->
+    <div class="comprendre-cat-title" style="margin-bottom:14px">💛 Laisser un message</div>
+    <div id="writeForm">
+      <div class="write-tabs">
+        <button class="wtab on" onclick="setTab(this,'Un mot pour toi…')"><span class="wtab-ico">💬</span>Un mot</button>
+        <button class="wtab" onclick="setTab(this,'Chère personne,\n\n')"><span class="wtab-ico">✉️</span>Une lettre</button>
+        <button class="wtab" onclick="setTab(this,'Je m\'en suis sorti·e et je veux vous dire que…')"><span class="wtab-ico">🌟</span>J'en suis sorti·e</button>
+      </div>
+      <div class="write-box">
+        <textarea class="write-area" id="writeArea" placeholder="Un mot pour toi…" maxlength="500" oninput="document.getElementById('wcount').textContent=this.value.length+' / 500'"></textarea>
+        <p class="write-count" id="wcount">0 / 500</p>
+      </div>
+      <div class="write-note"><span>🔒</span><span>100% anonyme. Filtré automatiquement. Vérifié avant publication.</span></div>
+      <button class="write-submit" id="writeBtn" onclick="submitMsg()"><span>Envoyer mon message</span><span>→</span></button>
+    </div>
+    <div class="success-card" id="successCard">
+      <div class="success-ico">✨</div>
+      <h3 class="success-title">Merci du fond du cœur.</h3>
+      <p class="success-txt">Ton message va être lu avec soin. Bientôt quelqu'un qui en a besoin le lira et se sentira moins seul·e.</p>
+    </div>
+
+    <div class="divider"><div class="div-line"></div><div class="div-txt">Je suis témoin — quoi faire ?</div><div class="div-line"></div></div>
+    <div style="background:linear-gradient(135deg,var(--gold-p2),var(--rose-p));border:1px solid var(--line);border-radius:14px;padding:14px 16px;margin-bottom:12px;font-size:13px;color:var(--ink2);line-height:1.7">
+      ✋ <strong style="color:var(--ink)">Le Signal d'Alerte :</strong> si quelqu'un te montre la paume ouverte puis replie le pouce sous ses doigts — c'est un appel à l'aide discret. Clique sur "J'ai vu le Signal d'Alerte" pour savoir quoi faire.
+    </div>
+
+    <!-- Guide témoin -->
+    <div class="temoin-options">
+      
+      <div class="temoin-option" onclick="showTemoin('signal')">
+        <div class="temoin-opt-label">✋ J'ai vu le Signal d'Alerte</div>
+        <div class="temoin-opt-desc">Quelqu'un m'a fait ce geste — paume ouverte, pouce replié</div>
+      </div>
+
+      <div class="temoin-option" onclick="showTemoin('physique')">
+        <div class="temoin-option-label">👁️ J'ai vu des signes de violences physiques</div>
+        <div class="temoin-option-desc">Traces, blessures, comportements alarmants</div>
+      </div>
+      <div class="temoin-option" onclick="showTemoin('controle')">
+        <div class="temoin-option-label">⚠️ J'observe des comportements de contrôle</div>
+        <div class="temoin-option-desc">Isolement, humiliation, surveillance constante</div>
+      </div>
+      <div class="temoin-option" onclick="showTemoin('enfant')">
+        <div class="temoin-option-label">👶 Un enfant semble en danger</div>
+        <div class="temoin-option-desc">Comportement inquiétant, peur, négligence</div>
+      </div>
+      <div class="temoin-option" onclick="showTemoin('voisin')">
+        <div class="temoin-option-label">🏠 J'entends des cris chez un voisin</div>
+        <div class="temoin-option-desc">Bruit, cris, disputes qui se répètent</div>
+      </div>
+    </div>
+    <div class="temoin-result" id="temoinResult"></div>
+
+    
+  </div></div>
+</div>
+
+<!-- ════ 02 — SOUTIEN ════ -->
+<div id="support" class="page">
+  <div class="page-band"></div>
+  <div class="page-wrap"><div class="inner">
+    <p class="eyebrow">Pour toi</p>
+    <h2 class="p-title">Tu n'es pas<br><em>seul·e.</em></h2>
+    <p class="p-intro">Des gens ont laissé des mots pour toi. Et des professionnels sont là, maintenant, gratuitement.</p>
+
+    <div class="msgs-banner">
+      <div class="msgs-banner-title">💛 Mots d'encouragement</div>
+      <div class="msgs-banner-sub">Laissés anonymement par des porteurs Manatoa</div>
+      <div class="msgs-count-badge" id="supportMsgCount">Chargement…</div>
+    </div>
+    <div class="msgs-list" id="supportMsgsList"></div>
+
+    <div class="divider"><div class="div-line"></div><div class="div-txt">Exercice de respiration</div><div class="div-line"></div></div>
+    <div class="breath-card">
+      <div class="breath-title">🌬️ Respiration apaisante</div>
+      <div class="breath-sub">Si tu te sens submergé·e, commence par respirer.</div>
+      <div class="breath-circle" id="breathCircle"><div class="breath-count" id="breathCount">4</div></div>
+      <div class="breath-instruction" id="breathInstruction">Prêt·e ?</div>
+      <button class="breath-btn" id="breathBtn" onclick="toggleBreath()">Commencer</button>
+    </div>
+
+    <div class="divider"><div class="div-line"></div><div class="div-txt">Numéros d'aide — Gratuits</div><div class="div-line"></div></div>
+    <div class="num-grid">
+      <a href="tel:3919" class="num-card"><div class="num-ico">📞</div><div class="num-body"><div class="num-name">Violences Femmes Info</div><div class="num-number">3919</div><div class="num-detail">Gratuit · 24h/24 · 7j/7</div></div><div class="num-arr">→</div></a>
+      <a href="tel:119" class="num-card"><div class="num-ico">🛡️</div><div class="num-body"><div class="num-name">Allô Enfance en Danger</div><div class="num-number">119</div><div class="num-detail">Gratuit · 24h/24 · 7j/7</div></div><div class="num-arr">→</div></a>
+      <a href="tel:3114" class="num-card"><div class="num-ico">💙</div><div class="num-body"><div class="num-name">Prévention Suicide</div><div class="num-number">3114</div><div class="num-detail">Gratuit · 24h/24 · 7j/7</div></div><div class="num-arr">→</div></a>
+      <a href="tel:17" class="num-card"><div class="num-ico">🚨</div><div class="num-body"><div class="num-name">Police Secours</div><div class="num-number">17</div><div class="num-detail">Urgence immédiate</div></div><div class="num-arr">→</div></a>
+      <a href="tel:15" class="num-card"><div class="num-ico">🏥</div><div class="num-body"><div class="num-name">SAMU</div><div class="num-number">15</div><div class="num-detail">Urgence médicale</div></div><div class="num-arr">→</div></a>
+      <a href="sms:114" class="num-card"><div class="num-ico">✉️</div><div class="num-body"><div class="num-name">SMS si tu ne peux pas parler</div><div class="num-number">114</div><div class="num-detail">Envoie juste "aide"</div></div><div class="num-arr">→</div></a>
+    </div>
+
+    <div class="divider"><div class="div-line"></div><div class="div-txt">Je ne suis pas en sécurité</div><div class="div-line"></div></div>
+    <div class="urgence-card">
+      <div class="urg-pulse">🕊️</div>
+      <div class="urg-title">Je ne suis pas en sécurité</div>
+      <div class="urg-sub">Tu n'es pas seul·e. Voici quoi faire maintenant.</div>
+      <button class="urg-btn" onclick="go('unsafe')">Voir les étapes →</button>
+    </div>
+
+        <div class="divider"><div class="div-line"></div><div class="div-txt">Alerter un proche</div><div class="div-line"></div></div>
+    <div class="contacts-box">
+      <div class="contacts-box-title">🔔 Mes proches de confiance</div>
+      <div class="contacts-box-sub">Ami·e, famille, thérapeute... En cas de danger, ils reçoivent un SMS en un clic.</div>
+      <div class="contact-list" id="contactList"></div>
+      <div class="add-contact-row">
+        <input type="text" class="contact-input" id="contactName" placeholder="Prénom"/>
+        <input type="tel" class="contact-input" id="contactNum" placeholder="+33 6 ..."/>
+      </div>
+      <button class="add-contact-btn" onclick="addContact()">+ Ajouter ce proche</button>
+    </div>
+  </div></div>
+</div>
+
+<!-- ════ PAS EN SÉCURITÉ ════ -->
+<div id="unsafe" class="page">
+  <div class="page-band"></div>
+  <div class="page-wrap"><div class="inner">
+    <p class="eyebrow">Aide immédiate</p>
+    <h2 class="p-title">Respire.<br><em>On est là.</em></h2>
+    <p class="p-intro">Tu n'es pas seul·e. Voici exactement quoi faire, étape par étape.</p>
+
+    <!-- SIGNAL D'ALERTE -->
+    <div style="background:linear-gradient(135deg,var(--gold-p2),var(--rose-p));border:1px solid var(--line);border-radius:18px;padding:20px 22px;margin-bottom:16px;position:relative;overflow:hidden">
+      <div style="position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(to right,transparent,var(--gold),var(--rose-l),transparent)"></div>
+      <p style="font-family:'Playfair Display',serif;font-size:17px;font-weight:700;color:var(--ink);margin-bottom:6px">✋ Le Signal d'Alerte</p>
+      <p style="font-size:13px;color:var(--muted);line-height:1.7;margin-bottom:14px">Un geste discret, reconnu internationalement, pour signaler que tu es en danger sans dire un mot.</p>
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <div style="display:flex;align-items:center;gap:14px;background:rgba(255,255,255,.7);border-radius:12px;padding:12px 14px">
+          <div style="font-size:28px;flex-shrink:0">🖐️</div>
+          <div><div style="font-size:13px;font-weight:600;color:var(--ink);margin-bottom:2px">Étape 1</div><div style="font-size:12px;color:var(--muted);line-height:1.5">Montre ta paume ouverte face à l'autre personne</div></div>
+        </div>
+        <div style="display:flex;align-items:center;gap:14px;background:rgba(255,255,255,.7);border-radius:12px;padding:12px 14px">
+          <div style="font-size:28px;flex-shrink:0">👍</div>
+          <div><div style="font-size:13px;font-weight:600;color:var(--ink);margin-bottom:2px">Étape 2</div><div style="font-size:12px;color:var(--muted);line-height:1.5">Replie le pouce vers l'intérieur de ta paume</div></div>
+        </div>
+        <div style="display:flex;align-items:center;gap:14px;background:rgba(255,255,255,.7);border-radius:12px;padding:12px 14px">
+          <div style="font-size:28px;flex-shrink:0">✊</div>
+          <div><div style="font-size:13px;font-weight:600;color:var(--ink);margin-bottom:2px">Étape 3</div><div style="font-size:12px;color:var(--muted);line-height:1.5">Referme les quatre doigts sur le pouce — c'est le signal</div></div>
+        </div>
+      </div>
+      <div style="margin-top:12px;padding:10px 12px;background:rgba(255,255,255,.6);border-radius:10px;font-size:12px;color:var(--rose-d);line-height:1.6;font-weight:500">
+        💡 Fais ce geste à un proche, un pharmacien, un commerçant, un chauffeur de taxi — toute personne de confiance comprendra et pourra appeler de l'aide.
+      </div>
+    </div>
+
+    <div style="background:linear-gradient(135deg,var(--rose-p2),rgba(196,133,122,.04));border-radius:20px;padding:22px;border:1px solid rgba(196,133,122,.18);margin-bottom:14px">
+      <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:16px">
+        <div style="display:flex;align-items:flex-start;gap:12px;background:rgba(255,255,255,.8);border:1px solid rgba(196,133,122,.12);border-radius:12px;padding:13px 15px"><div style="width:26px;height:26px;border-radius:50%;flex-shrink:0;background:linear-gradient(135deg,var(--rose-d),var(--rose));color:white;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700">1</div><div style="font-size:13px;color:var(--ink2);line-height:1.6"><strong>Appelle le 17 (Police) ou le 15 (SAMU).</strong> Dis juste "j'ai besoin d'aide" si tu ne peux pas parler fort.</div></div>
+        <div style="display:flex;align-items:flex-start;gap:12px;background:rgba(255,255,255,.8);border:1px solid rgba(196,133,122,.12);border-radius:12px;padding:13px 15px"><div style="width:26px;height:26px;border-radius:50%;flex-shrink:0;background:linear-gradient(135deg,var(--rose-d),var(--rose));color:white;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700">2</div><div style="font-size:13px;color:var(--ink2);line-height:1.6"><strong>Si tu ne peux pas parler,</strong> envoie un SMS au 114.</div></div>
+        <div style="display:flex;align-items:flex-start;gap:12px;background:rgba(255,255,255,.8);border:1px solid rgba(196,133,122,.12);border-radius:12px;padding:13px 15px"><div style="width:26px;height:26px;border-radius:50%;flex-shrink:0;background:linear-gradient(135deg,var(--rose-d),var(--rose));color:white;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700">3</div><div style="font-size:13px;color:var(--ink2);line-height:1.6"><strong>Rejoins un lieu sûr :</strong> voisin, commerce ouvert, pharmacie, hôpital.</div></div>
+        <div style="display:flex;align-items:flex-start;gap:12px;background:rgba(255,255,255,.8);border:1px solid rgba(196,133,122,.12);border-radius:12px;padding:13px 15px"><div style="width:26px;height:26px;border-radius:50%;flex-shrink:0;background:linear-gradient(135deg,var(--rose-d),var(--rose));color:white;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700">4</div><div style="font-size:13px;color:var(--ink2);line-height:1.6"><strong>Préviens un proche</strong> en utilisant le bouton ci-dessous.</div></div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <a href="tel:17" style="display:flex;align-items:center;gap:14px;padding:14px 16px;border-radius:12px;text-decoration:none;background:linear-gradient(135deg,var(--rose-d),var(--rose));color:white"><span style="font-size:18px">📞</span><div><div style="font-size:13px;font-weight:600">Appeler le 17 — Police Secours</div><div style="font-size:11px;opacity:.75">Urgence immédiate · Gratuit</div></div></a>
+        <a href="tel:3919" style="display:flex;align-items:center;gap:14px;padding:14px 16px;border-radius:12px;text-decoration:none;background:var(--white2);border:1px solid var(--line2);color:var(--ink2)"><span style="font-size:18px">💬</span><div><div style="font-size:13px;font-weight:600">Appeler le 3919 — Violences</div><div style="font-size:11px;color:var(--muted)">Écoute spécialisée · Gratuit · 24h/24</div></div></a>
+        <a href="sms:114" style="display:flex;align-items:center;gap:14px;padding:14px 16px;border-radius:12px;text-decoration:none;background:var(--white2);border:1px solid var(--line2);color:var(--ink2)"><span style="font-size:18px">✉️</span><div><div style="font-size:13px;font-weight:600">SMS au 114</div><div style="font-size:11px;color:var(--muted)">Si tu ne peux pas appeler</div></div></a>
+      </div>
+    </div>
+    <div style="background:linear-gradient(135deg,var(--gold-p),var(--rose-p));border:1px solid var(--line);border-radius:14px;padding:14px 16px;font-size:13px;color:var(--muted);line-height:1.7;margin-bottom:16px">
+      🕊️ <strong style="color:var(--rose-d)">Rappelle-toi :</strong> tu mérites d'être en sécurité. Ce n'est pas ta faute.
+    </div>
+    <div class="contacts-box">
+      <div class="contacts-box-title">🔔 Alerter un proche</div>
+      <div class="contacts-box-sub">Ils reçoivent un SMS depuis ton téléphone en un clic.</div>
+      <div class="contact-list" id="contactListUnsafe"></div>
+      <div class="add-contact-row">
+        <input type="text" class="contact-input" id="contactNameU" placeholder="Prénom"/>
+        <input type="tel" class="contact-input" id="contactNumU" placeholder="+33 6 ..."/>
+      </div>
+      <button class="add-contact-btn" onclick="addContactU()">+ Ajouter ce proche</button>
+    </div>
+
+    <div class="divider"><div class="div-line"></div><div class="div-txt">Mon plan de sécurité personnalisé</div><div class="div-line"></div></div>
+    <div class="plan-card" id="planQ1">
+      <div class="plan-question">Tu vis avec la personne qui te fait du mal ?</div>
+      <div class="plan-options">
+        <button class="plan-option" onclick="selectPlan('q1','oui',event)">Oui, on vit ensemble</button>
+        <button class="plan-option" onclick="selectPlan('q1','non',event)">Non, on ne vit pas ensemble</button>
+      </div>
+    </div>
+    <div class="plan-card" id="planQ2" style="display:none">
+      <div class="plan-question">Tu as des enfants avec toi ?</div>
+      <div class="plan-options">
+        <button class="plan-option" onclick="selectPlan('q2','oui',event)">Oui</button>
+        <button class="plan-option" onclick="selectPlan('q2','non',event)">Non</button>
+      </div>
+    </div>
+    <div class="plan-card" id="planQ3" style="display:none">
+      <div class="plan-question">Tu as un proche de confiance ?</div>
+      <div class="plan-options">
+        <button class="plan-option" onclick="selectPlan('q3','oui',event)">Oui, j'ai quelqu'un</button>
+        <button class="plan-option" onclick="selectPlan('q3','non',event)">Non, je suis isolé·e</button>
+      </div>
+    </div>
+    <div class="plan-result" id="planResult"></div>
+  </div></div>
+</div>
+
+<!-- ════ 03 — COMPRENDRE ════ -->
+<div id="comprendre" class="page">
+  <div class="page-band"></div>
+  <div class="page-wrap"><div class="inner">
+    <p class="eyebrow">Comprendre</p>
+    <h2 class="p-title">Mettre des mots<br><em>sur ce qui arrive.</em></h2>
+    <p class="p-intro">Comprendre c'est déjà reprendre du pouvoir. Ces réponses sont pour toi — victime, proche, ou simplement curieux·se.</p>
+
+    <!-- L'EMPRISE -->
+    <div class="comprendre-category">
+      <div class="comprendre-cat-title">L'emprise</div>
+
+      <div class="accordion-item">
+        <div class="accordion-header" onclick="toggleAccordion(this)">
+          <div class="accordion-question">Pourquoi je suis resté·e ?</div>
+          <div class="accordion-arrow">▾</div>
+        </div>
+        <div class="accordion-body">
+          <div class="accordion-short">Parce que l'emprise est réelle. Rester n'est pas un choix libre — c'est une réponse à une manipulation profonde.</div>
+          <div class="accordion-long">
+            <p>Rester dans une relation violente n'est pas une question de faiblesse ou d'amour mal placé. C'est le résultat d'un processus de manipulation appelé <strong>emprise</strong>.</p>
+            <p>L'agresseur construit progressivement un système de contrôle : isolement des proches, destruction de l'estime de soi, alternance de moments doux et de moments violents. Cette alternance crée une dépendance émotionnelle puissante.</p>
+            <p>À cela s'ajoutent des raisons très concrètes : peur des représailles, dépendance financière, enfants en commun, logement partagé. <strong>Partir est souvent le moment le plus dangereux.</strong></p>
+          </div>
+          <div class="accordion-note">Le 3919 peut t'aider à préparer un départ en sécurité, gratuitement et anonymement.</div>
+        </div>
+      </div>
+
+      <div class="accordion-item">
+        <div class="accordion-header" onclick="toggleAccordion(this)">
+          <div class="accordion-question">C'est quoi l'emprise exactement ?</div>
+          <div class="accordion-arrow">▾</div>
+        </div>
+        <div class="accordion-body">
+          <div class="accordion-short">L'emprise est un processus par lequel une personne prend le contrôle progressif de la pensée, des émotions et des comportements d'une autre.</div>
+          <div class="accordion-long">
+            <p>L'emprise ne s'installe pas du jour au lendemain. Elle se construit sur des mois, parfois des années, par des mécanismes discrets :</p>
+          </div>
+          <div class="accordion-signs">
+            <div class="accordion-sign"><div class="sign-dot"></div>Isolement progressif des amis et de la famille</div>
+            <div class="accordion-sign"><div class="sign-dot"></div>Dévalorisation constante, critiques, humiliations</div>
+            <div class="accordion-sign"><div class="sign-dot"></div>Contrôle des sorties, de l'argent, du téléphone</div>
+            <div class="accordion-sign"><div class="sign-dot"></div>Culpabilisation — "c'est de ta faute si je suis comme ça"</div>
+            <div class="accordion-sign"><div class="sign-dot"></div>Alternance de moments très doux et de moments violents</div>
+            <div class="accordion-sign"><div class="sign-dot"></div>Remise en question permanente de sa propre réalité</div>
+          </div>
+          <div class="accordion-note">Quand on est sous emprise, on ne s'en rend souvent pas compte. C'est normal. Ce n'est pas ta faute.</div>
+        </div>
+      </div>
+
+      <div class="accordion-item">
+        <div class="accordion-header" onclick="toggleAccordion(this)">
+          <div class="accordion-question">Les cycles de la violence — pourquoi ça recommence ?</div>
+          <div class="accordion-arrow">▾</div>
+        </div>
+        <div class="accordion-body">
+          <div class="accordion-short">La violence conjugale suit souvent un cycle en 4 phases. Comprendre ce cycle aide à sortir de la confusion.</div>
+          <div class="accordion-long">
+            <p><strong>Phase 1 — La tension</strong> : L'atmosphère se tend. La victime marche sur des œufs, essaie d'éviter la crise.</p>
+            <p><strong>Phase 2 — L'explosion</strong> : La violence éclate — physique, verbale, psychologique ou sexuelle.</p>
+            <p><strong>Phase 3 — La réconciliation</strong> : L'agresseur s'excuse, promet de changer, est très attentionné. C'est la "lune de miel".</p>
+            <p><strong>Phase 4 — Le calme</strong> : Une période de relative tranquillité. La victime espère que ça a changé.</p>
+            <p>Puis le cycle recommence, souvent avec une violence qui s'intensifie au fil du temps.</p>
+          </div>
+          <div class="accordion-note">Ce cycle est bien documenté. Il ne change pas sans une aide professionnelle spécialisée.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RECONNAÎTRE -->
+    <div class="comprendre-category">
+      <div class="comprendre-cat-title">Reconnaître</div>
+
+      <div class="accordion-item">
+        <div class="accordion-header" onclick="toggleAccordion(this)">
+          <div class="accordion-question">Relation saine vs relation toxique — les différences</div>
+          <div class="accordion-arrow">▾</div>
+        </div>
+        <div class="accordion-body">
+          <div class="accordion-short">Dans une relation saine, les deux partenaires se respectent, communiquent librement et gardent leur indépendance.</div>
+          <div class="accordion-long"><p><strong>Relation saine :</strong></p></div>
+          <div class="accordion-signs">
+            <div class="accordion-sign"><div class="sign-dot"></div>Tu peux voir tes amis et ta famille librement</div>
+            <div class="accordion-sign"><div class="sign-dot"></div>Tu peux exprimer tes opinions sans avoir peur</div>
+            <div class="accordion-sign"><div class="sign-dot"></div>Les disputes se résolvent sans violence ni humiliation</div>
+            <div class="accordion-sign"><div class="sign-dot"></div>Tu te sens en sécurité physiquement et émotionnellement</div>
+            <div class="accordion-sign"><div class="sign-dot"></div>Tu gardes ta propre identité, tes passions, tes projets</div>
+          </div>
+          <div class="accordion-long"><p><strong>Relation toxique :</strong></p></div>
+          <div class="accordion-signs">
+            <div class="accordion-sign"><div class="sign-dot"></div>Tu t'éloignes progressivement de tes proches</div>
+            <div class="accordion-sign"><div class="sign-dot"></div>Tu surveilles tes mots pour ne pas "provoquer"</div>
+            <div class="accordion-sign"><div class="sign-dot"></div>Tu te sens responsable de l'humeur de l'autre</div>
+            <div class="accordion-sign"><div class="sign-dot"></div>Tu marches sur des œufs à la maison</div>
+            <div class="accordion-sign"><div class="sign-dot"></div>Tu t'oublies toi-même pour satisfaire l'autre</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item">
+        <div class="accordion-header" onclick="toggleAccordion(this)">
+          <div class="accordion-question">Dispute normale vs dispute toxique</div>
+          <div class="accordion-arrow">▾</div>
+        </div>
+        <div class="accordion-body">
+          <div class="accordion-short">Se disputer fait partie de toute relation. La question c'est : comment ça se passe, et qu'est-ce que ça laisse après ?</div>
+          <div class="accordion-long"><p><strong>Dispute normale :</strong></p></div>
+          <div class="accordion-signs">
+            <div class="accordion-sign"><div class="sign-dot"></div>On parle du problème — pas de l'autre en tant que personne</div>
+            <div class="accordion-sign"><div class="sign-dot"></div>On peut s'arrêter quand ça monte trop</div>
+            <div class="accordion-sign"><div class="sign-dot"></div>On cherche un compromis ou une solution</div>
+            <div class="accordion-sign"><div class="sign-dot"></div>Après, on se réconcilie sans rancœur profonde</div>
+          </div>
+          <div class="accordion-long"><p><strong>Dispute toxique :</strong></p></div>
+          <div class="accordion-signs">
+            <div class="accordion-sign"><div class="sign-dot"></div>Insultes, humiliations, attaques personnelles</div>
+            <div class="accordion-sign"><div class="sign-dot"></div>Tu n'as pas le droit de t'exprimer ou de partir</div>
+            <div class="accordion-sign"><div class="sign-dot"></div>Tu finis toujours par te sentir coupable, même sans l'être</div>
+            <div class="accordion-sign"><div class="sign-dot"></div>La violence — même verbale — apparaît régulièrement</div>
+            <div class="accordion-sign"><div class="sign-dot"></div>Tu as peur des réactions de l'autre</div>
+          </div>
+          <div class="accordion-note">Si tu as peur pendant une dispute, ce n'est plus une dispute normale.</div>
+        </div>
+      </div>
+
+      <div class="accordion-item">
+        <div class="accordion-header" onclick="toggleAccordion(this)">
+          <div class="accordion-question">Les différentes formes de violences conjugales</div>
+          <div class="accordion-arrow">▾</div>
+        </div>
+        <div class="accordion-body">
+          <div class="accordion-short">La violence ne se voit pas toujours. Elle peut être physique, psychologique, sexuelle, économique ou numérique.</div>
+          <div class="accordion-signs">
+            <div class="accordion-sign"><div class="sign-dot"></div><strong>Physique</strong> — coups, bousculades, séquestration</div>
+            <div class="accordion-sign"><div class="sign-dot"></div><strong>Psychologique</strong> — insultes, humiliations, menaces, gaslighting</div>
+            <div class="accordion-sign"><div class="sign-dot"></div><strong>Sexuelle</strong> — rapports imposés, contrainte, humiliation</div>
+            <div class="accordion-sign"><div class="sign-dot"></div><strong>Économique</strong> — contrôle de l'argent, interdiction de travailler</div>
+            <div class="accordion-sign"><div class="sign-dot"></div><strong>Numérique</strong> — surveillance du téléphone, réseaux sociaux, harcèlement en ligne</div>
+            <div class="accordion-sign"><div class="sign-dot"></div><strong>Administrative</strong> — contrôle des papiers, isolement administratif</div>
+          </div>
+          <div class="accordion-note">Toutes ces formes sont reconnues par la loi française et peuvent faire l'objet d'une plainte.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- IMPACT -->
+    <div class="comprendre-category">
+      <div class="comprendre-cat-title">Les impacts</div>
+
+      <div class="accordion-item">
+        <div class="accordion-header" onclick="toggleAccordion(this)">
+          <div class="accordion-question">Ce que les violences conjugales peuvent engendrer sur soi</div>
+          <div class="accordion-arrow">▾</div>
+        </div>
+        <div class="accordion-body">
+          <div class="accordion-short">Les violences conjugales laissent des traces invisibles mais réelles — sur le corps, la psyché, l'identité.</div>
+          <div class="accordion-signs">
+            <div class="accordion-sign"><div class="sign-dot"></div>Perte de confiance en soi et en son jugement</div>
+            <div class="accordion-sign"><div class="sign-dot"></div>Stress post-traumatique, cauchemars, hypervigilance</div>
+            <div class="accordion-sign"><div class="sign-dot"></div>Dépression, anxiété, sentiment de vide</div>
+            <div class="accordion-sign"><div class="sign-dot"></div>Difficulté à faire confiance aux autres</div>
+            <div class="accordion-sign"><div class="sign-dot"></div>Honte et culpabilité intégrées</div>
+            <div class="accordion-sign"><div class="sign-dot"></div>Problèmes physiques liés au stress chronique</div>
+          </div>
+          <div class="accordion-note">Ces séquelles sont normales et soignables. Un accompagnement psychologique peut faire toute la différence.</div>
+        </div>
+      </div>
+
+      <div class="accordion-item">
+        <div class="accordion-header" onclick="toggleAccordion(this)">
+          <div class="accordion-question">L'impact sur les enfants qui grandissent dans ce contexte</div>
+          <div class="accordion-arrow">▾</div>
+        </div>
+        <div class="accordion-body">
+          <div class="accordion-short">Les enfants témoins de violences conjugales sont des victimes directes, même sans subir de violence physique eux-mêmes.</div>
+          <div class="accordion-long">
+            <p>Un enfant qui grandit dans un foyer violent absorbe ce qu'il voit. Il apprend que la violence fait partie des relations. Cela peut impacter :</p>
+          </div>
+          <div class="accordion-signs">
+            <div class="accordion-sign"><div class="sign-dot"></div>Leur développement émotionnel et social</div>
+            <div class="accordion-sign"><div class="sign-dot"></div>Leurs résultats scolaires et leur concentration</div>
+            <div class="accordion-sign"><div class="sign-dot"></div>Leur rapport aux autres et à l'autorité</div>
+            <div class="accordion-sign"><div class="sign-dot"></div>Leur vision de ce qu'est une relation amoureuse</div>
+            <div class="accordion-sign"><div class="sign-dot"></div>Leur propre risque d'être victime ou auteur de violences à l'âge adulte</div>
+          </div>
+          <div class="accordion-note">Protéger les enfants de la violence, c'est aussi briser le cycle pour les générations futures. Le 119 peut vous orienter.</div>
+        </div>
+      </div>
+
+      <div class="accordion-item">
+        <div class="accordion-header" onclick="toggleAccordion(this)">
+          <div class="accordion-question">Comment en parler à ses enfants ?</div>
+          <div class="accordion-arrow">▾</div>
+        </div>
+        <div class="accordion-body">
+          <div class="accordion-short">Mettre des mots sur ce que l'enfant a vécu est essentiel. Le silence ne les protège pas — il les isole.</div>
+          <div class="accordion-long">
+            <p>Les enfants ont souvent compris bien plus qu'on ne le pense. Ne pas en parler crée de la confusion et de la honte.</p>
+            <p><strong>Quelques principes :</strong></p>
+          </div>
+          <div class="accordion-signs">
+            <div class="accordion-sign"><div class="sign-dot"></div>Adapter le langage à l'âge de l'enfant</div>
+            <div class="accordion-sign"><div class="sign-dot"></div>Lui dire clairement que ce n'est pas de sa faute</div>
+            <div class="accordion-sign"><div class="sign-dot"></div>Valider ses émotions sans les minimiser</div>
+            <div class="accordion-sign"><div class="sign-dot"></div>Ne pas le mettre en position de médiateur ou de confident</div>
+            <div class="accordion-sign"><div class="sign-dot"></div>L'encourager à parler à un adulte de confiance</div>
+          </div>
+          <div class="accordion-note">Des professionnels comme les psychologues scolaires peuvent accompagner les enfants gratuitement.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RECONSTRUCTION -->
+    <div class="comprendre-category">
+      <div class="comprendre-cat-title">La reconstruction</div>
+
+      <div class="accordion-item">
+        <div class="accordion-header" onclick="toggleAccordion(this)">
+          <div class="accordion-question">Après, c'est possible. Comment on se reconstruit ?</div>
+          <div class="accordion-arrow">▾</div>
+        </div>
+        <div class="accordion-body">
+          <div class="accordion-short">La reconstruction est possible. Ce n'est pas linéaire, ce n'est pas rapide, mais c'est réel.</div>
+          <div class="accordion-long">
+            <p>Sortir d'une relation violente c'est traverser un deuil complexe — celui de la relation, mais aussi d'une partie de soi-même. C'est normal de ressentir du vide, de la nostalgie, parfois même de manquer à l'agresseur.</p>
+            <p>La reconstruction passe souvent par :</p>
+          </div>
+          <div class="accordion-signs">
+            <div class="accordion-sign"><div class="sign-dot"></div>Accepter de ne pas aller bien tout de suite</div>
+            <div class="accordion-sign"><div class="sign-dot"></div>S'entourer de personnes bienveillantes</div>
+            <div class="accordion-sign"><div class="sign-dot"></div>Un accompagnement psychologique spécialisé</div>
+            <div class="accordion-sign"><div class="sign-dot"></div>Redécouvrir ses propres désirs, goûts, valeurs</div>
+            <div class="accordion-sign"><div class="sign-dot"></div>Apprendre à reconnaître les signaux d'alerte</div>
+            <div class="accordion-sign"><div class="sign-dot"></div>Se permettre d'avoir confiance à nouveau — progressivement</div>
+          </div>
+          <div class="accordion-note">Des milliers de personnes s'en sont sorties. Tu peux en faire partie.</div>
+        </div>
+      </div>
+
+      <div class="accordion-item">
+        <div class="accordion-header" onclick="toggleAccordion(this)">
+          <div class="accordion-question">Comment aider un·e proche qui vit des violences ?</div>
+          <div class="accordion-arrow">▾</div>
+        </div>
+        <div class="accordion-body">
+          <div class="accordion-short">La meilleure chose que tu puisses faire c'est être présent·e, sans juger, sans forcer.</div>
+          <div class="accordion-signs">
+            <div class="accordion-sign"><div class="sign-dot"></div>Écoute sans minimiser ni dramatiser</div>
+            <div class="accordion-sign"><div class="sign-dot"></div>Dis-lui clairement que tu es là, quoi qu'il arrive</div>
+            <div class="accordion-sign"><div class="sign-dot"></div>Ne la force pas à partir — ça peut la mettre en danger</div>
+            <div class="accordion-sign"><div class="sign-dot"></div>Aide-la à avoir un plan de sortie en sécurité</div>
+            <div class="accordion-sign"><div class="sign-dot"></div>Propose-lui d'appeler le 3919 ensemble</div>
+            <div class="accordion-sign"><div class="sign-dot"></div>Prends soin de toi aussi — accompagner est épuisant</div>
+          </div>
+          <div class="accordion-note">Tu ne peux pas la sauver à sa place. Mais ta présence peut lui sauver la vie.</div>
+        </div>
+      </div>
+
+      <div class="accordion-item">
+        <div class="accordion-header" onclick="toggleAccordion(this)">
+          <div class="accordion-question">Le gaslighting — qu'est-ce que c'est ?</div>
+          <div class="accordion-arrow">▾</div>
+        </div>
+        <div class="accordion-body">
+          <div class="accordion-short">Le gaslighting c'est quand l'agresseur te fait douter de ta propre réalité. "Tu es folle", "Ce n'est jamais arrivé", "Tu exagères toujours".</div>
+          <div class="accordion-long">
+            <p>C'est une forme de manipulation psychologique qui vise à te faire perdre confiance en ta propre perception. Tu finis par douter de tes souvenirs, de tes émotions, de ton jugement.</p>
+            <p><strong>Signes que tu subis du gaslighting :</strong></p>
+          </div>
+          <div class="accordion-signs">
+            <div class="accordion-sign"><div class="sign-dot"></div>Tu te demandes souvent si tu "exagères"</div>
+            <div class="accordion-sign"><div class="sign-dot"></div>Tu t'excuses constamment sans savoir pourquoi</div>
+            <div class="accordion-sign"><div class="sign-dot"></div>Tu as du mal à prendre des décisions simples</div>
+            <div class="accordion-sign"><div class="sign-dot"></div>Tu te sens "folle" ou "trop sensible" régulièrement</div>
+            <div class="accordion-sign"><div class="sign-dot"></div>Tu mentionnes des faits et on te dit que tu "inventes"</div>
+          </div>
+          <div class="accordion-note">Ta réalité est réelle. Tes émotions sont valides. Ne les laisse pas t'en convaincre autrement.</div>
+        </div>
+      </div>
+    </div>
+
+    
+    <!-- RECONSTRUCTION -->
+    <div class="comprendre-category">
+      <div class="comprendre-cat-title">Se reconstruire</div>
+
+      <div class="accordion-item">
+        <div class="accordion-header" onclick="toggleAccordion(this)">
+          <div class="accordion-question">Se reconstruire en tant qu'adulte — par où commencer ?</div>
+          <div class="accordion-arrow">▾</div>
+        </div>
+        <div class="accordion-body">
+          <div class="accordion-short">La reconstruction ne se fait pas seul·e. Il faut du temps, de la bienveillance envers soi, et souvent un accompagnement professionnel.</div>
+          <div class="accordion-signs">
+            <div class="accordion-sign"><div class="sign-dot"></div>Consulter un·e psychologue ou thérapeute spécialisé·e en traumatismes</div>
+            <div class="accordion-sign"><div class="sign-dot"></div>Rejoindre un groupe de parole — briser l'isolement est essentiel</div>
+            <div class="accordion-sign"><div class="sign-dot"></div>Reprendre contact progressivement avec ses proches de confiance</div>
+            <div class="accordion-sign"><div class="sign-dot"></div>Se fixer de petits objectifs concrets chaque semaine</div>
+            <div class="accordion-sign"><div class="sign-dot"></div>Apprendre à identifier et nommer ses émotions</div>
+            <div class="accordion-sign"><div class="sign-dot"></div>Pratiquer une activité douce — marche, yoga, natation</div>
+            <div class="accordion-sign"><div class="sign-dot"></div>Être patient·e avec soi-même — deux pas en avant, un en arrière est normal</div>
+          </div>
+          <div class="accordion-note">Un·e thérapeute spécialisé·e peut faire toute la différence. Le 3919 peut orienter vers des professionnels gratuits.</div>
+        </div>
+      </div>
+
+      <div class="accordion-item">
+        <div class="accordion-header" onclick="toggleAccordion(this)">
+          <div class="accordion-question">Aider un enfant à se reconstruire après avoir vécu des violences</div>
+          <div class="accordion-arrow">▾</div>
+        </div>
+        <div class="accordion-body">
+          <div class="accordion-short">Un enfant qui a grandi dans un foyer violent porte des blessures invisibles. Avec le bon accompagnement, il peut guérir.</div>
+          <div class="accordion-signs">
+            <div class="accordion-sign"><div class="sign-dot"></div>Consulter un pédopsychologue ou le psychologue scolaire (gratuit)</div>
+            <div class="accordion-sign"><div class="sign-dot"></div>Maintenir une routine stable et sécurisante au quotidien</div>
+            <div class="accordion-sign"><div class="sign-dot"></div>Lui dire clairement et régulièrement : ce n'est pas ta faute</div>
+            <div class="accordion-sign"><div class="sign-dot"></div>Le laisser exprimer ses émotions sans les minimiser</div>
+            <div class="accordion-sign"><div class="sign-dot"></div>Éviter de le mettre au courant des conflits légaux</div>
+            <div class="accordion-sign"><div class="sign-dot"></div>L'encourager à voir ses ami·es et à avoir des activités</div>
+            <div class="accordion-sign"><div class="sign-dot"></div>Être attentif·ve aux signaux : repli sur soi, agressivité, cauchemars</div>
+          </div>
+          <div class="accordion-note">Le psychologue scolaire est gratuit dans chaque établissement. Le 119 peut orienter vers des professionnels de l'enfance.</div>
+        </div>
+      </div>
+
+      <div class="accordion-item">
+        <div class="accordion-header" onclick="toggleAccordion(this)">
+          <div class="accordion-question">Pourquoi consulter un·e thérapeute ? Et comment en trouver un·e gratuitement ?</div>
+          <div class="accordion-arrow">▾</div>
+        </div>
+        <div class="accordion-body">
+          <div class="accordion-short">Un·e thérapeute spécialisé·e n'est pas un luxe. C'est souvent le maillon manquant pour vraiment guérir.</div>
+          <div class="accordion-long">
+            <p>Les violences laissent des traces que le temps seul ne suffit pas à effacer. Un·e thérapeute peut aider à :</p>
+          </div>
+          <div class="accordion-signs">
+            <div class="accordion-sign"><div class="sign-dot"></div>Comprendre et dénouer les mécanismes de l'emprise</div>
+            <div class="accordion-sign"><div class="sign-dot"></div>Traiter le stress post-traumatique (EMDR, TCC, thérapies corporelles)</div>
+            <div class="accordion-sign"><div class="sign-dot"></div>Reconstruire l'estime de soi progressivement</div>
+            <div class="accordion-sign"><div class="sign-dot"></div>Apprendre à faire confiance à nouveau</div>
+            <div class="accordion-sign"><div class="sign-dot"></div>Préparer de futures relations saines et équilibrées</div>
+          </div>
+          <div class="accordion-long"><p><strong>Comment trouver un·e thérapeute gratuit·e :</strong></p></div>
+          <div class="accordion-signs">
+            <div class="accordion-sign"><div class="sign-dot"></div>Le 3919 oriente vers des professionnels gratuits près de chez toi</div>
+            <div class="accordion-sign"><div class="sign-dot"></div>Les CPEF proposent des consultations gratuites</div>
+            <div class="accordion-sign"><div class="sign-dot"></div>Les CMP — accès gratuit sur ordonnance</div>
+            <div class="accordion-sign"><div class="sign-dot"></div>Les associations locales ont souvent des permanences psy gratuites</div>
+            <div class="accordion-sign"><div class="sign-dot"></div>MonPsy.sante.gouv.fr — 8 séances remboursées par an</div>
+          </div>
+          <div class="accordion-note">Tu mérites d'être accompagné·e. Demander de l'aide professionnelle est un acte de courage.</div>
+        </div>
+      </div>
+    </div>
+
+
+      <div class="accordion-item">
+        <div class="accordion-header" onclick="toggleAccordion(this)">
+          <div class="accordion-question">💰 Aides financières — je peux m'en sortir seul·e avec mes enfants ?</div>
+          <div class="accordion-arrow">▾</div>
+        </div>
+        <div class="accordion-body">
+          <div class="accordion-short">Oui. Tu as des droits. La peur de ne pas y arriver financièrement ne doit pas te retenir — des aides existent précisément pour ça.</div>
+
+          <div class="accordion-long"><p><strong>🆘 L'aide d'urgence CAF — spéciale victimes de violences conjugales</strong></p></div>
+          <div class="accordion-signs">
+            <div class="accordion-sign"><div class="sign-dot"></div>Disponible depuis décembre 2023 — pour toute victime, homme ou femme, avec ou sans enfants</div>
+            <div class="accordion-sign"><div class="sign-dot"></div>Entre <strong>243€ et 1 330€</strong> selon tes revenus et le nombre d'enfants</div>
+            <div class="accordion-sign"><div class="sign-dot"></div>Versée en moins de <strong>72 heures</strong> après la demande</div>
+            <div class="accordion-sign"><div class="sign-dot"></div>Non remboursable si tes revenus sont faibles — sinon c'est un prêt sans intérêts</div>
+            <div class="accordion-sign"><div class="sign-dot"></div>Condition : avoir un dépôt de plainte, une ordonnance de protection ou un signalement au procureur datant de moins de 12 mois</div>
+            <div class="accordion-sign"><div class="sign-dot"></div>Demande en ligne sur <strong>caf.fr</strong> > Mes démarches > Vie personnelle > Aide d'urgence violences conjugales</div>
+          </div>
+
+          <div class="accordion-long"><p><strong>📋 Aides pour les parents seuls :</strong></p></div>
+          <div class="accordion-signs">
+            <div class="accordion-sign"><div class="sign-dot"></div><strong>RSA majoré (parent isolé)</strong> — montant plus élevé si tu élèves seul·e un enfant</div>
+            <div class="accordion-sign"><div class="sign-dot"></div><strong>APL</strong> — aide au logement dès que tu as une nouvelle adresse</div>
+            <div class="accordion-sign"><div class="sign-dot"></div><strong>Allocations familiales + AEEH</strong> — pour chaque enfant à charge</div>
+            <div class="accordion-sign"><div class="sign-dot"></div><strong>Pension alimentaire</strong> — le juge aux affaires familiales peut la fixer en urgence, sans accord de l'autre parent</div>
+            <div class="accordion-sign"><div class="sign-dot"></div><strong>ARIPA</strong> — si l'autre parent ne paie pas, l'État te verse la pension et se retourne contre lui</div>
+            <div class="accordion-sign"><div class="sign-dot"></div><strong>Aide juridictionnelle</strong> — avocat gratuit ou à tarif réduit selon tes revenus</div>
+            <div class="accordion-sign"><div class="sign-dot"></div><strong>Hébergement d'urgence</strong> — des structures accueillent gratuitement les victimes avec enfants</div>
+          </div>
+
+          <div class="accordion-long"><p><strong>📊 La pension alimentaire — ce qu'il faut savoir :</strong></p></div>
+          <div class="accordion-signs">
+            <div class="accordion-sign"><div class="sign-dot"></div>Elle est <strong>revalorisée chaque année automatiquement</strong> selon l'indice des prix à la consommation (inflation)</div>
+            <div class="accordion-sign"><div class="sign-dot"></div>Elle peut être <strong>révisée à la hausse</strong> si les besoins de l'enfant augmentent ou si les revenus de l'autre parent augmentent</div>
+            <div class="accordion-sign"><div class="sign-dot"></div>Si l'autre parent ne paie pas : l'ARIPA avance les sommes et les récupère à sa place</div>
+            <div class="accordion-sign"><div class="sign-dot"></div>Simulateur officiel : <strong>pension-alimentaire.caf.fr</strong></div>
+          </div>
+
+          <div class="accordion-long"><p><strong>🧾 Avantages fiscaux pour les parents isolés :</strong></p></div>
+          <div class="accordion-signs">
+            <div class="accordion-sign"><div class="sign-dot"></div><strong>Demi-part supplémentaire</strong> — en tant que parent isolé, tu paies moins d'impôts</div>
+            <div class="accordion-sign"><div class="sign-dot"></div><strong>Case T à cocher</strong> sur ta déclaration d'impôts — "parent isolé" — ne pas l'oublier !</div>
+            <div class="accordion-sign"><div class="sign-dot"></div>La pension alimentaire reçue est à déclarer mais elle est souvent peu ou pas imposée selon tes revenus</div>
+            <div class="accordion-sign"><div class="sign-dot"></div>Crédit d'impôt pour les frais de garde d'enfants jusqu'à 6 ans</div>
+          </div>
+
+          <div class="accordion-long"><p><strong>🚀 Par où commencer maintenant :</strong></p></div>
+          <div class="accordion-signs">
+            <div class="accordion-sign"><div class="sign-dot"></div>Le <strong>3919</strong> oriente vers les assistantes sociales et toutes les aides disponibles</div>
+            <div class="accordion-sign"><div class="sign-dot"></div><strong>caf.fr</strong> — simule tes droits en 5 minutes avec le simulateur en ligne</div>
+            <div class="accordion-sign"><div class="sign-dot"></div>Le <strong>CCAS</strong> de ta mairie — aide alimentaire, mobilité, logement d'urgence</div>
+            <div class="accordion-sign"><div class="sign-dot"></div>Une <strong>assistante sociale</strong> peut faire le point complet sur tes droits gratuitement</div>
+          </div>
+
+          <div class="accordion-note">💜 Des milliers de parents seuls s'en sortent chaque année grâce à ces aides. Tu n'es pas seul·e face à ça — et tu as plus de droits que tu ne le crois.</div>
+        </div>
+      </div>
+
+      <div class="accordion-item">
+        <div class="accordion-header" onclick="toggleAccordion(this)">
+          <div class="accordion-question">🤝 Contacter une association — pourquoi et comment ?</div>
+          <div class="accordion-arrow">▾</div>
+        </div>
+        <div class="accordion-body">
+          <div class="accordion-short">Une association spécialisée dans les violences conjugales peut tout changer. C'est gratuit, confidentiel, et elles connaissent exactement ta situation.</div>
+          <div class="accordion-long"><p><strong>Ce qu'une association peut faire pour toi, concrètement :</strong></p></div>
+          <div class="accordion-signs">
+            <div class="accordion-sign"><div class="sign-dot"></div>T'écouter sans te juger — des personnes formées, souvent elles-mêmes concernées</div>
+            <div class="accordion-sign"><div class="sign-dot"></div>T'accompagner dans tes démarches légales — plainte, ordonnance de protection, divorce</div>
+            <div class="accordion-sign"><div class="sign-dot"></div>T'orienter vers un hébergement d'urgence si tu dois partir rapidement</div>
+            <div class="accordion-sign"><div class="sign-dot"></div>T'aider à accéder aux aides financières et sociales</div>
+            <div class="accordion-sign"><div class="sign-dot"></div>Proposer un suivi psychologique gratuit ou à tarif réduit</div>
+            <div class="accordion-sign"><div class="sign-dot"></div>T'accompagner physiquement si tu as peur de faire des démarches seul·e</div>
+          </div>
+          <div class="accordion-long"><p><strong>Comment trouver une association près de chez toi :</strong></p></div>
+          <div class="accordion-signs">
+            <div class="accordion-sign"><div class="sign-dot"></div>Appelle le <strong>3919</strong> — ils te mettent en contact avec les associations locales</div>
+            <div class="accordion-sign"><div class="sign-dot"></div>Tape "association violences conjugales + ta ville" sur Google</div>
+            <div class="accordion-sign"><div class="sign-dot"></div>Rends-toi directement dans une association — pas besoin de rendez-vous en urgence</div>
+            <div class="accordion-sign"><div class="sign-dot"></div>Ton médecin traitant peut aussi t'orienter vers les bonnes structures</div>
+          </div>
+          <div class="accordion-note">Tu n'as pas à tout porter seul·e. Ces associations existent précisément pour toi — elles ont vu des centaines de situations comme la tienne et elles savent comment aider.</div>
+        </div>
+      </div>
+
+<div class="legal-note">
+      Ce contenu est informatif et ne remplace pas un accompagnement professionnel.<br>
+      Pour une aide personnalisée : <strong>3919</strong> (gratuit, 24h/24)
+    </div>
+  </div></div>
+</div>
+
+<!-- ════ 04 — BOUTIQUE ════ -->
+<div id="boutique" class="page">
+  <div class="page-band"></div>
+  <div class="page-wrap"><div class="inner">
+    <p class="eyebrow">Le projet</p>
+    <h2 class="p-title">Manatoa,<br><em>c'est quoi ?</em></h2>
+    <p class="p-intro">Une marque engagée, fondée par une maman solo d'origine tahitienne, survivante de violences conjugales. Chaque produit soutient directement une association d'aide aux victimes.</p>
+    <div style="background:linear-gradient(135deg,var(--gold-p),var(--rose-p));border:1px solid var(--line);border-radius:16px;padding:18px 20px;margin-bottom:18px">
+      <p style="font-family:'Playfair Display',serif;font-size:16px;font-weight:700;color:var(--ink);margin-bottom:8px">💡 Comment ça marche ?</p>
+      <p style="font-size:13px;color:var(--muted);line-height:1.7">Chaque vêtement et basket Manatoa porte un QR code. N'importe qui peut le scanner — victime, témoin, ou passant — et accéder à ce site de soutien gratuitement. <strong style="color:var(--ink2)">Porter Manatoa, c'est porter une main tendue invisible.</strong></p>
+    </div>
+    <div class="boutique-hero">
+      <div class="boutique-title">🌿 La Boutique Manatoa</div>
+      <div class="boutique-sub">Baskets personnalisables · Sweats · Tee-shirts<br>QR code protecteur inclus sur chaque pièce</div>
+      <a href="https://manatoa87.com/" target="_blank" class="boutique-btn">Voir tous les produits →</a>
+    </div>
+    <div class="impact-grid">
+      <div class="impact-card"><div class="impact-n">10€</div><div class="impact-l">reversés à une association d'aide aux victimes par vente</div></div>
+      <div class="impact-card"><div class="impact-n">3919</div><div class="impact-l">accessible via le QR code</div></div>
+      <div class="impact-card"><div class="impact-n" id="impactMsgs">0</div><div class="impact-l">messages d'espoir publiés</div></div>
+      <div class="impact-card"><div class="impact-n">∞</div><div class="impact-l">vies qui peuvent changer</div></div>
+    </div>
+    <div class="mission-card">
+      <p class="eyebrow">Notre mission</p>
+      <h3 style="font-family:'Playfair Display',serif;font-size:20px;font-weight:700;color:var(--ink);margin:10px 0">Chaque achat <span style="background:linear-gradient(135deg,var(--gold),var(--rose));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">compte vraiment</span></h3>
+      <p style="font-size:13px;color:var(--muted);line-height:1.7">Manatoa finance directement une association qui accompagne les victimes de violences conjugales — avec écoute, protection et dignité.</p>
+      <div class="mission-quote">
+        <div class="mq-mark">«</div>
+        <p class="mq-txt">Un vêtement, une basket — un symbole de résilience. Bien plus qu'un simple produit : en le portant, tu tends une main invisible à ceux qui en ont besoin.</p>
+        <p class="mq-auth">La fondatrice de Manatoa</p>
+      </div>
+    </div>
+  </div></div>
+</div>
+
+<div class="toast" id="toastEl"></div>
+
+<script>
+// ── Mots du jour ──
+const MOTS=["Tu n'as pas à traverser ça seul·e. Des gens que tu ne connais pas encore pensent à toi et te soutiennent.","Ta douleur est réelle. Ta force l'est aussi — même si tu ne la vois pas encore.","Chaque journée difficile traversée est une preuve de ton courage.","Tu mérites d'être en sécurité, d'être aimé·e, d'être respecté·e.","Demander de l'aide n'est pas une faiblesse. C'est l'acte le plus courageux qui soit.","Quelque part, quelqu'un pense à toi et espère que tu vas bien.","Ta vie a de la valeur. Tu as de la valeur. N'oublie jamais ça."];
+function getMotDuJour(){const el=document.getElementById('motDuJour');if(el)el.textContent=MOTS[new Date().getDate()%MOTS.length]}
+
+// ── Messages ──
+const DEFAULT_MSGS=["Ce que tu traverses est réel. Ta douleur est réelle. Et ta force aussi — même si tu ne la vois pas encore.","Tu mérites d'être en sécurité. Tu mérites d'être aimé·e. N'oublie jamais ça.","Je ne te connais pas, mais je pense à toi. Quelque part, quelqu'un porte Manatoa en pensant à des gens comme toi.","Même dans le silence le plus lourd, tu n'es pas seul·e. On est là.","Chaque journée difficile que tu traverses est une preuve de ta force.","Tu n'as pas à avoir honte de ce que tu vis. Demander de l'aide, c'est le plus grand acte de courage.","Je m'en suis sortie. Aujourd'hui j'ai une vie que j'aurais jamais cru possible. Tu peux y arriver aussi.","Il y a eu un avant et un après. L'après est plus beau que tout ce que j'imaginais."];
+function getMsgs(){try{const s=localStorage.getItem('manatoa_f3');return s?JSON.parse(s):[...DEFAULT_MSGS]}catch(e){return[...DEFAULT_MSGS]}}
+function saveMsgs(m){try{localStorage.setItem('manatoa_f3',JSON.stringify(m))}catch(e){}}
+
+// ── Proches ──
+function getContacts(){try{const s=localStorage.getItem('manatoa_contacts');return s?JSON.parse(s):[]}catch(e){return[]}}
+function saveContacts(c){try{localStorage.setItem('manatoa_contacts',JSON.stringify(c))}catch(e){}}
+function renderContacts(listId){
+  const list=document.getElementById(listId);if(!list)return;
+  const contacts=getContacts();
+  if(contacts.length===0){list.innerHTML='<p style="font-size:12px;color:var(--muted);text-align:center;padding:6px 0;margin-bottom:10px">Aucun proche enregistré</p>';return}
+  list.innerHTML=contacts.map((c,i)=>`<div class="contact-item"><div class="contact-info"><div class="contact-name">${c.name}</div><div class="contact-num">${c.num}</div></div><div class="contact-actions"><button class="contact-call" onclick="alertContact(${i})">Alerter</button><button class="contact-del" onclick="deleteContact(${i},'${listId}')">✕</button></div></div>`).join('');
+}
+function addContact(){
+  const n=document.getElementById('contactName').value.trim(),nu=document.getElementById('contactNum').value.trim();
+  if(!n||!nu){toast('Entre un prénom et un numéro');return}
+  const c=getContacts();c.push({name:n,num:nu});saveContacts(c);
+  document.getElementById('contactName').value='';document.getElementById('contactNum').value='';
+  renderContacts('contactList');toast(`✅ ${n} ajouté`);
+}
+function addContactU(){
+  const n=document.getElementById('contactNameU').value.trim(),nu=document.getElementById('contactNumU').value.trim();
+  if(!n||!nu){toast('Entre un prénom et un numéro');return}
+  const c=getContacts();c.push({name:n,num:nu});saveContacts(c);
+  document.getElementById('contactNameU').value='';document.getElementById('contactNumU').value='';
+  renderContacts('contactListUnsafe');toast(`✅ ${n} ajouté`);
+}
+function deleteContact(i,listId){const c=getContacts();c.splice(i,1);saveContacts(c);renderContacts(listId)}
+function alertContact(i){
+  const c=getContacts()[i];
+  const msg=encodeURIComponent(`🆘 J'ai besoin d'aide. Je ne suis pas en sécurité en ce moment. Merci de me contacter dès que possible.`);
+  window.location.href=`sms:${c.num}?body=${msg}`;
+}
+
+// ── Guide témoin ──
+const TEMOIN_DATA={
+  signal:{title:"Tu as vu le Signal d'Alerte — voici quoi faire",steps:[
+    "Reste calme, ne montre pas que tu as compris devant l'agresseur",
+    "Trouve un prétexte discret pour t'éloigner avec la personne",
+    "À l'abri : demande-lui discrètement si elle a besoin d'aide",
+    "Si elle confirme : appelle le 17 ou aide-la à quitter les lieux",
+    "Si tu ne peux pas l'approcher : appelle le 17 et décris la situation",
+    "Ne confronte jamais l'agresseur — ta sécurité et la sienne sont prioritaires"
+  ]},
+  physique:{title:"Tu as vu des signes de violences physiques",steps:["Ne confronte pas l'agresseur — ta sécurité est prioritaire","Si la personne est en danger immédiat : appelle le 17","Parle discrètement à la victime si c'est possible et sécurisé","Appelle le 3919 pour avoir des conseils adaptés à la situation","Témoigne si un signalement officiel est fait — ton témoignage compte"]},
+  controle:{title:"Tu observes des comportements de contrôle",steps:["Note ce que tu observes (dates, comportements) sans intervenir directement","Sois présent·e et disponible pour la victime sans la presser","Informe-toi au 3919 — ils conseillent aussi les proches","Propose ton aide concrète : écoute, hébergement temporaire","Respecte son rythme — la victime doit décider elle-même de partir"]},
+  enfant:{title:"Un enfant semble en danger",steps:["Appelle le 119 (Allô Enfance en Danger) — gratuit, anonyme, confidentiel","Tu n'as pas besoin de certitude pour signaler — le doute suffit","Des professionnels évalueront la situation — tu ne décides pas seul·e","Ne confronte pas les parents si tu penses que ça met l'enfant en danger","Ton signalement peut sauver une vie"]},
+  voisin:{title:"Tu entends des cris chez un voisin",steps:["Si danger immédiat (cris de détresse, violence physique) : appelle le 17","Frappe à la porte en disant que tu as entendu du bruit — sans accuser","Si pas de réponse ou si tu as peur : appelle le 17 ou le gardien","Parle à d'autres voisins pour vous coordonner discrètement","Signale au 3919 si ça se répète régulièrement"]}
+};
+function showTemoin(type){
+  const d=TEMOIN_DATA[type];
+  const r=document.getElementById('temoinResult');
+  r.innerHTML=`<div class="temoin-result-title">${d.title}</div>${d.steps.map((s,i)=>`<div class="temoin-step"><div class="temoin-step-num">${i+1}</div><div>${s}</div></div>`).join('')}<div style="margin-top:12px;padding:10px 12px;background:rgba(255,255,255,.6);border-radius:8px;font-size:12px;color:var(--muted);line-height:1.6">💜 Pour aller plus loin : <strong>3919</strong> (gratuit) ou <strong>17</strong> (urgence)</div>`;
+  r.classList.add('show');
+  setTimeout(()=>r.scrollIntoView({behavior:'smooth',block:'nearest'}),100);
+}
+
+// ── Plan sécurité ──
+let planAnswers={};
+function selectPlan(q,ans,e){
+  planAnswers[q]=ans;
+  const card=e.target.closest('.plan-card');
+  card.querySelectorAll('.plan-option').forEach(o=>o.classList.remove('selected'));
+  e.target.classList.add('selected');
+  if(q==='q1')document.getElementById('planQ2').style.display='block';
+  if(q==='q2')document.getElementById('planQ3').style.display='block';
+  if(q==='q3')generatePlan();
+}
+function generatePlan(){
+  const vit=planAnswers.q1==='oui',enfants=planAnswers.q2==='oui',proche=planAnswers.q3==='oui';
+  let steps=[];
+  if(vit){
+    steps.push("Prépare un sac d'urgence discret : documents importants, médicaments, vêtements, argent liquide");
+    steps.push("Mémorise un numéro de secours que tu peux composer rapidement");
+    if(enfants)steps.push("Explique à tes enfants un code secret pour qu'ils sachent quand partir avec toi");
+    if(proche)steps.push("Informe ton proche de confiance — il peut t'héberger en urgence");
+    else steps.push("Appelle le 3919 pour trouver un hébergement d'urgence près de chez toi");
+    steps.push("Identifie à l'avance un lieu sûr : famille, ami·e, hôtel, centre d'hébergement");
+  } else {
+    steps.push("Bloque ou limite le contact sur tous tes réseaux et ton téléphone");
+    if(proche)steps.push("Ton proche peut t'accompagner lors des rencontres obligatoires");
+    steps.push("Dépose une main courante ou une plainte au commissariat");
+    steps.push("Contacte le 3919 pour être accompagné·e dans tes démarches légales");
+  }
+  steps.push("Sauvegarde des preuves : photos, messages, certificats médicaux");
+  steps.push("Le 3919 peut te mettre en contact avec une assistante sociale gratuitement");
+  const r=document.getElementById('planResult');
+  r.innerHTML=`<div class="plan-result-title">✦ Ton plan personnalisé</div>${steps.map((s,i)=>`<div class="plan-step"><div class="plan-step-num">${i+1}</div><div>${s}</div></div>`).join('')}<div style="margin-top:14px;padding:12px 14px;background:rgba(255,255,255,.6);border-radius:12px;font-size:12px;color:var(--muted);line-height:1.6">💜 Ce plan est un point de départ. Le <strong>3919</strong> peut t'aider à l'adapter à ta situation exacte.</div>`;
+  r.classList.add('show');
+  setTimeout(()=>r.scrollIntoView({behavior:'smooth',block:'nearest'}),100);
+}
+
+// ── Accordéon ──
+function toggleAccordion(header){
+  const item=header.parentElement;
+  const isOpen=item.classList.contains('open');
+  document.querySelectorAll('.accordion-item.open').forEach(i=>{if(i!==item)i.classList.remove('open')});
+  item.classList.toggle('open',!isOpen);
+  if(!isOpen)setTimeout(()=>header.scrollIntoView({behavior:'smooth',block:'nearest'}),100);
+}
+
+// ── Respiration ──
+let breathInterval=null,breathPhase='idle',breathSeconds=4;
+function toggleBreath(){
+  const btn=document.getElementById('breathBtn');
+  if(breathInterval){
+    clearInterval(breathInterval);breathInterval=null;
+    document.getElementById('breathCircle').className='breath-circle';
+    document.getElementById('breathInstruction').textContent='Prêt·e ?';
+    document.getElementById('breathCount').textContent='4';
+    btn.textContent='Commencer';
+  } else {
+    btn.textContent='Arrêter';
+    breathPhase='inhale';breathSeconds=4;
+    document.getElementById('breathInstruction').textContent='Inspire…';
+    document.getElementById('breathCircle').className='breath-circle inhale';
+    document.getElementById('breathCount').textContent=4;
+    breathInterval=setInterval(()=>{
+      breathSeconds--;document.getElementById('breathCount').textContent=breathSeconds;
+      if(breathSeconds<=0){
+        if(breathPhase==='inhale'){breathPhase='exhale';breathSeconds=4;document.getElementById('breathInstruction').textContent='Expire doucement…';document.getElementById('breathCircle').className='breath-circle exhale'}
+        else{breathPhase='inhale';breathSeconds=4;document.getElementById('breathInstruction').textContent='Inspire…';document.getElementById('breathCircle').className='breath-circle inhale'}
+      }
+    },1000);
+  }
+}
+
+// ── Filtre & messages ──
+const BAD=['haine','tuer','mort','suicide','nul','inutile','idiot','con ','merde','putain'];
+function filterMsg(t){const l=t.toLowerCase();for(const w of BAD)if(l.includes(w))return false;return t.length>=10}
+async function renderMsgs(listId,countId){
+  const msgs = await getMsgsFromAPI();
+  const list=document.getElementById(listId);
+  const count=document.getElementById(countId);
+  if(count)count.textContent=msgs.length+' messages';
+  updateCounts(msgs.length);
+  if(!list)return;
+  const shuffled=[...msgs].sort(()=>Math.random()-.5).slice(0,6);
+  list.innerHTML=shuffled.map((m,i)=>`<div class="msg-card" style="animation-delay:${i*.07}s"><div class="msg-quote">«</div><p class="msg-text">${m}</p><div class="msg-meta"><div class="msg-dot"></div>Porteur·euse Manatoa · Anonyme</div></div>`).join('');
+}
+function updateCounts(n){['msgCount','impactMsgs'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=n})}
+
+// ── Mode discret ──
+function enterDiscret(){document.body.classList.add('discret')}
+function exitDiscret(){document.body.classList.remove('discret')}
+
+// ── Navigation ──
+function go(id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  document.getElementById('back').classList.add('show');
+  if(id==='support'){renderMsgs('supportMsgsList','supportMsgCount');renderContacts('contactList')}
+  if(id==='give')renderMsgs('giveMsgsList','giveMsgCount');
+  if(id==='unsafe')renderContacts('contactListUnsafe');
+  if(breathInterval&&id!=='support'){clearInterval(breathInterval);breathInterval=null;document.getElementById('breathBtn').textContent='Commencer';document.getElementById('breathCircle').className='breath-circle';document.getElementById('breathInstruction').textContent='Prêt·e ?';document.getElementById('breathCount').textContent='4'}
+  window.scrollTo(0,0);
+}
+function goHome(){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById('home').classList.add('active');
+  document.getElementById('back').classList.remove('show');
+  updateCounts(getMsgs().length);
+  window.scrollTo(0,0);
+}
+function setTab(btn,ph){document.querySelectorAll('.wtab').forEach(t=>t.classList.remove('on'));btn.classList.add('on');document.getElementById('writeArea').placeholder=ph}
+async function submitMsg(){
+  const v=document.getElementById('writeArea').value.trim();
+  if(!v||v.length<10){toast('Écris quelque chose de plus long ✨');return}
+  if(!filterMsg(v)){toast('✨ Reformule avec bienveillance — certains mots ne peuvent pas passer.');return}
+  const btn=document.getElementById('writeBtn');
+  btn.disabled=true;btn.innerHTML='<span>Envoi en cours…</span>';
+  try {
+    const res = await fetch('/api/messages', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({message: v})
+    });
+    const data = await res.json();
+    if (data.ok) {
+      document.getElementById('writeForm').style.display='none';
+      document.getElementById('successCard').classList.add('show');
+    } else {
+      btn.disabled=false;btn.innerHTML='<span>Envoyer mon message</span><span>→</span>';
+      toast('Une erreur est survenue, réessaie.');
+    }
+  } catch(e) {
+    btn.disabled=false;btn.innerHTML='<span>Envoyer mon message</span><span>→</span>';
+    toast('Erreur de connexion, réessaie.');
+  }
+}
+function toast(msg){const t=document.getElementById('toastEl');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3500)}
+
+getMotDuJour();
+updateCounts(getMsgs().length);
+</script>
+
+<script>
+
+// ══════════════════════════════════════
+// TRADUCTIONS COMPLÈTES
+// ══════════════════════════════════════
+const T = {
+  fr:{
+    tagline:"Fondée par une maman solo, d'origine tahitienne,<br><em>survivante de plusieurs années de violences conjugales.</em><br>Qui soutient une association qui aide les victimes de violences conjugales.",
+    home_title:"Aujourd'hui,<br>tu es <strong>plutôt…</strong>",
+    home_sub:"Ce site existe pour toi — que tu traverses quelque chose, que tu aies vu quelque chose, ou que tu veuilles aider.",
+    nav1_label:"J'encourage / Je témoigne", nav1_desc:"Laisser un mot, une lettre, ou agir en tant que témoin",
+    nav2_label:"J'ai besoin de soutien", nav2_desc:"Mots, exercices, aide, numéros et plan personnalisé",
+    nav3_label:"Comprendre", nav3_desc:"L'emprise, les signes, les cycles, la reconstruction",
+    nav4_label:"Découvrir Manatoa", nav4_desc:"La boutique, la mission, l'association",
+    stat1:"Messages d'espoir", stat2:"Reversés par vente", stat3:"QR Protecteur",
+    give_eyebrow:"Agir ensemble", give_title:"Chaque geste<br><em>compte.</em>",
+    give_intro:"Que tu veuilles encourager, partager ton expérience, ou agir en tant que témoin — ta voix a de la valeur.",
+    tab1:"Un mot", tab2:"Une lettre", tab3:"J'en suis sorti·e",
+    tab1_ph:"Un mot pour toi…", tab2_ph:"Chère personne,\n\n", tab3_ph:"Je m'en suis sorti·e et je veux vous dire que…",
+    anon:"100% anonyme. Filtré automatiquement. Vérifié avant publication.",
+    send:"Envoyer mon message", success_title:"Merci du fond du cœur.",
+    success_txt:"Ton message va être lu avec soin. Bientôt quelqu'un qui en a besoin le lira.",
+    witness_div:"Je suis témoin — quoi faire ?",
+    msgs_title:"💛 Mots d'espoir", msgs_sub:"Écrits anonymement par des gens qui tiennent à toi",
+    support_eyebrow:"Pour toi", support_title:"Tu n'es pas<br><em>seul·e.</em>",
+    support_intro:"Des gens ont laissé des mots pour toi. Et des professionnels sont là, maintenant, gratuitement.",
+    breath_div:"Exercice de respiration", breath_title:"🌬️ Respiration apaisante",
+    breath_sub:"Si tu te sens submergé·e, commence par respirer.",
+    breath_ready:"Prêt·e ?", breath_start:"Commencer", breath_stop:"Arrêter",
+    breath_inhale:"Inspire…", breath_exhale:"Expire doucement…",
+    nums_div:"Numéros d'aide — Gratuits",
+    unsafe_div:"Je ne suis pas en sécurité", urg_title:"Je ne suis pas en sécurité",
+    urg_sub:"Tu n'es pas seul·e. Voici quoi faire maintenant.", urg_btn:"Voir les étapes →",
+    contacts_div:"Alerter un proche", contacts_title:"🔔 Mes proches de confiance",
+    contacts_sub:"Ami·e, famille, thérapeute... En cas de danger, ils reçoivent un SMS en un clic.",
+    contact_ph:"Prénom", add_contact:"+ Ajouter ce proche",
+    unsafe_eyebrow:"Aide immédiate", unsafe_title:"Respire.<br><em>On est là.</em>",
+    unsafe_intro:"Tu n'es pas seul·e. Voici exactement quoi faire, étape par étape.",
+    remember_label:"Rappelle-toi :", remember_txt:"Tu mérites d'être en sécurité. Ce n'est pas ta faute.",
+    plan_div:"Mon plan de sécurité",
+    plan_q1:"Tu vis avec la personne qui te fait du mal ?",
+    plan_q1y:"Oui, on vit ensemble", plan_q1n:"Non, on ne vit pas ensemble",
+    plan_q2:"Tu as des enfants avec toi ?", plan_q2y:"Oui", plan_q2n:"Non",
+    plan_q3:"Tu as un proche de confiance ?",
+    plan_q3y:"Oui, j'ai quelqu'un", plan_q3n:"Non, je suis isolé·e",
+    comprendre_eyebrow:"Comprendre", comprendre_title:"Mettre des mots<br><em>sur ce qui arrive.</em>",
+    comprendre_intro:"Comprendre c'est déjà reprendre du pouvoir. Ces réponses sont pour toi.",
+    legal:"Ce contenu est informatif et ne remplace pas un accompagnement professionnel.",
+    boutique_eyebrow:"Le projet", boutique_title:"Manatoa,<br><em>c'est quoi ?</em>",
+    boutique_intro:"Une marque engagée, fondée par une maman solo d'origine tahitienne, survivante de violences conjugales. Chaque produit soutient directement une association d'aide aux victimes.",
+    how_tit:"💡 Comment ça marche ?",
+    how_txt:"Chaque vêtement et basket Manatoa porte un QR code. N'importe qui peut le scanner et accéder à ce site gratuitement. Porter Manatoa, c'est porter une main tendue invisible.",
+    shop_title:"🌿 La Boutique Manatoa",
+    shop_sub:"Baskets personnalisables · Sweats · Tee-shirts\nQR code protecteur inclus sur chaque pièce",
+    shop_btn:"Voir tous les produits →",
+    impact1:"reversés à une association d'aide par vente", impact2:"messages d'espoir publiés",
+    impact3:"vies qui peuvent changer", impact4:"QR code protecteur",
+    mission_eyebrow:"Notre mission",
+    mission_txt:"Manatoa finance directement une association qui accompagne les victimes de violences conjugales — avec écoute, protection et dignité.",
+    quote:"Un vêtement, une basket — un symbole de résilience. Bien plus qu'un simple produit : en le portant, tu tends une main invisible à ceux qui en ont besoin.",
+    quote_auth:"La fondatrice de Manatoa",
+    mots:["Tu n'as pas à traverser ça seul·e. Des gens que tu ne connais pas encore pensent à toi.","Ta douleur est réelle. Ta force aussi — même si tu ne la vois pas encore.","Chaque journée difficile traversée est une preuve de ton courage.","Tu mérites d'être en sécurité, d'être aimé·e et respecté·e.","Demander de l'aide n'est pas une faiblesse. C'est l'acte le plus courageux qui soit.","Quelque part, quelqu'un pense à toi et espère que tu vas bien.","Ta vie a de la valeur. Tu as de la valeur. N'oublie jamais ça."]
+  },
+  en:{
+    tagline:"Founded by a single mother of Tahitian origin,<br><em>survivor of years of domestic violence.</em><br>Supporting an association helping victims of domestic violence.",
+    home_title:"Today,<br>you are <strong>here because…</strong>",
+    home_sub:"This site exists for you — whether you're going through something, witnessed something, or want to help.",
+    nav1_label:"I encourage / I witness", nav1_desc:"Leave a word, a letter, or act as a witness",
+    nav2_label:"I need support", nav2_desc:"Words, exercises, help, numbers and personal plan",
+    nav3_label:"Understand", nav3_desc:"Coercive control, signs, cycles, recovery",
+    nav4_label:"Discover Manatoa", nav4_desc:"The shop, the mission, the association",
+    stat1:"Messages of hope", stat2:"Donated per sale", stat3:"Protective QR",
+    give_eyebrow:"Act together", give_title:"Every gesture<br><em>matters.</em>",
+    give_intro:"Whether you want to encourage, share your experience, or act as a witness — your voice has value.",
+    tab1:"A word", tab2:"A letter", tab3:"I made it out",
+    tab1_ph:"A word for you…", tab2_ph:"Dear person,\n\n", tab3_ph:"I made it out and I want you to know that…",
+    anon:"100% anonymous. Auto-filtered. Reviewed before publication.",
+    send:"Send my message", success_title:"Thank you from the bottom of my heart.",
+    success_txt:"Your message will be read carefully. Soon someone who needs it will read it.",
+    witness_div:"I am a witness — what should I do?",
+    msgs_title:"💛 Words of hope", msgs_sub:"Written anonymously by people who care about you",
+    support_eyebrow:"For you", support_title:"You are not<br><em>alone.</em>",
+    support_intro:"People have left words for you. And professionals are available now, for free.",
+    breath_div:"Breathing exercise", breath_title:"🌬️ Soothing breath",
+    breath_sub:"If you feel overwhelmed, start by breathing with me.",
+    breath_ready:"Ready?", breath_start:"Start", breath_stop:"Stop",
+    breath_inhale:"Breathe in…", breath_exhale:"Breathe out slowly…",
+    nums_div:"Helplines — Free",
+    unsafe_div:"I am not safe", urg_title:"I am not safe",
+    urg_sub:"You are not alone. Here is what to do right now.", urg_btn:"See the steps →",
+    contacts_div:"Alert a trusted person", contacts_title:"🔔 My trusted contacts",
+    contacts_sub:"Friend, family, therapist... In danger, they receive a text in one tap.",
+    contact_ph:"First name", add_contact:"+ Add this contact",
+    unsafe_eyebrow:"Immediate help", unsafe_title:"Breathe.<br><em>We are here.</em>",
+    unsafe_intro:"You are not alone. Here is exactly what to do, step by step.",
+    remember_label:"Remember:", remember_txt:"You deserve to be safe. This is not your fault.",
+    plan_div:"My safety plan",
+    plan_q1:"Do you live with the person hurting you?",
+    plan_q1y:"Yes, we live together", plan_q1n:"No, we don't live together",
+    plan_q2:"Do you have children with you?", plan_q2y:"Yes", plan_q2n:"No",
+    plan_q3:"Do you have a trusted person you can turn to?",
+    plan_q3y:"Yes, I have someone", plan_q3n:"No, I feel isolated",
+    comprendre_eyebrow:"Understand", comprendre_title:"Putting words<br><em>to what is happening.</em>",
+    comprendre_intro:"Understanding is already reclaiming power. These answers are for you.",
+    legal:"This content is informational and does not replace professional support.",
+    boutique_eyebrow:"The project", boutique_title:"Manatoa,<br><em>what is it?</em>",
+    boutique_intro:"An engaged brand, founded by a single mother of Tahitian origin, survivor of domestic violence. Every product directly supports a victim assistance association.",
+    how_tit:"💡 How does it work?",
+    how_txt:"Every Manatoa garment and trainer carries a QR code. Anyone can scan it and access this support site for free. Wearing Manatoa means carrying an invisible helping hand.",
+    shop_title:"🌿 The Manatoa Shop",
+    shop_sub:"Customisable trainers · Sweatshirts · T-shirts\nProtective QR code on every item",
+    shop_btn:"See all products →",
+    impact1:"donated to a victim association per sale", impact2:"messages of hope published",
+    impact3:"lives that can change", impact4:"protective QR code",
+    mission_eyebrow:"Our mission",
+    mission_txt:"Manatoa directly funds an association that supports victims of domestic violence — with listening, protection and dignity.",
+    quote:"A garment, a trainer — a symbol of resilience. Much more than a simple product: by wearing it, you extend an invisible hand to those who need it.",
+    quote_auth:"The founder of Manatoa",
+    mots:["You don't have to go through this alone. People you haven't met yet are thinking of you.","Your pain is real. Your strength too — even if you can't see it yet.","Every difficult day you get through is proof of your courage.","You deserve to be safe, loved and respected.","Asking for help is not weakness. It is the most courageous act of all.","Somewhere, someone is thinking of you and hoping you are okay.","Your life has value. You have value. Never forget that."]
+  },
+  es:{
+    tagline:"Fundada por una madre soltera de origen tahitiano,<br><em>superviviente de años de violencia doméstica.</em><br>Apoyando una asociación de ayuda a las víctimas.",
+    home_title:"Hoy,<br>estás aquí <strong>porque…</strong>",
+    home_sub:"Este sitio existe para ti — tanto si estás pasando algo, como si has visto algo, o si quieres ayudar.",
+    nav1_label:"Animo / Soy testigo", nav1_desc:"Dejar una palabra, carta o actuar como testigo",
+    nav2_label:"Necesito apoyo", nav2_desc:"Palabras, ejercicios, ayuda, números y plan personal",
+    nav3_label:"Comprender", nav3_desc:"El control, señales, ciclos, recuperación",
+    nav4_label:"Descubrir Manatoa", nav4_desc:"La tienda, la misión, la asociación",
+    stat1:"Mensajes de esperanza", stat2:"Donados por venta", stat3:"QR Protector",
+    give_eyebrow:"Actuar juntos", give_title:"Cada gesto<br><em>importa.</em>",
+    give_intro:"Tanto si quieres animar, compartir tu experiencia o actuar como testigo — tu voz tiene valor.",
+    tab1:"Una palabra", tab2:"Una carta", tab3:"Yo lo superé",
+    tab1_ph:"Una palabra para ti…", tab2_ph:"Querida persona,\n\n", tab3_ph:"Lo superé y quiero decirte que…",
+    anon:"100% anónimo. Filtrado automáticamente. Revisado antes de publicar.",
+    send:"Enviar mi mensaje", success_title:"Gracias de todo corazón.",
+    success_txt:"Tu mensaje será revisado con cuidado. Pronto alguien que lo necesite lo leerá.",
+    witness_div:"Soy testigo — ¿qué hago?",
+    msgs_title:"💛 Palabras de esperanza", msgs_sub:"Escritas anónimamente por personas que se preocupan por ti",
+    support_eyebrow:"Para ti", support_title:"No estás<br><em>solo·a.</em>",
+    support_intro:"Personas han dejado palabras para ti. Y profesionales están disponibles ahora, de forma gratuita.",
+    breath_div:"Ejercicio de respiración", breath_title:"🌬️ Respiración calmante",
+    breath_sub:"Si te sientes abrumado·a, empieza por respirar conmigo.",
+    breath_ready:"¿Listo·a?", breath_start:"Empezar", breath_stop:"Parar",
+    breath_inhale:"Inspira…", breath_exhale:"Espira suavemente…",
+    nums_div:"Números de ayuda — Gratuitos",
+    unsafe_div:"No estoy seguro·a", urg_title:"No estoy seguro·a",
+    urg_sub:"No estás solo·a. Aquí tienes qué hacer ahora mismo.", urg_btn:"Ver los pasos →",
+    contacts_div:"Avisar a una persona de confianza", contacts_title:"🔔 Mis personas de confianza",
+    contacts_sub:"Amigo·a, familia, terapeuta... En peligro, reciben un SMS en un toque.",
+    contact_ph:"Nombre", add_contact:"+ Añadir esta persona",
+    unsafe_eyebrow:"Ayuda inmediata", unsafe_title:"Respira.<br><em>Estamos aquí.</em>",
+    unsafe_intro:"No estás solo·a. Aquí tienes exactamente qué hacer, paso a paso.",
+    remember_label:"Recuerda:", remember_txt:"Mereces estar seguro·a. No es tu culpa.",
+    plan_div:"Mi plan de seguridad",
+    plan_q1:"¿Vives con la persona que te hace daño?",
+    plan_q1y:"Sí, vivimos juntos", plan_q1n:"No, no vivimos juntos",
+    plan_q2:"¿Tienes hijos contigo?", plan_q2y:"Sí", plan_q2n:"No",
+    plan_q3:"¿Tienes una persona de confianza?",
+    plan_q3y:"Sí, tengo a alguien", plan_q3n:"No, estoy aislado·a",
+    comprendre_eyebrow:"Comprender", comprendre_title:"Poner palabras<br><em>a lo que sucede.</em>",
+    comprendre_intro:"Comprender es ya recuperar el poder. Estas respuestas son para ti.",
+    legal:"Este contenido es informativo y no reemplaza el apoyo profesional.",
+    boutique_eyebrow:"El proyecto", boutique_title:"Manatoa,<br><em>¿qué es?</em>",
+    boutique_intro:"Una marca comprometida, fundada por una madre soltera de origen tahitiano, superviviente de violencia doméstica.",
+    how_tit:"💡 ¿Cómo funciona?",
+    how_txt:"Cada prenda y zapatilla Manatoa lleva un código QR. Cualquiera puede escanearlo y acceder a este sitio de apoyo gratuitamente.",
+    shop_title:"🌿 La Tienda Manatoa", shop_sub:"Zapatillas · Sudaderas · Camisetas", shop_btn:"Ver todos los productos →",
+    impact1:"donados a una asociación por venta", impact2:"mensajes de esperanza publicados",
+    impact3:"vidas que pueden cambiar", impact4:"código QR protector",
+    mission_eyebrow:"Nuestra misión",
+    mission_txt:"Manatoa financia directamente una asociación que acompaña a las víctimas de violencia doméstica.",
+    quote:"Una prenda, una zapatilla — un símbolo de resiliencia. Mucho más que un simple producto: al llevarlo, tiendes una mano invisible a quienes lo necesitan.",
+    quote_auth:"La fundadora de Manatoa",
+    mots:["No tienes que pasar por esto solo·a.","Tu dolor es real. Tu fuerza también.","Cada día difícil que superas es una prueba de tu valentía.","Mereces estar seguro·a, ser amado·a y respetado·a.","Pedir ayuda no es debilidad. Es el acto más valiente que existe.","En algún lugar, alguien piensa en ti.","Tu vida tiene valor. Tú tienes valor."]
+  },
+  pt:{
+    tagline:"Fundada por uma mãe solteira de origem taitiana,<br><em>sobrevivente de anos de violência doméstica.</em><br>Apoiando uma associação de ajuda às vítimas.",
+    home_title:"Hoje,<br>estás aqui <strong>porque…</strong>",
+    home_sub:"Este site existe para ti — quer estejas a passar por algo, tenhas visto algo, ou queiras ajudar.",
+    nav1_label:"Encorajo / Sou testemunha", nav1_desc:"Deixar uma palavra, carta ou agir como testemunha",
+    nav2_label:"Preciso de apoio", nav2_desc:"Palavras, exercícios, ajuda, números e plano pessoal",
+    nav3_label:"Compreender", nav3_desc:"Controlo coercivo, sinais, ciclos, recuperação",
+    nav4_label:"Descobrir Manatoa", nav4_desc:"A loja, a missão, a associação",
+    stat1:"Mensagens de esperança", stat2:"Doados por venda", stat3:"QR Protetor",
+    give_eyebrow:"Agir juntos", give_title:"Cada gesto<br><em>importa.</em>",
+    give_intro:"Quer queiras encorajar, partilhar a tua experiência ou agir como testemunha — a tua voz tem valor.",
+    tab1:"Uma palavra", tab2:"Uma carta", tab3:"Eu saí",
+    tab1_ph:"Uma palavra para ti…", tab2_ph:"Querida pessoa,\n\n", tab3_ph:"Saí e quero dizer-te que…",
+    anon:"100% anónimo. Filtrado automaticamente. Revisto antes de publicar.",
+    send:"Enviar a minha mensagem", success_title:"Obrigado do fundo do coração.",
+    success_txt:"A tua mensagem será lida com cuidado. Em breve alguém que precisa vai lê-la.",
+    witness_div:"Sou testemunha — o que devo fazer?",
+    msgs_title:"💛 Palavras de esperança", msgs_sub:"Escritas anonimamente por pessoas que se preocupam contigo",
+    support_eyebrow:"Para ti", support_title:"Não estás<br><em>sozinho·a.</em>",
+    support_intro:"Pessoas deixaram palavras para ti. E profissionais estão disponíveis agora, de forma gratuita.",
+    breath_div:"Exercício de respiração", breath_title:"🌬️ Respiração calmante",
+    breath_sub:"Se te sentires sobrecarregado·a, começa por respirar comigo.",
+    breath_ready:"Pronto·a?", breath_start:"Começar", breath_stop:"Parar",
+    breath_inhale:"Inspira…", breath_exhale:"Expira suavemente…",
+    nums_div:"Números de ajuda — Gratuitos",
+    unsafe_div:"Não estou seguro·a", urg_title:"Não estou seguro·a",
+    urg_sub:"Não estás sozinho·a. Aqui está o que deves fazer agora.", urg_btn:"Ver os passos →",
+    contacts_div:"Avisar uma pessoa de confiança", contacts_title:"🔔 As minhas pessoas de confiança",
+    contacts_sub:"Amigo·a, família, terapeuta... Em perigo, recebem um SMS com um toque.",
+    contact_ph:"Nome", add_contact:"+ Adicionar esta pessoa",
+    unsafe_eyebrow:"Ajuda imediata", unsafe_title:"Respira.<br><em>Estamos aqui.</em>",
+    unsafe_intro:"Não estás sozinho·a. Aqui está exatamente o que deves fazer, passo a passo.",
+    remember_label:"Lembra-te:", remember_txt:"Mereces estar em segurança. Não é culpa tua.",
+    plan_div:"O meu plano de segurança",
+    plan_q1:"Vives com a pessoa que te está a magoar?",
+    plan_q1y:"Sim, vivemos juntos", plan_q1n:"Não, não vivemos juntos",
+    plan_q2:"Tens filhos contigo?", plan_q2y:"Sim", plan_q2n:"Não",
+    plan_q3:"Tens uma pessoa de confiança?",
+    plan_q3y:"Sim, tenho alguém", plan_q3n:"Não, estou isolado·a",
+    comprendre_eyebrow:"Compreender", comprendre_title:"Colocar palavras<br><em>no que acontece.</em>",
+    comprendre_intro:"Compreender é já recuperar o poder. Estas respostas são para ti.",
+    legal:"Este conteúdo é informativo e não substitui apoio profissional.",
+    boutique_eyebrow:"O projeto", boutique_title:"Manatoa,<br><em>o que é?</em>",
+    boutique_intro:"Uma marca comprometida, fundada por uma mãe solteira de origem taitiana, sobrevivente de violência doméstica.",
+    how_tit:"💡 Como funciona?",
+    how_txt:"Cada peça e sapatilha Manatoa tem um código QR. Qualquer pessoa pode digitalizá-lo e aceder a este site de apoio gratuitamente.",
+    shop_title:"🌿 A Loja Manatoa", shop_sub:"Sapatilhas · Sweats · T-shirts", shop_btn:"Ver todos os produtos →",
+    impact1:"doados a uma associação por venda", impact2:"mensagens de esperança publicadas",
+    impact3:"vidas que podem mudar", impact4:"código QR protetor",
+    mission_eyebrow:"A nossa missão",
+    mission_txt:"Manatoa financia diretamente uma associação que acompanha as vítimas de violência doméstica.",
+    quote:"Uma peça, uma sapatilha — um símbolo de resiliência. Muito mais do que um simples produto: ao usá-lo, estendes uma mão invisível a quem precisa.",
+    quote_auth:"A fundadora da Manatoa",
+    mots:["Não tens de passar por isto sozinho·a.","A tua dor é real. A tua força também.","Cada dia difícil que superas é uma prova da tua coragem.","Mereces estar em segurança, ser amado·a e respeitado·a.","Pedir ajuda não é fraqueza. É o ato mais corajoso que existe.","Em algum lugar, alguém pensa em ti.","A tua vida tem valor. Tu tens valor."]
+  },
+  de:{
+    tagline:"Gegründet von einer alleinerziehenden Mutter tahitianischer Herkunft,<br><em>Überlebende häuslicher Gewalt.</em><br>Unterstützung einer Opferhilfsorganisation.",
+    home_title:"Heute<br>bist du hier, <strong>weil…</strong>",
+    home_sub:"Diese Website existiert für dich — ob du etwas durchmachst, etwas gesehen hast oder helfen möchtest.",
+    nav1_label:"Ich ermutige / Ich bin Zeuge", nav1_desc:"Eine Nachricht hinterlassen oder als Zeuge handeln",
+    nav2_label:"Ich brauche Unterstützung", nav2_desc:"Worte, Übungen, Hilfe, Nummern und persönlicher Plan",
+    nav3_label:"Verstehen", nav3_desc:"Kontrolle, Anzeichen, Zyklen, Erholung",
+    nav4_label:"Manatoa entdecken", nav4_desc:"Der Shop, die Mission, der Verein",
+    stat1:"Botschaften der Hoffnung", stat2:"Gespendet pro Verkauf", stat3:"Schützender QR",
+    give_eyebrow:"Gemeinsam handeln", give_title:"Jede Geste<br><em>zählt.</em>",
+    give_intro:"Ob du ermutigen, deine Erfahrung teilen oder als Zeuge handeln möchtest — deine Stimme hat Wert.",
+    tab1:"Ein Wort", tab2:"Ein Brief", tab3:"Ich habe es geschafft",
+    tab1_ph:"Ein Wort für dich…", tab2_ph:"Liebe Person,\n\n", tab3_ph:"Ich habe es geschafft und möchte dir sagen…",
+    anon:"100% anonym. Automatisch gefiltert. Vor Veröffentlichung geprüft.",
+    send:"Meine Nachricht senden", success_title:"Vielen Dank von Herzen.",
+    success_txt:"Deine Nachricht wird sorgfältig gelesen. Bald wird sie jemand lesen, der sie braucht.",
+    witness_div:"Ich bin Zeuge — was tue ich?",
+    msgs_title:"💛 Worte der Hoffnung", msgs_sub:"Anonym geschrieben von Menschen, denen du wichtig bist",
+    support_eyebrow:"Für dich", support_title:"Du bist nicht<br><em>allein.</em>",
+    support_intro:"Menschen haben Worte für dich hinterlassen. Fachleute sind jetzt kostenlos für dich da.",
+    breath_div:"Atemübung", breath_title:"🌬️ Beruhigendes Atmen",
+    breath_sub:"Wenn du dich überwältigt fühlst, beginne damit, mit mir zu atmen.",
+    breath_ready:"Bereit?", breath_start:"Starten", breath_stop:"Stoppen",
+    breath_inhale:"Einatmen…", breath_exhale:"Langsam ausatmen…",
+    nums_div:"Hilfstelefone — Kostenlos",
+    unsafe_div:"Ich bin nicht sicher", urg_title:"Ich bin nicht sicher",
+    urg_sub:"Du bist nicht allein. Hier ist, was du jetzt tun sollst.", urg_btn:"Die Schritte sehen →",
+    contacts_div:"Vertrauensperson benachrichtigen", contacts_title:"🔔 Meine Vertrauenspersonen",
+    contacts_sub:"Freund·in, Familie, Therapeut... Im Notfall erhalten sie eine SMS.",
+    contact_ph:"Vorname", add_contact:"+ Diese Person hinzufügen",
+    unsafe_eyebrow:"Sofortige Hilfe", unsafe_title:"Atme.<br><em>Wir sind hier.</em>",
+    unsafe_intro:"Du bist nicht allein. Hier ist genau, was du Schritt für Schritt tun sollst.",
+    remember_label:"Denk daran:", remember_txt:"Du verdienst es, sicher zu sein. Es ist nicht deine Schuld.",
+    plan_div:"Mein Sicherheitsplan",
+    plan_q1:"Lebst du mit der Person, die dir schadet?",
+    plan_q1y:"Ja, wir leben zusammen", plan_q1n:"Nein, wir leben nicht zusammen",
+    plan_q2:"Hast du Kinder bei dir?", plan_q2y:"Ja", plan_q2n:"Nein",
+    plan_q3:"Hast du eine Vertrauensperson?",
+    plan_q3y:"Ja, ich habe jemanden", plan_q3n:"Nein, ich bin isoliert",
+    comprendre_eyebrow:"Verstehen", comprendre_title:"Worte finden<br><em>für das, was passiert.</em>",
+    comprendre_intro:"Zu verstehen bedeutet schon, Macht zurückzugewinnen.",
+    legal:"Dieser Inhalt ist informativ und ersetzt keine professionelle Unterstützung.",
+    boutique_eyebrow:"Das Projekt", boutique_title:"Manatoa,<br><em>was ist das?</em>",
+    boutique_intro:"Eine engagierte Marke, gegründet von einer alleinerziehenden Mutter tahitianischer Herkunft, Überlebende häuslicher Gewalt.",
+    how_tit:"💡 Wie funktioniert das?",
+    how_txt:"Jedes Manatoa-Kleidungsstück trägt einen QR-Code. Jeder kann ihn scannen und kostenlos auf diese Unterstützungsseite zugreifen.",
+    shop_title:"🌿 Der Manatoa-Shop", shop_sub:"Schuhe · Sweatshirts · T-Shirts", shop_btn:"Alle Produkte ansehen →",
+    impact1:"pro Verkauf an eine Hilfsorganisation gespendet", impact2:"veröffentlichte Hoffnungsbotschaften",
+    impact3:"Leben die sich ändern können", impact4:"schützender QR-Code",
+    mission_eyebrow:"Unsere Mission",
+    mission_txt:"Manatoa finanziert direkt eine Organisation, die Opfer häuslicher Gewalt begleitet.",
+    quote:"Ein Kleidungsstück, ein Schuh — ein Symbol der Stärke. Viel mehr als ein einfaches Produkt: indem du es trägst, reichst du eine unsichtbare Hand denen, die sie brauchen.",
+    quote_auth:"Die Gründerin von Manatoa",
+    mots:["Du musst das nicht allein durchmachen.","Dein Schmerz ist real. Deine Stärke auch.","Jeder schwierige Tag ist ein Beweis deines Mutes.","Du verdienst es, sicher, geliebt und respektiert zu sein.","Um Hilfe zu bitten ist keine Schwäche.","Irgendwo denkt jemand an dich.","Dein Leben hat Wert. Du hast Wert."]
+  },
+  it:{
+    tagline:"Fondata da una madre single di origini tahitiane,<br><em>sopravvissuta a anni di violenza domestica.</em><br>A sostegno di un'associazione di aiuto alle vittime.",
+    home_title:"Oggi<br>sei qui <strong>perché…</strong>",
+    home_sub:"Questo sito esiste per te — che tu stia attraversando qualcosa, che tu abbia visto qualcosa, o che tu voglia aiutare.",
+    nav1_label:"Incoraggio / Testimonio", nav1_desc:"Lasciare una parola, lettera o agire come testimone",
+    nav2_label:"Ho bisogno di supporto", nav2_desc:"Parole, esercizi, aiuto, numeri e piano personale",
+    nav3_label:"Capire", nav3_desc:"Controllo coercitivo, segnali, cicli, recupero",
+    nav4_label:"Scoprire Manatoa", nav4_desc:"Il negozio, la missione, l'associazione",
+    stat1:"Messaggi di speranza", stat2:"Donati per vendita", stat3:"QR Protettivo",
+    give_eyebrow:"Agire insieme", give_title:"Ogni gesto<br><em>conta.</em>",
+    give_intro:"Che tu voglia incoraggiare, condividere la tua esperienza o agire come testimone — la tua voce ha valore.",
+    tab1:"Una parola", tab2:"Una lettera", tab3:"Ce l'ho fatta",
+    tab1_ph:"Una parola per te…", tab2_ph:"Cara persona,\n\n", tab3_ph:"Ce l'ho fatta e voglio dirti che…",
+    anon:"100% anonimo. Filtrato automaticamente. Verificato prima della pubblicazione.",
+    send:"Invia il mio messaggio", success_title:"Grazie di cuore.",
+    success_txt:"Il tuo messaggio sarà letto con cura. Presto qualcuno che ne ha bisogno lo leggerà.",
+    witness_div:"Sono testimone — cosa faccio?",
+    msgs_title:"💛 Parole di speranza", msgs_sub:"Scritte anonimamente da persone che tengono a te",
+    support_eyebrow:"Per te", support_title:"Non sei<br><em>solo·a.</em>",
+    support_intro:"Le persone hanno lasciato parole per te. E i professionisti sono disponibili ora, gratuitamente.",
+    breath_div:"Esercizio di respirazione", breath_title:"🌬️ Respirazione calmante",
+    breath_sub:"Se ti senti sopraffatto·a, comincia a respirare con me.",
+    breath_ready:"Pronto·a?", breath_start:"Iniziare", breath_stop:"Fermare",
+    breath_inhale:"Inspira…", breath_exhale:"Espira lentamente…",
+    nums_div:"Numeri di aiuto — Gratuiti",
+    unsafe_div:"Non sono al sicuro", urg_title:"Non sono al sicuro",
+    urg_sub:"Non sei solo·a. Ecco cosa fare adesso.", urg_btn:"Vedi i passi →",
+    contacts_div:"Avvisare una persona di fiducia", contacts_title:"🔔 Le mie persone di fiducia",
+    contacts_sub:"Amico·a, famiglia, terapeuta... In pericolo, ricevono un SMS con un tocco.",
+    contact_ph:"Nome", add_contact:"+ Aggiungi questa persona",
+    unsafe_eyebrow:"Aiuto immediato", unsafe_title:"Respira.<br><em>Siamo qui.</em>",
+    unsafe_intro:"Non sei solo·a. Ecco esattamente cosa fare, passo dopo passo.",
+    remember_label:"Ricorda:", remember_txt:"Meriti di stare al sicuro. Non è colpa tua.",
+    plan_div:"Il mio piano di sicurezza",
+    plan_q1:"Vivi con la persona che ti fa del male?",
+    plan_q1y:"Sì, viviamo insieme", plan_q1n:"No, non viviamo insieme",
+    plan_q2:"Hai figli con te?", plan_q2y:"Sì", plan_q2n:"No",
+    plan_q3:"Hai una persona di fiducia?",
+    plan_q3y:"Sì, ho qualcuno", plan_q3n:"No, sono isolato·a",
+    comprendre_eyebrow:"Capire", comprendre_title:"Mettere parole<br><em>su ciò che accade.</em>",
+    comprendre_intro:"Capire significa già riprendere il controllo.",
+    legal:"Questo contenuto è informativo e non sostituisce il supporto professionale.",
+    boutique_eyebrow:"Il progetto", boutique_title:"Manatoa,<br><em>cos'è?</em>",
+    boutique_intro:"Un brand impegnato, fondato da una madre single di origini tahitiane, sopravvissuta alla violenza domestica.",
+    how_tit:"💡 Come funziona?",
+    how_txt:"Ogni indumento e scarpa Manatoa porta un codice QR. Chiunque può scansionarlo e accedere a questo sito di supporto gratuitamente.",
+    shop_title:"🌿 Il Negozio Manatoa", shop_sub:"Scarpe · Felpe · T-shirt", shop_btn:"Vedi tutti i prodotti →",
+    impact1:"donati a un'associazione per vendita", impact2:"messaggi di speranza pubblicati",
+    impact3:"vite che possono cambiare", impact4:"codice QR protettivo",
+    mission_eyebrow:"La nostra missione",
+    mission_txt:"Manatoa finanzia direttamente un'associazione che accompagna le vittime di violenza domestica.",
+    quote:"Un capo, una scarpa — un simbolo di resilienza. Molto più di un semplice prodotto: indossandolo, tendi una mano invisibile a chi ne ha bisogno.",
+    quote_auth:"La fondatrice di Manatoa",
+    mots:["Non devi affrontare questo da solo·a.","Il tuo dolore è reale. Anche la tua forza.","Ogni giorno difficile che superi è una prova del tuo coraggio.","Meriti di stare al sicuro, di essere amato·a e rispettato·a.","Chiedere aiuto non è debolezza.","Da qualche parte, qualcuno pensa a te.","La tua vita ha valore. Tu hai valore."]
+  },
+  nl:{
+    tagline:"Opgericht door een alleenstaande moeder van Tahitiaanse afkomst,<br><em>overlevende van huiselijk geweld.</em><br>Ter ondersteuning van een slachtofferhulporganisatie.",
+    home_title:"Vandaag<br>ben je hier <strong>omdat…</strong>",
+    home_sub:"Deze website bestaat voor jou — of je iets doormaakt, iets hebt gezien, of wilt helpen.",
+    nav1_label:"Ik moedig aan / Ik getuig", nav1_desc:"Een woord achterlaten of als getuige optreden",
+    nav2_label:"Ik heb steun nodig", nav2_desc:"Woorden, oefeningen, hulp, nummers en persoonlijk plan",
+    nav3_label:"Begrijpen", nav3_desc:"Controle, tekenen, cycli, herstel",
+    nav4_label:"Manatoa ontdekken", nav4_desc:"De winkel, de missie, de organisatie",
+    stat1:"Berichten van hoop", stat2:"Gedoneerd per verkoop", stat3:"Beschermende QR",
+    give_eyebrow:"Samen handelen", give_title:"Elk gebaar<br><em>telt.</em>",
+    give_intro:"Of je nu wilt aanmoedigen, je ervaring wilt delen of als getuige wilt optreden — jouw stem heeft waarde.",
+    tab1:"Een woord", tab2:"Een brief", tab3:"Ik heb het overleefd",
+    tab1_ph:"Een woord voor jou…", tab2_ph:"Beste persoon,\n\n", tab3_ph:"Ik heb het overleefd en ik wil je zeggen dat…",
+    anon:"100% anoniem. Automatisch gefilterd. Gecontroleerd voor publicatie.",
+    send:"Mijn bericht versturen", success_title:"Hartelijk dank.",
+    success_txt:"Jouw bericht wordt zorgvuldig gelezen. Binnenkort leest iemand die het nodig heeft het.",
+    witness_div:"Ik ben getuige — wat doe ik?",
+    msgs_title:"💛 Woorden van hoop", msgs_sub:"Anoniem geschreven door mensen die om jou geven",
+    support_eyebrow:"Voor jou", support_title:"Je bent niet<br><em>alleen.</em>",
+    support_intro:"Mensen hebben woorden voor jou achtergelaten. En professionals zijn er nu, gratis, voor je.",
+    breath_div:"Ademhalingsoefening", breath_title:"🌬️ Kalmerende ademhaling",
+    breath_sub:"Als je je overweldigd voelt, begin dan met mij te ademen.",
+    breath_ready:"Klaar?", breath_start:"Beginnen", breath_stop:"Stoppen",
+    breath_inhale:"Inademen…", breath_exhale:"Langzaam uitademen…",
+    nums_div:"Hulplijnen — Gratis",
+    unsafe_div:"Ik ben niet veilig", urg_title:"Ik ben niet veilig",
+    urg_sub:"Je bent niet alleen. Dit is wat je nu moet doen.", urg_btn:"Zie de stappen →",
+    contacts_div:"Vertrouwenspersoon waarschuwen", contacts_title:"🔔 Mijn vertrouwenspersonen",
+    contacts_sub:"Vriend·in, familie, therapeut... In gevaar ontvangen ze een SMS.",
+    contact_ph:"Voornaam", add_contact:"+ Deze persoon toevoegen",
+    unsafe_eyebrow:"Onmiddellijke hulp", unsafe_title:"Adem.<br><em>We zijn er.</em>",
+    unsafe_intro:"Je bent niet alleen. Dit is precies wat je stap voor stap moet doen.",
+    remember_label:"Onthoud:", remember_txt:"Je verdient het om veilig te zijn. Het is niet jouw schuld.",
+    plan_div:"Mijn veiligheidsplan",
+    plan_q1:"Woon je samen met de persoon die je pijn doet?",
+    plan_q1y:"Ja, we wonen samen", plan_q1n:"Nee, we wonen niet samen",
+    plan_q2:"Heb je kinderen bij je?", plan_q2y:"Ja", plan_q2n:"Nee",
+    plan_q3:"Heb je een vertrouwenspersoon?",
+    plan_q3y:"Ja, ik heb iemand", plan_q3n:"Nee, ik ben geïsoleerd",
+    comprendre_eyebrow:"Begrijpen", comprendre_title:"Woorden geven<br><em>aan wat er gebeurt.</em>",
+    comprendre_intro:"Begrijpen is al macht terugwinnen.",
+    legal:"Deze inhoud is informatief en vervangt geen professionele ondersteuning.",
+    boutique_eyebrow:"Het project", boutique_title:"Manatoa,<br><em>wat is het?</em>",
+    boutique_intro:"Een betrokken merk, opgericht door een alleenstaande moeder van Tahitiaanse afkomst, overlevende van huiselijk geweld.",
+    how_tit:"💡 Hoe werkt het?",
+    how_txt:"Elk Manatoa kledingstuk heeft een QR-code. Iedereen kan deze scannen en gratis toegang krijgen tot deze ondersteuningssite.",
+    shop_title:"🌿 De Manatoa Winkel", shop_sub:"Schoenen · Sweaters · T-shirts", shop_btn:"Alle producten bekijken →",
+    impact1:"gedoneerd aan een hulporganisatie per verkoop", impact2:"gepubliceerde hoopberichten",
+    impact3:"levens die kunnen veranderen", impact4:"beschermende QR-code",
+    mission_eyebrow:"Onze missie",
+    mission_txt:"Manatoa financiert direct een organisatie die slachtoffers van huiselijk geweld begeleidt.",
+    quote:"Een kledingstuk, een schoen — een symbool van veerkracht. Veel meer dan een eenvoudig product: door het te dragen, reik je een onzichtbare hand aan wie het nodig heeft.",
+    quote_auth:"De oprichtster van Manatoa",
+    mots:["Je hoeft dit niet alleen door te maken.","Jouw pijn is echt. Jouw kracht ook.","Elke moeilijke dag is een bewijs van jouw moed.","Je verdient het om veilig, geliefd en gerespecteerd te worden.","Om hulp vragen is geen zwakte.","Ergens denkt iemand aan jou.","Jouw leven heeft waarde. Jij hebt waarde."]
+  }
+};
+T.us = T.en;
+T.pf = T.fr;
+T.zh = {...T.fr, tagline:"由一位塔希提裔单身母亲创立，<br><em>家庭暴力幸存者。</em><br>支持受害者援助协会。", home_title:"今天，<br>你来这里是因为<strong>……</strong>", home_sub:"这个网站为你而生。", nav1_label:"我想鼓励 / 我是目击者", nav2_label:"我需要支持", nav3_label:"了解", nav4_label:"了解Manatoa", stat1:"希望留言", stat2:"每次销售捐赠", stat3:"保护性二维码", send:"发送我的留言", success_title:"衷心感谢。", mots:["你不必独自面对这一切。","你的痛苦是真实的。你的力量也是。","你值得被保护、被爱、被尊重。","寻求帮助是最勇敢的行为。","你的生命有价值。你有价值。"]};
+T.ar = {...T.fr, tagline:"أسّستها أم عزباء من أصل تاهيتي،<br><em>ناجية من العنف الأسري.</em><br>تدعم جمعية مساعدة الضحايا.", home_title:"اليوم،<br>أنت هنا <strong>لأن…</strong>", home_sub:"هذا الموقع موجود من أجلك.", nav1_label:"أشجّع / أشهد", nav2_label:"أحتاج إلى دعم", nav3_label:"الفهم", nav4_label:"اكتشف Manatoa", stat1:"رسائل أمل", stat2:"متبرع به لكل بيع", stat3:"QR حماية", send:"إرسال رسالتي", success_title:"شكراً من القلب.", mots:["لست مضطرًا لتجاوز هذا وحدك.","ألمك حقيقي. قوتك أيضًا.","تستحق أن تكون آمنًا ومحبوبًا.","طلب المساعدة هو أشجع ما يمكن فعله.","حياتك لها قيمة. أنت لك قيمة."]};
+T.tr = {...T.fr, tagline:"Tahitili bir tek anne tarafından kuruldu,<br><em>yıllarca süren aile içi şiddetten sağ kurtulan.</em><br>Mağdur yardım derneğini destekliyor.", home_title:"Bugün,<br>buraya <strong>şunun için geldin…</strong>", home_sub:"Bu site senin için var.", nav1_label:"Cesaret veriyorum / Tanık oluyorum", nav2_label:"Desteğe ihtiyacım var", nav3_label:"Anlamak", nav4_label:"Manatoa'yı Keşfet", stat1:"Umut mesajları", stat2:"Satış başına bağışlandı", stat3:"Koruyucu QR", send:"Mesajımı gönder", success_title:"Yürekten teşekkürler.", mots:["Bunu yalnız başına geçirmek zorunda değilsin.","Acın gerçek. Gücün de.","Güvende olmayı hak ediyorsun.","Yardım istemek cesaret ister.","Hayatının değeri var. Senin değerin var."]};
+
+function translatePage(code) {
+  const t = T[code] || T['fr'];
+  const s = (id, val) => { const e = document.getElementById(id); if(e) e.innerHTML = val; };
+  const st = (id, val) => { const e = document.getElementById(id); if(e) e.textContent = val; };
+  const sp = (id, val) => { const e = document.getElementById(id); if(e) e.placeholder = val; };
+
+  // Mot du jour
+  const mots = t.mots;
+  const motEl = document.getElementById('motDuJour');
+  if(motEl) motEl.textContent = mots[new Date().getDate() % mots.length];
+
+  // Accueil
+  s('logoTagline', t.tagline);
+  s('homeTitle', t.home_title);
+  st('homeSub', t.home_sub);
+  st('nav1Label', t.nav1_label); st('nav1Desc', t.nav1_desc);
+  st('nav2Label', t.nav2_label); st('nav2Desc', t.nav2_desc);
+  st('nav3Label', t.nav3_label); st('nav3Desc', t.nav3_desc);
+  st('nav4Label', t.nav4_label); st('nav4Desc', t.nav4_desc);
+  st('stat1Txt', t.stat1); st('stat2Txt', t.stat2); st('stat3Txt', t.stat3);
+
+  // Give
+  st('giveEyebrow', t.give_eyebrow);
+  s('giveTitle', t.give_title);
+  st('giveIntro', t.give_intro);
+  st('tab1Txt', t.tab1); st('tab2Txt', t.tab2); st('tab3Txt', t.tab3);
+  const wa = document.getElementById('writeArea'); if(wa) wa.placeholder = t.tab1_ph;
+  st('anonNote', t.anon);
+  st('sendBtnTxt', t.send);
+  st('successTitle', t.success_title); st('successTxt', t.success_txt);
+  st('witnessDivider', t.witness_div);
+  st('msgsBannerTitle', t.msgs_title); st('msgsBannerSub', t.msgs_sub);
+
+  // Support
+  st('supportEyebrow', t.support_eyebrow);
+  s('supportTitle', t.support_title);
+  st('supportIntro', t.support_intro);
+  st('supportMsgTitle', t.msgs_title); st('supportMsgSub', t.msgs_sub);
+  st('breathDivider', t.breath_div);
+  st('breathTitle', t.breath_title); st('breathSub', t.breath_sub);
+  const bi = document.getElementById('breathInstr'); if(bi) bi.textContent = t.breath_ready;
+  const bb = document.getElementById('breathBtn'); if(bb) bb.textContent = t.breath_start;
+  st('numbersDivider', t.nums_div);
+  st('unsafeDivider', t.unsafe_div);
+  st('urgTitle', t.urg_title); st('urgSub', t.urg_sub);
+  const ub = document.getElementById('urgBtn'); if(ub) ub.textContent = t.urg_btn;
+  st('contactsDivider', t.contacts_div);
+  st('contactsTitle', t.contacts_title); st('contactsSub', t.contacts_sub);
+  sp('contactName', t.contact_ph);
+  st('addContactBtn', t.add_contact);
+
+  // Unsafe
+  st('unsafeEyebrow', t.unsafe_eyebrow);
+  s('unsafePageTitle', t.unsafe_title);
+  st('unsafePageIntro', t.unsafe_intro);
+  st('rememberLabel', t.remember_label); st('rememberTxt', t.remember_txt);
+  st('contactsTitle2', t.contacts_title); st('contactsSub2', t.contacts_sub);
+  st('addContactBtn2', t.add_contact);
+  st('planDivider', t.plan_div);
+  st('planQ1Txt', t.plan_q1);
+  st('planQ1Yes', t.plan_q1y); st('planQ1No', t.plan_q1n);
+  st('planQ2Txt', t.plan_q2);
+  st('planQ2Yes', t.plan_q2y); st('planQ2No', t.plan_q2n);
+  st('planQ3Txt', t.plan_q3);
+  st('planQ3Yes', t.plan_q3y); st('planQ3No', t.plan_q3n);
+
+  // Comprendre
+  st('comprendreEyebrow', t.comprendre_eyebrow);
+  s('comprendreTitle', t.comprendre_title);
+  st('comprendreIntro', t.comprendre_intro);
+  st('legalNote', t.legal); st('legalNote2', t.legal);
+
+  // Boutique
+  st('boutiqueEyebrow', t.boutique_eyebrow);
+  s('boutiqueTitle', t.boutique_title);
+  st('boutiqueIntro', t.boutique_intro);
+  st('howWorksTit', t.how_tit); st('howWorksTxt', t.how_txt);
+  st('shopTitle', t.shop_title); st('shopSub', t.shop_sub);
+  const sb = document.getElementById('shopBtn'); if(sb) sb.textContent = t.shop_btn;
+  st('impact1', t.impact1); st('impact2', t.impact2);
+  st('impact3', t.impact3); st('impact4', t.impact4);
+  st('missionEyebrow', t.mission_eyebrow);
+  st('missionTxt', t.mission_txt);
+  st('quoteText', t.quote); st('quoteAuth', t.quote_auth);
+
+  // RTL pour arabe
+  document.documentElement.setAttribute('dir', code === 'ar' ? 'rtl' : 'ltr');
+}
+
+// ══════════════════════════════════════
+// NUMÉROS PAR LANGUE
+// ══════════════════════════════════════
+const LANG_NUMBERS = {
+  fr:[
+    {ico:'📞',name:'Violences Femmes Info',number:'3919',detail:'Gratuit · 24h/24',href:'tel:3919'},
+    {ico:'🛡️',name:'Allô Enfance en Danger',number:'119',detail:'Gratuit · 24h/24',href:'tel:119'},
+    {ico:'💙',name:'Prévention Suicide',number:'3114',detail:'Gratuit · 24h/24',href:'tel:3114'},
+    {ico:'🚨',name:'Police Secours',number:'17',detail:'Urgence immédiate',href:'tel:17'},
+    {ico:'🏥',name:'SAMU',number:'15',detail:'Urgence médicale',href:'tel:15'},
+    {ico:'✉️',name:'SMS si tu ne peux pas parler',number:'114',detail:'Envoie "aide"',href:'sms:114'}
+  ],
+  en:[
+    {ico:'📞',name:'Domestic Violence Helpline',number:'0808 2000 247',detail:'Free · 24h/7',href:'tel:08082000247'},
+    {ico:'🛡️',name:'Missing Children',number:'116 000',detail:'Free · 24h/7',href:'tel:116000'},
+    {ico:'💙',name:'Samaritans',number:'116 123',detail:'Free · 24h/7',href:'tel:116123'},
+    {ico:'🚨',name:'Police Emergency',number:'999',detail:'Immediate emergency',href:'tel:999'},
+    {ico:'🏥',name:'Ambulance',number:'999',detail:'Medical emergency',href:'tel:999'},
+    {ico:'✉️',name:'Text 999',number:'999',detail:'If you cannot speak',href:'sms:999'}
+  ],
+  us:[
+    {ico:'📞',name:'National DV Hotline',number:'1-800-799-7233',detail:'Free · 24h/7',href:'tel:18007997233'},
+    {ico:'🛡️',name:'Childhelp Hotline',number:'1-800-422-4453',detail:'Free · 24h/7',href:'tel:18004224453'},
+    {ico:'💙',name:'Crisis Text Line',number:'741741',detail:'Text HOME · Free',href:'sms:741741'},
+    {ico:'🚨',name:'Police Emergency',number:'911',detail:'Immediate emergency',href:'tel:911'},
+    {ico:'🏥',name:'Medical Emergency',number:'911',detail:'Medical emergency',href:'tel:911'},
+    {ico:'✉️',name:'Text START to 88788',number:'88788',detail:'DV text line',href:'sms:88788'}
+  ],
+  es:[
+    {ico:'📞',name:'Violencia de género',number:'016',detail:'Gratuito · 24h/7',href:'tel:016'},
+    {ico:'🛡️',name:'Menores en peligro',number:'116 000',detail:'Gratuito · 24h/7',href:'tel:116000'},
+    {ico:'💙',name:'Teléfono Esperanza',number:'717 003 717',detail:'Gratuito · 24h/7',href:'tel:717003717'},
+    {ico:'🚨',name:'Policía / Emergencias',number:'112',detail:'Urgencia inmediata',href:'tel:112'},
+    {ico:'🏥',name:'Emergencias médicas',number:'112',detail:'Urgencia médica',href:'tel:112'},
+    {ico:'✉️',name:'SMS si no puedes hablar',number:'600 000 016',detail:'Envía tu situación',href:'sms:600000016'}
+  ],
+  pt:[
+    {ico:'📞',name:'Violência doméstica',number:'800 202 148',detail:'Gratuito · 24h/7',href:'tel:800202148'},
+    {ico:'🛡️',name:'Crianças em perigo',number:'116 000',detail:'Gratuito · 24h/7',href:'tel:116000'},
+    {ico:'💙',name:'SOS Voz Amiga',number:'213 544 545',detail:'Apoio emocional',href:'tel:213544545'},
+    {ico:'🚨',name:'Polícia / Emergências',number:'112',detail:'Urgência imediata',href:'tel:112'},
+    {ico:'🏥',name:'Emergências médicas',number:'112',detail:'Urgência médica',href:'tel:112'},
+    {ico:'✉️',name:'SMS se não conseguires',number:'112',detail:'Envía a tua situação',href:'sms:112'}
+  ],
+  de:[
+    {ico:'📞',name:'Häusliche Gewalt',number:'08000 116 016',detail:'Kostenlos · 24h/7',href:'tel:08000116016'},
+    {ico:'🛡️',name:'Kindernotaufnahme',number:'0800 111 0333',detail:'Kostenlos · 24h/7',href:'tel:08001110333'},
+    {ico:'💙',name:'Telefonseelsorge',number:'0800 111 0 111',detail:'Kostenlos · 24h/7',href:'tel:08001110111'},
+    {ico:'🚨',name:'Polizei',number:'110',detail:'Sofortiger Notfall',href:'tel:110'},
+    {ico:'🏥',name:'Notruf',number:'112',detail:'Medizinischer Notfall',href:'tel:112'},
+    {ico:'✉️',name:'SMS wenn du nicht anrufen kannst',number:'110',detail:'Situation senden',href:'sms:110'}
+  ],
+  it:[
+    {ico:'📞',name:'Violenza domestica',number:'1522',detail:'Gratuito · 24h/7',href:'tel:1522'},
+    {ico:'🛡️',name:'Bambini in pericolo',number:'114',detail:'Gratuito · 24h/7',href:'tel:114'},
+    {ico:'💙',name:'Telefono Amico',number:'02 2327 2327',detail:'Supporto emotivo',href:'tel:0223272327'},
+    {ico:'🚨',name:'Polizia / Emergenze',number:'112',detail:'Urgenza immediata',href:'tel:112'},
+    {ico:'🏥',name:'Emergenze mediche',number:'118',detail:'Urgenza medica',href:'tel:118'},
+    {ico:'✉️',name:'SMS se non puoi chiamare',number:'112',detail:'Invia la situazione',href:'sms:112'}
+  ],
+  nl:[
+    {ico:'📞',name:'Huiselijk Geweld',number:'0800 2000',detail:'Gratis · 24u/7',href:'tel:08002000'},
+    {ico:'🛡️',name:'Vermiste Kinderen',number:'116 000',detail:'Gratis · 24u/7',href:'tel:116000'},
+    {ico:'💙',name:'Sensoor',number:'0800 0767',detail:'Gratis · 24u/7',href:'tel:08000767'},
+    {ico:'🚨',name:'Politie / Nooddiensten',number:'112',detail:'Onmiddellijk noodgeval',href:'tel:112'},
+    {ico:'🏥',name:'Medische noodgevallen',number:'112',detail:'Medisch noodgeval',href:'tel:112'},
+    {ico:'✉️',name:'SMS als je niet kunt bellen',number:'112',detail:'Stuur je situatie',href:'sms:112'}
+  ],
+  pf:[
+    {ico:'📞',name:'Mau Faahiahia — Faarero',number:'3919',detail:'Aore moni · 24h/24',href:'tel:3919'},
+    {ico:'🛡️',name:'Tamarii i te Faati',number:'119',detail:'Aore moni · 24h/24',href:'tel:119'},
+    {ico:'💙',name:'Tauturu Manaò',number:'3114',detail:'Aore moni · 24h/24',href:'tel:3114'},
+    {ico:'🚨',name:'Police',number:'17',detail:'Faati mano',href:'tel:17'},
+    {ico:'🏥',name:'SAMU',number:'15',detail:'Faati manaò',href:'tel:15'},
+    {ico:'✉️',name:'SMS ia ore e roa to parau',number:'114',detail:'Tuu noa "tauturu"',href:'sms:114'}
+  ],
+  zh:[
+    {ico:'📞',name:'家庭暴力热线',number:'12338',detail:'免费 · 24小时',href:'tel:12338'},
+    {ico:'🛡️',name:'儿童保护热线',number:'12338',detail:'免费 · 24小时',href:'tel:12338'},
+    {ico:'💙',name:'心理援助热线',number:'400-161-9995',detail:'心理支持',href:'tel:4001619995'},
+    {ico:'🚨',name:'警察',number:'110',detail:'紧急情况',href:'tel:110'},
+    {ico:'🏥',name:'急救',number:'120',detail:'医疗急救',href:'tel:120'},
+    {ico:'✉️',name:'无法打电话时',number:'110',detail:'发短信',href:'sms:110'}
+  ],
+  ar:[
+    {ico:'📞',name:'العنف الأسري',number:'112',detail:'مجاني · 24 ساعة',href:'tel:112'},
+    {ico:'🛡️',name:'حماية الأطفال',number:'116 000',detail:'مجاني · 24 ساعة',href:'tel:116000'},
+    {ico:'💙',name:'دعم نفسي',number:'920033360',detail:'دعم متخصص',href:'tel:920033360'},
+    {ico:'🚨',name:'الشرطة / الطوارئ',number:'112',detail:'طوارئ فورية',href:'tel:112'},
+    {ico:'🏥',name:'الإسعاف',number:'112',detail:'طوارئ طبية',href:'tel:112'},
+    {ico:'✉️',name:'الأرقام تختلف حسب بلدك',number:'112',detail:'الرقم الدولي للطوارئ',href:'tel:112'}
+  ],
+  tr:[
+    {ico:'📞',name:'Şiddet Danışma Hattı',number:'183',detail:'Ücretsiz · 24 saat',href:'tel:183'},
+    {ico:'🛡️',name:'Çocuk İhbar Hattı',number:'183',detail:'Ücretsiz · 24 saat',href:'tel:183'},
+    {ico:'💙',name:'Psikolojik Destek',number:'182',detail:'Ücretsiz destek',href:'tel:182'},
+    {ico:'🚨',name:'Polis',number:'155',detail:'Acil durum',href:'tel:155'},
+    {ico:'🏥',name:'Ambulans',number:'112',detail:'Tıbbi acil durum',href:'tel:112'},
+    {ico:'✉️',name:'Arayamıyorsan SMS',number:'155',detail:'Durumunu gönder',href:'sms:155'}
+  ]
+};
+
+const LANG_NAMES = {
+  fr:'🇫🇷 FR', en:'🇬🇧 EN', us:'🇺🇸 US', es:'🇪🇸 ES',
+  pt:'🇵🇹 PT', de:'🇩🇪 DE', it:'🇮🇹 IT', nl:'🇳🇱 NL',
+  pf:'🇵🇫 Tahiti', zh:'🇨🇳 中文', ar:'🇸🇦 عربي', tr:'🇹🇷 TR'
+};
+
+let currentLang = 'fr';
+
+function detectLang() {
+  const nav = (navigator.language || 'fr').toLowerCase();
+  if (nav.includes('pf') || nav.includes('tahiti')) return 'pf';
+  if (nav.startsWith('zh')) return 'zh';
+  if (nav.startsWith('ar')) return 'ar';
+  if (nav.startsWith('tr')) return 'tr';
+  if (nav === 'en-us') return 'us';
+  if (nav.startsWith('en')) return 'en';
+  if (nav.startsWith('es')) return 'es';
+  if (nav.startsWith('pt')) return 'pt';
+  if (nav.startsWith('de')) return 'de';
+  if (nav.startsWith('it')) return 'it';
+  if (nav.startsWith('nl')) return 'nl';
+  return 'fr';
+}
+
+function buildLangBar() {
+  const bar = document.getElementById('langBar');
+  if (!bar) return;
+  bar.innerHTML = Object.entries(LANG_NAMES).map(([code, name]) =>
+    `<button class="lang-btn ${code === currentLang ? 'on' : ''}" onclick="setLang('${code}')">${name}</button>`
+  ).join('');
+}
+
+function updateNumbers(code) {
+  const nums = LANG_NUMBERS[code] || LANG_NUMBERS['fr'];
+  // RTL pour arabe
+  document.documentElement.setAttribute('dir', code === 'ar' ? 'rtl' : 'ltr');
+
+  // Grille numéros dans soutien
+  const grid = document.getElementById('numGrid');
+  if (grid) {
+    grid.innerHTML = nums.map(n => `
+      <a href="${n.href}" class="num-card">
+        <div class="num-ico">${n.ico}</div>
+        <div class="num-body">
+          <div class="num-name">${n.name}</div>
+          <div class="num-number">${n.number}</div>
+          <div class="num-detail">${n.detail}</div>
+        </div>
+        <div class="num-arr">→</div>
+      </a>`).join('');
+    if (code === 'ar') {
+      grid.innerHTML += '<div style="font-size:11px;color:var(--muted);font-style:italic;text-align:center;padding:10px;background:var(--gold-p);border-radius:10px;margin-top:8px">⚠️ الأرقام تختلف حسب البلد. في حالة الشك، اتصل بـ 112</div>';
+    }
+  }
+
+  // Actions dans unsafe
+  const unsafeActions = document.getElementById('unsafeActions');
+  if (unsafeActions) {
+    const police = nums.find(n => n.number === '17' || n.number === '110' || n.number === '111' || n.number === '155' || n.number === '911' || n.number === '999' || n.number === '112') || nums[3] || nums[0];
+    const help = nums[0];
+    const sms = nums.find(n => n.href.startsWith('sms:'));
+    unsafeActions.innerHTML = `
+      <a href="${police.href}" style="display:flex;align-items:center;gap:14px;padding:14px 16px;border-radius:12px;text-decoration:none;background:linear-gradient(135deg,var(--rose-d),var(--rose));color:white;margin-bottom:0">
+        <span style="font-size:18px">🚨</span>
+        <div><div style="font-size:13px;font-weight:600">${police.name} — ${police.number}</div><div style="font-size:11px;opacity:.75">${police.detail}</div></div>
+      </a>
+      <a href="${help.href}" style="display:flex;align-items:center;gap:14px;padding:14px 16px;border-radius:12px;text-decoration:none;background:var(--white2);border:1px solid var(--line2);color:var(--ink2)">
+        <span style="font-size:18px">📞</span>
+        <div><div style="font-size:13px;font-weight:600">${help.name} — ${help.number}</div><div style="font-size:11px;color:var(--muted)">${help.detail}</div></div>
+      </a>
+      ${sms ? `<a href="${sms.href}" style="display:flex;align-items:center;gap:14px;padding:14px 16px;border-radius:12px;text-decoration:none;background:var(--white2);border:1px solid var(--line2);color:var(--ink2)"><span style="font-size:18px">✉️</span><div><div style="font-size:13px;font-weight:600">${sms.name}</div><div style="font-size:11px;color:var(--muted)">${sms.detail}</div></div></a>` : ''}
+    `;
+  }
+}
+
+function setLang(code) {
+  currentLang = code;
+  buildLangBar();
+  updateNumbers(code);
+  translatePage(code);
+  try { localStorage.setItem('manatoa_lang', code); } catch(e) {}
+}
+
+// ══ TOOLTIP DISCRET ══
+let tipTimer = null;
+function showDiscretTip() {
+  const tip = document.getElementById('discretTooltip');
+  if (!tip) return;
+  tip.style.display = 'block';
+  if (tipTimer) clearTimeout(tipTimer);
+  tipTimer = setTimeout(() => { tip.style.display = 'none'; }, 8000);
+}
+
+// ══ JEU CANDY CRUSH ══
+const CANDIES = ['🍭','🍬','🍫','🍓','🍋','💎','🌈'];
+let tapCount = 0, tapTimer = null;
+
+function buildCandyGrid() {
+  const grid = document.getElementById('candyGrid');
+  if (!grid) return;
+  grid.innerHTML = '';
+  for (let i = 0; i < 49; i++) {
+    const cell = document.createElement('div');
+    cell.style.cssText = 'aspect-ratio:1;background:rgba(255,255,255,.08);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px;cursor:pointer;border:1px solid rgba(255,255,255,.05);transition:transform .15s';
+    cell.textContent = CANDIES[Math.floor(Math.random() * CANDIES.length)];
+    cell.onclick = function() {
+      this.style.transform = 'scale(.8)';
+      setTimeout(() => { this.style.transform = ''; this.textContent = CANDIES[Math.floor(Math.random()*CANDIES.length)]; }, 150);
+      const s = document.getElementById('fakeScore');
+      if (s) { const v = parseInt(s.textContent.replace(/\D/g,''))||12480; s.textContent = (v + Math.floor(Math.random()*200+50)).toLocaleString('fr-FR'); }
+    };
+    grid.appendChild(cell);
+  }
+}
+
+function fakeTap() {
+  buildCandyGrid();
+  const s = document.getElementById('fakeScore');
+  if (s) { const v = parseInt(s.textContent.replace(/\D/g,''))||12480; s.textContent = (v + Math.floor(Math.random()*500+200)).toLocaleString('fr-FR'); }
+}
+
+function scoreTripleTap() {
+  tapCount++;
+  if (tapTimer) clearTimeout(tapTimer);
+  if (tapCount >= 3) { tapCount = 0; exitDiscret(); }
+  else tapTimer = setTimeout(() => { tapCount = 0; }, 800);
+}
+
+function enterDiscret() {
+  document.body.classList.add('discret');
+  buildCandyGrid();
+  // Message visible pendant 5 secondes
+  const msg = document.getElementById('tapMsg');
+  if (msg) {
+    msg.style.opacity = '1';
+    setTimeout(() => { msg.style.opacity = '0.15'; }, 5000);
+  }
+}
+
+function exitDiscret() { document.body.classList.remove('discret'); }
+
+
+// ══ INIT ══
+document.addEventListener('DOMContentLoaded', function() {
+  // Cacher l'explication mode discret après 60 secondes
+  setTimeout(() => {
+    const hint = document.getElementById('discretHint');
+    if (hint) { hint.style.opacity = '0'; setTimeout(() => { hint.style.display = 'none'; }, 1000); }
+  }, 60000);
+
+  const saved = localStorage.getItem('manatoa_lang');
+  currentLang = saved || detectLang();
+  buildLangBar();
+  updateNumbers(currentLang);
+  translatePage(currentLang);
+});
+</script>
+
+
+</body>
+</html>
