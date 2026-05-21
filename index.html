@@ -1306,7 +1306,7 @@ function toggleBreath(){
 }
 
 // ── Filtre & messages ──
-const BAD=['haine','tuer','mort','suicide','nul','inutile','idiot','con ','merde','putain'];
+const BAD=['haine','tuer','mort','suicide','nul','inutile','idiot','con ','merde','putain','connasse','conne','connard','sale pute','pute','merde','fils de pute', 'enculé'];
 function filterMsg(t){const l=t.toLowerCase();for(const w of BAD)if(l.includes(w))return false;return t.length>=10}
 async function renderMsgs(listId,countId){
   const msgs = await getMsgsFromAPI();
