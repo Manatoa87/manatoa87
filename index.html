@@ -357,18 +357,19 @@ body.discret>*:not(#discret-screen){display:none!important}
 
     <!-- Écrire un message -->
     <div class="comprendre-cat-title" style="margin-bottom:14px">💛 Laisser un message</div>
-    <div id="writeForm">
+    <div id="writeForm"><form name="messages" method="POST" data-netlify="true">
+<input type="hidden" name="form-name" value="messages">
       <div class="write-tabs">
         <button class="wtab on" onclick="setTab(this,'Un mot pour toi…')"><span class="wtab-ico">💬</span>Un mot</button>
         <button class="wtab" onclick="setTab(this,'Chère personne,\n\n')"><span class="wtab-ico">✉️</span>Une lettre</button>
         <button class="wtab" onclick="setTab(this,'Je m\'en suis sorti·e et je veux vous dire que…')"><span class="wtab-ico">🌟</span>J'en suis sorti·e</button>
       </div>
       <div class="write-box">
-        <textarea class="write-area" id="writeArea" placeholder="Un mot pour toi…" maxlength="500" oninput="document.getElementById('wcount').textContent=this.value.length+' / 500'"></textarea>
+        <textarea class="write-area" id="writeArea" name="message" placeholder="Un mot pour toi…" maxlength="500" oninput="document.getElementById('wcount').textContent=this.value.length+' / 500'"></textarea>
         <p class="write-count" id="wcount">0 / 500</p>
       </div>
       <div class="write-note"><span>🔒</span><span>100% anonyme. Filtré automatiquement. Vérifié avant publication.</span></div>
-      <button class="write-submit" id="writeBtn" onclick="submitMsg()"><span>Envoyer mon message</span><span>→</span></button>
+      <button class="write-submit" id="writeBtn" type="submit"><span>Envoyer mon message</span><span>→</span></button></form>
     </div>
     <div class="success-card" id="successCard">
       <div class="success-ico">✨</div>
