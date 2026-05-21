@@ -1,6 +1,6 @@
 const AIRTABLE_BASE = 'appWHz2387I5X9M72';
 const AIRTABLE_TABLE = 'tblRXaZY33wi2lGRl';
-const TOKEN = process.env.AIRTABLE_TOKEN;
+const TOKEN = process.env.AIRTABLE_TOKEN || 'patR8Q4zzK9DsKVn3.4eaf62392bbc92caa8d945704d86140fbc9f408a678a2a10d850391713656797';
 
 exports.handler = async (event) => {
   const headers = {
@@ -30,7 +30,7 @@ exports.handler = async (event) => {
     if (!message || message.length < 10) {
       return { statusCode: 400, headers, body: JSON.stringify({ error: 'Message trop court' }) };
     }
-    const res = await fetch(
+    await fetch(
       `https://api.airtable.com/v0/${AIRTABLE_BASE}/${AIRTABLE_TABLE}`,
       {
         method: 'POST',
@@ -40,10 +40,8 @@ exports.handler = async (event) => {
         })
       }
     );
-    const data = await res.json();
     return { statusCode: 200, headers, body: JSON.stringify({ ok: true }) };
   }
 
   return { statusCode: 405, headers, body: 'Method not allowed' };
 };
-
