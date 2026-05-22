@@ -1178,7 +1178,7 @@ const MOTS=["Tu n'as pas à traverser ça seul·e. Des gens que tu ne connais pa
 function getMotDuJour(){const el=document.getElementById('motDuJour');if(el)el.textContent=MOTS[new Date().getDate()%MOTS.length]}
 
 // ── Messages ──
-const DEFAULT_MSGS=["Je iuhoilhoiljl"];
+const DEFAULT_MSGS=;
 function getMsgs(){try{const s=localStorage.getItem('manatoa_f3');return s?JSON.parse(s):[...DEFAULT_MSGS]}catch(e){return[...DEFAULT_MSGS]}}
 function saveMsgs(m){try{localStorage.setItem('manatoa_f3',JSON.stringify(m))}catch(e){}}
 
