@@ -1,0 +1,1284 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Manatoa</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --white:#FFFFFF;--white2:#FDFBF8;--white3:#F8F4EF;
+  --gold:#C9A84C;--gold-l:#E2C070;--gold-d:#A88830;
+  --gold-p:rgba(201,168,76,.09);--gold-p2:rgba(201,168,76,.16);
+  --rose:#C4857A;--rose-l:#D9A89F;--rose-d:#A86B60;
+  --rose-p:rgba(196,133,122,.09);--rose-p2:rgba(196,133,122,.16);
+  --ink:#1C1810;--ink2:#3A2E22;--muted:#9A8878;
+  --line:rgba(201,168,76,.16);--line2:rgba(28,24,16,.06);
+}
+
+
+#home{padding-top:60px}
+.page-wrap{padding-top:80px}
+.back-btn{top:20px}
+.page-band{top:0}
+[dir="rtl"]{text-align:right}
+[dir="rtl"] .choice{flex-direction:row-reverse}
+[dir="rtl"] .choice:hover{transform:translateX(-5px);box-shadow:3px 0 0 var(--gold)}
+html{scroll-behavior:smooth}
+body{font-family:'DM Sans',sans-serif;background:var(--white);color:var(--ink);overflow-x:hidden}
+.page{display:none;min-height:100vh}.page.active{display:block}
+
+body.discret #discret-screen{display:flex!important}
+body.discret>*:not(#discret-screen){display:none!important}
+#discret-screen{display:none;position:fixed;inset:0;background:white;z-index:99999;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:40px 24px}
+.discret-fake-title{font-family:Georgia,serif;font-size:22px;color:#333}
+.discret-fake-text{font-size:14px;color:#888;line-height:1.7;text-align:center;max-width:300px}
+.discret-exit{margin-top:20px;padding:10px 24px;background:#f0f0f0;border-radius:100px;font-size:12px;color:#888;cursor:pointer;font-family:sans-serif;border:none}
+
+.back-btn{position:fixed;top:20px;left:20px;z-index:200;display:none;align-items:center;gap:8px;background:rgba(255,255,255,.96);backdrop-filter:blur(12px);border:1px solid var(--line);border-radius:100px;padding:10px 20px;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:500;color:var(--rose-d);transition:all .2s;box-shadow:0 4px 20px rgba(196,133,122,.1)}
+.back-btn.show{display:flex}
+.back-btn:hover{background:linear-gradient(135deg,var(--gold),var(--rose));color:white;border-color:transparent}
+.discret-btn{position:fixed;top:20px;right:20px;z-index:300;background:rgba(255,255,255,.9);border:1px solid var(--line2);border-radius:100px;padding:8px 16px;font-size:11px;color:var(--muted);cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .2s}
+.discret-btn:hover{background:var(--ink);color:white}
+
+/* ══ HOME ══ */
+#home{min-height:100vh;background:var(--white);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:60px 24px 80px;position:relative;overflow:hidden}
+.home-bg{position:absolute;inset:0;z-index:0;pointer-events:none;background:radial-gradient(ellipse 60% 50% at 5% 5%,rgba(201,168,76,.05) 0%,transparent 60%),radial-gradient(ellipse 50% 45% at 95% 95%,rgba(196,133,122,.07) 0%,transparent 60%),var(--white)}
+.deco-top{position:absolute;top:0;left:50%;transform:translateX(-50%);width:1px;height:110px;background:linear-gradient(to bottom,var(--gold),transparent);opacity:.3;z-index:1}
+.home-center{position:relative;z-index:2;text-align:center;max-width:420px;width:100%}
+.gold-sep{display:flex;align-items:center;gap:14px;margin-bottom:24px}
+.gs-line{flex:1;height:1px;background:linear-gradient(to right,transparent,var(--gold-l),var(--rose-l),transparent)}
+.gs-diamond{width:5px;height:5px;background:linear-gradient(135deg,var(--gold),var(--rose));transform:rotate(45deg)}
+.logo-name{font-family:'Playfair Display',serif;font-size:52px;font-weight:900;letter-spacing:.1em;text-transform:uppercase;background:linear-gradient(135deg,var(--gold-d) 0%,var(--gold) 35%,var(--gold-l) 55%,var(--rose-l) 75%,var(--rose) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:12px;animation:fadeUp .9s .1s both}
+.logo-tagline{font-size:12px;color:var(--muted);line-height:1.9;margin-bottom:16px;padding:0 8px;animation:fadeUp .9s .2s both}
+.logo-tagline em{font-style:italic;color:var(--rose-d);font-weight:500}
+.mot-du-jour{background:linear-gradient(135deg,var(--gold-p2),var(--rose-p));border:1px solid var(--line);border-radius:14px;padding:14px 18px;margin-bottom:28px;text-align:left;animation:fadeUp .9s .25s both;position:relative;overflow:hidden}
+.mot-du-jour::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(to right,var(--gold),var(--rose))}
+.mdj-label{font-size:9px;letter-spacing:.22em;text-transform:uppercase;background:linear-gradient(135deg,var(--gold-d),var(--rose-d));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;font-weight:600;margin-bottom:5px}
+.mdj-text{font-family:'Playfair Display',serif;font-size:14px;font-style:italic;color:var(--ink2);line-height:1.7}
+.home-title{font-family:'Playfair Display',serif;font-size:clamp(22px,5vw,30px);font-weight:400;font-style:italic;color:var(--muted);line-height:1.4;margin-bottom:6px;animation:fadeUp .9s .3s both}
+.home-title strong{font-style:normal;font-weight:800;color:var(--ink)}
+.home-sub{font-size:13px;color:var(--muted);margin-bottom:28px;line-height:1.7;animation:fadeUp .9s .35s both}
+@keyframes fadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+
+.choices{display:flex;flex-direction:column;gap:10px;animation:fadeUp .9s .45s both}
+.choice{display:flex;align-items:center;gap:16px;padding:18px 20px;border-radius:16px;cursor:pointer;border:1px solid var(--line2);text-align:left;background:var(--white2);transition:all .28s cubic-bezier(.22,1,.36,1);position:relative;overflow:hidden}
+.choice::before{content:'';position:absolute;left:0;top:0;bottom:0;width:0;background:linear-gradient(to right,rgba(201,168,76,.07),transparent);transition:width .3s}
+.choice:hover::before{width:100%}
+.choice:hover{border-color:rgba(201,168,76,.3);transform:translateX(5px);box-shadow:-3px 0 0 var(--gold)}
+.ch-ico{width:48px;height:48px;border-radius:14px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:22px;background:var(--white3);border:1px solid var(--line);transition:transform .25s}
+.choice:hover .ch-ico{transform:scale(1.06) rotate(-4deg)}
+.ch-body{flex:1}
+.ch-num{font-size:9px;letter-spacing:.24em;text-transform:uppercase;font-weight:500;background:linear-gradient(135deg,var(--gold-d),var(--rose-d));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:3px}
+.ch-label{font-family:'Playfair Display',serif;font-size:17px;font-weight:700;color:var(--ink);margin-bottom:2px}
+.ch-desc{font-size:12px;color:var(--muted);line-height:1.5}
+.ch-arr{width:34px;height:34px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;border:1px solid var(--line);color:var(--gold-d);font-size:16px;transition:all .22s;background:var(--gold-p)}
+.choice:hover .ch-arr{background:linear-gradient(135deg,var(--gold),var(--rose));color:white;border-color:transparent}
+.home-stats{display:flex;gap:0;margin-top:28px;border:1px solid var(--line);border-radius:14px;overflow:hidden;animation:fadeUp .9s .6s both;background:var(--white2)}
+.hs-item{flex:1;padding:12px 8px;text-align:center;border-right:1px solid var(--line)}
+.hs-item:last-child{border-right:none}
+.hs-n{font-family:'Playfair Display',serif;font-size:16px;font-weight:700;background:linear-gradient(135deg,var(--gold),var(--rose));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hs-l{font-size:9px;color:var(--muted);margin-top:1px}
+
+/* ══ INNER ══ */
+.page-wrap{min-height:100vh;padding:80px 24px 60px;display:flex;flex-direction:column;align-items:center;animation:fadeUp .45s ease both;background:var(--white)}
+.inner{max-width:460px;width:100%}
+.page-band{position:fixed;top:0;left:0;right:0;height:2px;z-index:100;background:linear-gradient(to right,transparent,var(--gold),var(--rose-l),var(--gold-l),transparent)}
+.eyebrow{display:inline-flex;align-items:center;gap:10px;font-size:10px;letter-spacing:.26em;text-transform:uppercase;font-weight:500;margin-bottom:12px;background:linear-gradient(135deg,var(--gold-d),var(--rose-d));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.p-title{font-family:'Playfair Display',serif;font-size:clamp(28px,7vw,42px);font-weight:900;line-height:1.1;margin-bottom:12px;color:var(--ink)}
+.p-title em{font-style:italic;background:linear-gradient(135deg,var(--gold),var(--rose));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.p-intro{font-size:14px;color:var(--muted);line-height:1.9;margin-bottom:24px}
+.divider{display:flex;align-items:center;gap:12px;margin:22px 0}
+.div-line{flex:1;height:1px;background:linear-gradient(to right,transparent,var(--line),transparent)}
+.div-txt{font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);white-space:nowrap}
+
+/* ══ MESSAGES ══ */
+.write-tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}
+.wtab{padding:11px 6px;border-radius:12px;border:1px solid var(--line2);background:var(--white2);font-family:'DM Sans',sans-serif;font-size:11px;color:var(--muted);cursor:pointer;transition:all .2s;display:flex;flex-direction:column;align-items:center;gap:4px}
+.wtab.on{background:linear-gradient(135deg,var(--gold-p2),var(--rose-p2));border-color:var(--line);color:var(--gold-d);font-weight:600}
+.wtab-ico{font-size:16px}
+.write-box{background:var(--white2);border:1px solid var(--line2);border-radius:16px;padding:4px;margin-bottom:10px;transition:all .2s}
+.write-box:focus-within{border-color:rgba(196,133,122,.35);box-shadow:0 0 0 3px var(--rose-p)}
+.write-area{width:100%;padding:16px 18px;background:transparent;border:none;font-family:'Playfair Display',serif;font-size:17px;color:var(--ink);line-height:1.7;resize:none;min-height:140px;outline:none}
+.write-area::placeholder{color:var(--muted);font-style:italic}
+.write-count{font-size:10px;color:var(--muted);text-align:right;padding:0 14px 10px}
+.write-note{background:linear-gradient(135deg,var(--gold-p),var(--rose-p));border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin-bottom:14px;display:flex;gap:10px;align-items:flex-start;font-size:12px;color:var(--muted);line-height:1.6}
+.write-submit{width:100%;padding:17px;background:linear-gradient(135deg,var(--gold-d),var(--gold),var(--rose-l),var(--rose));color:white;border:none;border-radius:100px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:700;cursor:pointer;transition:all .28s;letter-spacing:.08em;text-transform:uppercase;display:flex;align-items:center;justify-content:center;gap:10px;box-shadow:0 8px 28px rgba(196,133,122,.2)}
+.write-submit:hover{transform:translateY(-2px)}
+.write-submit:disabled{opacity:.4;cursor:not-allowed;transform:none}
+.success-card{display:none;text-align:center;padding:44px 24px;background:linear-gradient(135deg,var(--gold-p),var(--rose-p));border:1px solid var(--line);border-radius:22px}
+.success-card.show{display:block;animation:fadeUp .5s ease}
+.success-ico{font-size:44px;margin-bottom:16px}
+.success-title{font-family:'Playfair Display',serif;font-size:24px;font-weight:700;font-style:italic;color:var(--ink);margin-bottom:10px}
+.success-txt{font-size:14px;color:var(--muted);line-height:1.85}
+
+.msgs-banner{background:linear-gradient(135deg,var(--gold-p),var(--rose-p));border:1px solid var(--line);border-radius:16px;padding:18px 20px;margin-bottom:14px;text-align:center}
+.msgs-banner-title{font-family:'Playfair Display',serif;font-size:18px;font-weight:700;color:var(--ink);margin-bottom:4px}
+.msgs-banner-sub{font-size:12px;color:var(--muted)}
+.msgs-count-badge{display:inline-block;background:linear-gradient(135deg,var(--gold),var(--rose));border-radius:100px;padding:4px 14px;font-size:11px;font-weight:600;color:white;margin-top:8px}
+.msgs-list{display:flex;flex-direction:column;gap:10px}
+.msg-card{background:var(--white2);border:1px solid var(--line2);border-radius:16px;padding:18px 20px;transition:all .22s;position:relative;overflow:hidden}
+.msg-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:2px;background:linear-gradient(to bottom,var(--gold),var(--rose));opacity:0;transition:opacity .25s}
+.msg-card:hover::before{opacity:1}
+.msg-card:hover{border-color:rgba(196,133,122,.2);transform:translateX(4px)}
+.msg-quote{font-family:'Playfair Display',serif;font-size:32px;font-weight:900;background:linear-gradient(135deg,var(--gold),var(--rose));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;opacity:.3;line-height:.8;margin-bottom:8px}
+.msg-text{font-family:'Playfair Display',serif;font-size:15px;font-style:italic;font-weight:400;line-height:1.8;color:var(--ink2);margin-bottom:10px}
+.msg-meta{font-size:10px;color:var(--muted);display:flex;align-items:center;gap:8px}
+.msg-dot{width:4px;height:4px;background:var(--rose);border-radius:50%;opacity:.5}
+
+/* ══ TEMOIN ══ */
+.temoin-options{display:flex;flex-direction:column;gap:10px;margin-bottom:16px}
+.temoin-option{padding:16px 18px;border:1px solid var(--line2);border-radius:14px;cursor:pointer;background:var(--white2);transition:all .22s;text-align:left;font-family:'DM Sans',sans-serif}
+.temoin-option:hover{border-color:rgba(201,168,76,.3);background:linear-gradient(135deg,var(--gold-p2),var(--rose-p));transform:translateX(4px)}
+.temoin-option-label{font-family:'Playfair Display',serif;font-size:16px;font-weight:700;color:var(--ink);margin-bottom:3px}
+.temoin-option-desc{font-size:12px;color:var(--muted)}
+.temoin-result{display:none;background:linear-gradient(135deg,var(--gold-p),var(--rose-p));border:1px solid var(--line);border-radius:16px;padding:20px;margin-bottom:16px}
+.temoin-result.show{display:block;animation:fadeUp .4s ease}
+.temoin-result-title{font-family:'Playfair Display',serif;font-size:17px;font-weight:700;color:var(--ink);margin-bottom:14px}
+.temoin-step{display:flex;gap:10px;margin-bottom:10px;font-size:13px;color:var(--ink2);line-height:1.6;align-items:flex-start}
+.temoin-step-num{width:22px;height:22px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--rose));color:white;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;margin-top:1px}
+
+/* ══ ACCORDÉON COMPRENDRE ══ */
+.comprendre-section{margin-bottom:10px}
+.comprendre-category{margin-bottom:20px}
+.comprendre-cat-title{font-family:'Playfair Display',serif;font-size:18px;font-weight:700;color:var(--ink);margin-bottom:12px;padding-left:4px;border-left:3px solid var(--gold);padding-left:12px}
+.accordion-item{border:1px solid var(--line2);border-radius:14px;overflow:hidden;margin-bottom:8px;background:var(--white2)}
+.accordion-header{display:flex;align-items:center;justify-content:space-between;padding:16px 18px;cursor:pointer;transition:all .2s}
+.accordion-header:hover{background:linear-gradient(135deg,var(--gold-p),var(--rose-p))}
+.accordion-question{font-size:14px;font-weight:600;color:var(--ink);line-height:1.4;flex:1;padding-right:12px}
+.accordion-arrow{font-size:18px;color:var(--gold);transition:transform .3s;flex-shrink:0}
+.accordion-item.open .accordion-arrow{transform:rotate(180deg)}
+.accordion-body{display:none;padding:0 18px 18px}
+.accordion-item.open .accordion-body{display:block;animation:fadeUp .3s ease}
+.accordion-short{font-size:14px;color:var(--rose-d);font-weight:500;line-height:1.6;margin-bottom:12px;padding:10px 14px;background:linear-gradient(135deg,var(--gold-p),var(--rose-p));border-radius:10px}
+.accordion-long{font-size:13px;color:var(--ink2);line-height:1.9;margin-bottom:12px}
+.accordion-long p{margin-bottom:8px}
+.accordion-long strong{color:var(--ink)}
+.accordion-signs{display:flex;flex-direction:column;gap:6px;margin-bottom:12px}
+.accordion-sign{display:flex;align-items:flex-start;gap:10px;font-size:13px;color:var(--ink2);line-height:1.5}
+.sign-dot{width:6px;height:6px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--rose));flex-shrink:0;margin-top:5px}
+.accordion-note{font-size:12px;color:var(--muted);font-style:italic;line-height:1.6;padding:10px 12px;background:rgba(255,255,255,.6);border-radius:8px;border-left:2px solid var(--rose-l)}
+.accordion-more{display:none;margin-top:10px}
+.accordion-item.open .accordion-more{display:block}
+.read-more-btn{background:none;border:none;font-family:'DM Sans',sans-serif;font-size:12px;color:var(--gold-d);cursor:pointer;text-decoration:underline;padding:0;margin-top:6px}
+
+/* ══ RESPIRATION ══ */
+.breath-card{background:linear-gradient(135deg,var(--gold-p2),var(--rose-p));border:1px solid var(--line);border-radius:18px;padding:24px 22px;text-align:center}
+.breath-title{font-family:'Playfair Display',serif;font-size:18px;font-weight:700;color:var(--ink);margin-bottom:6px}
+.breath-sub{font-size:12px;color:var(--muted);margin-bottom:18px;line-height:1.6}
+.breath-circle{width:96px;height:96px;border-radius:50%;background:linear-gradient(135deg,var(--gold-p2),var(--rose-p2));border:3px solid var(--gold-l);margin:0 auto 12px;display:flex;align-items:center;justify-content:center;transition:all 4s ease-in-out}
+.breath-circle.inhale{transform:scale(1.4);border-color:var(--rose-l)}
+.breath-circle.exhale{transform:scale(1);border-color:var(--gold-l)}
+.breath-count{font-family:'Playfair Display',serif;font-size:30px;font-weight:700;background:linear-gradient(135deg,var(--gold),var(--rose));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.breath-instruction{font-size:13px;color:var(--muted);margin-bottom:14px;min-height:20px}
+.breath-btn{padding:12px 28px;background:linear-gradient(135deg,var(--gold-d),var(--gold),var(--rose));color:white;border:none;border-radius:100px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;cursor:pointer;transition:all .2s;box-shadow:0 6px 20px rgba(196,133,122,.2)}
+
+/* ══ NUMÉROS ══ */
+.num-grid{display:flex;flex-direction:column;gap:8px}
+.num-card{display:flex;align-items:center;gap:16px;padding:14px 18px;border-radius:14px;text-decoration:none;background:var(--white2);border:1px solid var(--line2);transition:all .22s;position:relative;overflow:hidden}
+.num-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:0;background:linear-gradient(to right,rgba(196,133,122,.08),transparent);transition:width .3s}
+.num-card:hover::before{width:100%}
+.num-card:hover{border-color:rgba(196,133,122,.3);transform:translateX(5px);box-shadow:-2px 0 0 var(--rose)}
+.num-ico{width:46px;height:46px;border-radius:13px;flex-shrink:0;background:linear-gradient(135deg,var(--gold-p),var(--rose-p));border:1px solid var(--line);display:flex;align-items:center;justify-content:center;font-size:18px}
+.num-body{flex:1}
+.num-name{font-size:12px;font-weight:500;color:var(--muted);margin-bottom:1px}
+.num-number{font-family:'Playfair Display',serif;font-size:28px;font-weight:900;line-height:1;background:linear-gradient(135deg,var(--gold-d),var(--rose-d));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.num-detail{font-size:10px;color:var(--muted);margin-top:1px}
+.num-arr{color:var(--rose);opacity:.4;font-size:16px;transition:all .2s}
+.num-card:hover .num-arr{opacity:1;transform:translateX(3px)}
+
+/* ══ URGENCE ══ */
+.urgence-card{background:linear-gradient(135deg,var(--rose-p2),rgba(196,133,122,.04));border:1px solid rgba(196,133,122,.2);border-radius:18px;padding:22px;text-align:center;position:relative;overflow:hidden}
+.urgence-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(to right,transparent,var(--rose-l),var(--gold-l),transparent)}
+.urg-pulse{width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,rgba(196,133,122,.12),rgba(201,168,76,.08));border:1px solid rgba(196,133,122,.2);margin:0 auto 12px;display:flex;align-items:center;justify-content:center;font-size:20px;animation:urgPulse 3s ease-in-out infinite}
+@keyframes urgPulse{0%,100%{box-shadow:0 0 0 0 rgba(196,133,122,.2)}50%{box-shadow:0 0 0 12px rgba(196,133,122,0)}}
+.urg-title{font-family:'Playfair Display',serif;font-size:18px;font-weight:700;color:var(--ink);margin-bottom:6px}
+.urg-sub{font-size:12px;color:var(--muted);line-height:1.7;margin-bottom:14px}
+.urg-btn{display:inline-flex;align-items:center;gap:10px;background:linear-gradient(135deg,var(--rose-d),var(--rose));color:white;border:none;border-radius:100px;padding:12px 22px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;cursor:pointer;transition:all .2s;box-shadow:0 6px 20px rgba(196,133,122,.22)}
+
+/* ══ PLAN ══ */
+.plan-card{background:var(--white2);border:1px solid var(--line2);border-radius:16px;padding:20px;margin-bottom:10px}
+.plan-question{font-family:'Playfair Display',serif;font-size:16px;font-weight:700;color:var(--ink);margin-bottom:12px}
+.plan-options{display:flex;flex-direction:column;gap:8px}
+.plan-option{padding:12px 16px;border:1px solid var(--line2);border-radius:11px;cursor:pointer;font-size:13px;color:var(--ink2);background:var(--white);transition:all .2s;text-align:left;font-family:'DM Sans',sans-serif}
+.plan-option:hover,.plan-option.selected{background:linear-gradient(135deg,var(--gold-p2),var(--rose-p));border-color:rgba(201,168,76,.35)}
+.plan-result{display:none;background:linear-gradient(135deg,var(--gold-p),var(--rose-p));border:1px solid var(--line);border-radius:16px;padding:20px;margin-top:10px}
+.plan-result.show{display:block;animation:fadeUp .4s ease}
+.plan-result-title{font-family:'Playfair Display',serif;font-size:17px;font-weight:700;color:var(--ink);margin-bottom:12px}
+.plan-step{display:flex;gap:10px;margin-bottom:10px;font-size:13px;color:var(--ink2);line-height:1.6;align-items:flex-start}
+.plan-step-num{width:22px;height:22px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--rose));color:white;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;margin-top:1px}
+
+/* ══ PROCHES ══ */
+.contacts-box{background:linear-gradient(135deg,var(--gold-p),var(--rose-p));border:1px solid var(--line);border-radius:16px;padding:20px}
+.contacts-box-title{font-family:'Playfair Display',serif;font-size:17px;font-weight:700;color:var(--ink);margin-bottom:4px}
+.contacts-box-sub{font-size:12px;color:var(--muted);line-height:1.6;margin-bottom:14px}
+.contact-list{display:flex;flex-direction:column;gap:8px;margin-bottom:12px}
+.contact-item{display:flex;align-items:center;gap:12px;padding:11px 14px;background:rgba(255,255,255,.8);border:1px solid var(--line2);border-radius:11px}
+.contact-info{flex:1}
+.contact-name{font-size:13px;font-weight:600;color:var(--ink)}
+.contact-num{font-size:11px;color:var(--muted)}
+.contact-actions{display:flex;gap:6px}
+.contact-call{padding:6px 12px;background:linear-gradient(135deg,var(--rose-d),var(--rose));color:white;border:none;border-radius:100px;font-size:11px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif}
+.contact-del{padding:6px 10px;background:transparent;border:1px solid var(--line2);color:var(--muted);border-radius:100px;font-size:11px;cursor:pointer;font-family:'DM Sans',sans-serif}
+.add-contact-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px}
+.contact-input{padding:10px 13px;border:1px solid var(--line2);border-radius:10px;font-family:'DM Sans',sans-serif;font-size:13px;color:var(--ink);background:rgba(255,255,255,.8);outline:none;transition:all .2s;width:100%}
+.contact-input:focus{border-color:var(--rose);box-shadow:0 0 0 3px var(--rose-p)}
+.add-contact-btn{width:100%;padding:11px;background:linear-gradient(135deg,var(--gold-d),var(--gold),var(--rose));color:white;border:none;border-radius:10px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;cursor:pointer}
+
+/* ══ BOUTIQUE ══ */
+.boutique-hero{background:linear-gradient(135deg,var(--gold-p2),var(--rose-p));border:1px solid var(--line);border-radius:20px;padding:26px 22px;text-align:center;margin-bottom:18px;position:relative;overflow:hidden}
+.boutique-hero::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(to right,transparent,var(--gold),var(--rose-l),transparent)}
+.boutique-title{font-family:'Playfair Display',serif;font-size:22px;font-weight:700;color:var(--ink);margin-bottom:8px}
+.boutique-sub{font-size:13px;color:var(--muted);line-height:1.7;margin-bottom:18px}
+.boutique-btn{display:inline-flex;align-items:center;gap:10px;background:linear-gradient(135deg,var(--gold-d),var(--gold),var(--rose-l),var(--rose));color:white;border:none;border-radius:100px;padding:13px 26px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:700;cursor:pointer;text-decoration:none;transition:all .22s;box-shadow:0 8px 24px rgba(196,133,122,.2);letter-spacing:.06em}
+.boutique-btn:hover{transform:scale(1.04)}
+.impact-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px}
+.impact-card{background:var(--white2);border:1px solid var(--line2);border-radius:14px;padding:18px 14px;text-align:center;transition:all .22s;position:relative;overflow:hidden}
+.impact-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(to right,var(--gold),var(--rose));opacity:0;transition:opacity .25s}
+.impact-card:hover::before{opacity:1}
+.impact-card:hover{border-color:rgba(196,133,122,.2);transform:translateY(-2px)}
+.impact-n{font-family:'Playfair Display',serif;font-size:26px;font-weight:900;line-height:1;margin-bottom:5px;background:linear-gradient(135deg,var(--gold-d),var(--rose-d));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.impact-l{font-size:11px;color:var(--muted);line-height:1.4}
+.mission-card{background:var(--white2);border:1px solid var(--line);border-radius:18px;padding:24px 20px;position:relative;overflow:hidden}
+.mission-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(to right,transparent,var(--gold),var(--rose-l),transparent)}
+.mission-quote{border-left:2px solid var(--rose);padding-left:16px;margin-top:16px}
+.mq-mark{font-family:'Playfair Display',serif;font-size:32px;font-weight:900;background:linear-gradient(135deg,var(--gold),var(--rose));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;opacity:.4;line-height:.8;margin-bottom:8px}
+.mq-txt{font-family:'Playfair Display',serif;font-size:15px;font-style:italic;color:var(--ink2);line-height:1.8;margin-bottom:10px}
+.mq-auth{font-size:10px;color:var(--rose-d);letter-spacing:.16em;text-transform:uppercase;font-weight:600}
+.legal-note{margin-top:20px;padding:14px 16px;background:var(--white2);border:1px solid var(--line2);border-radius:12px;font-size:11px;color:var(--muted);line-height:1.7;text-align:center}
+
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(10px);background:var(--ink);color:var(--white);padding:12px 24px;border-radius:100px;font-size:13px;opacity:0;transition:all .3s;z-index:600;pointer-events:none;white-space:nowrap;box-shadow:0 8px 28px rgba(26,24,16,.15)}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* ══ DROITS ══ */
+.loi-card{background:var(--white2);border:1px solid var(--line2);border-radius:16px;overflow:hidden;margin-bottom:10px}
+.loi-header{display:flex;align-items:flex-start;gap:14px;padding:16px 18px;cursor:pointer;transition:all .2s}
+.loi-header:hover{background:linear-gradient(135deg,var(--gold-p),var(--rose-p))}
+.loi-title-wrap{flex:1}
+.loi-name{font-size:14px;font-weight:600;color:var(--ink);line-height:1.35;margin-bottom:3px}
+.loi-tag{display:inline-block;font-size:9px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;padding:2px 8px;border-radius:100px;margin-right:4px;margin-bottom:4px}
+.tag-protect{background:rgba(196,133,122,.12);color:var(--rose-d)}
+.tag-enfant{background:rgba(201,168,76,.12);color:var(--gold-d)}
+.tag-urgence{background:rgba(196,133,122,.2);color:var(--rose-d);border:1px solid rgba(196,133,122,.2)}
+.tag-penal{background:rgba(28,24,16,.06);color:var(--ink2)}
+.loi-arr{font-size:18px;color:var(--gold);transition:transform .3s;flex-shrink:0;margin-top:2px}
+.loi-card.open .loi-arr{transform:rotate(180deg)}
+.loi-body{display:none;padding:0 18px 18px}
+.loi-card.open .loi-body{display:block;animation:fadeUp .3s ease}
+.loi-text{font-size:13px;color:var(--ink2);line-height:1.9;margin-bottom:12px}
+.loi-text strong{color:var(--ink)}
+.loi-what{background:linear-gradient(135deg,var(--gold-p),var(--rose-p));border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin-bottom:10px}
+.loi-what-title{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--rose-d);margin-bottom:8px}
+.loi-signs{display:flex;flex-direction:column;gap:6px}
+.loi-sign{display:flex;align-items:flex-start;gap:10px;font-size:13px;color:var(--ink2);line-height:1.55}
+.loi-dot{width:5px;height:5px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--rose));flex-shrink:0;margin-top:5px}
+.loi-note{font-size:11px;color:var(--muted);font-style:italic;line-height:1.65;padding:10px 12px;background:rgba(255,255,255,.7);border-radius:8px;border-left:2px solid var(--rose-l)}
+.loi-urgence-badge{display:flex;align-items:center;gap:8px;background:linear-gradient(135deg,rgba(196,133,122,.1),rgba(201,168,76,.06));border:1px solid rgba(196,133,122,.2);border-radius:10px;padding:10px 14px;margin-bottom:10px;font-size:12px;color:var(--rose-d);font-weight:500}
+.droits-intro{background:linear-gradient(135deg,var(--gold-p2),var(--rose-p));border:1px solid var(--line);border-radius:18px;padding:22px 20px;margin-bottom:20px;position:relative;overflow:hidden}
+.droits-intro::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(to right,transparent,var(--gold),var(--rose-l),transparent)}
+.droits-intro-title{font-family:'Playfair Display',serif;font-size:17px;font-weight:700;color:var(--ink);margin-bottom:8px}
+.droits-intro-text{font-size:13px;color:var(--muted);line-height:1.85}
+.droits-intro-text strong{color:var(--rose-d)}
+.droits-category-title{font-family:'Playfair Display',serif;font-size:17px;font-weight:700;color:var(--ink);border-left:3px solid var(--gold);padding-left:12px;margin:22px 0 12px}
+.phrase-cle{font-size:13px;font-weight:600;color:var(--rose-d);font-style:italic;line-height:1.6;padding:12px 14px;background:rgba(196,133,122,.07);border-radius:10px;border-left:3px solid var(--rose);margin-bottom:10px}
+.centre-card{background:linear-gradient(135deg,var(--rose-p2),var(--gold-p));border:1px solid var(--line);border-radius:18px;padding:22px 20px;margin-bottom:16px;position:relative;overflow:hidden}
+.centre-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(to right,transparent,var(--rose-l),var(--gold-l),transparent)}
+.centre-badge{display:inline-block;background:linear-gradient(135deg,var(--rose-d),var(--rose));color:white;font-size:10px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;padding:5px 14px;border-radius:100px;margin-bottom:14px}
+</style>
+</head>
+<body>
+
+<div id="discret-screen">
+<div style="width:100%;max-width:400px;font-family:Arial,sans-serif;background:#1a0533;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding-bottom:30px">
+  <div style="width:100%;background:linear-gradient(180deg,#6b1fa0,#4a0f7a);padding:14px 20px 10px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 3px 10px rgba(0,0,0,.4)">
+    <div style="text-align:center"><div style="font-size:10px;color:#f9d849;font-weight:700">NIVEAU</div><div style="font-size:26px;font-weight:900;color:white;line-height:1">247</div></div>
+    <div style="text-align:center"><div style="font-size:22px;font-weight:900;background:linear-gradient(135deg,#f9d849,#ff9f43);-webkit-background-clip:text;-webkit-text-fill-color:transparent">CandyBlast</div><div style="font-size:10px;color:#c084fc">★★★ Objectif: 15 000 pts</div></div>
+    <div style="text-align:center"><div style="font-size:10px;color:#f9d849;font-weight:700">VIES</div><div style="font-size:20px">❤️❤️❤️</div></div>
+  </div>
+  <div style="background:rgba(255,255,255,.07);border-radius:14px;margin:14px 16px 0;padding:10px 20px;width:calc(100% - 32px);text-align:center;border:1px solid rgba(255,255,255,.1)">
+    <div style="font-size:10px;color:#c084fc;font-weight:600;letter-spacing:.1em">SCORE</div>
+    <div style="font-size:36px;font-weight:900;color:#f9d849;cursor:pointer" id="fakeScore" onclick="scoreTripleTap()">12 480</div>
+    <div style="height:6px;background:rgba(255,255,255,.1);border-radius:100px;margin-top:8px;overflow:hidden"><div style="height:100%;width:83%;background:linear-gradient(to right,#f9d849,#ff6b9d);border-radius:100px"></div></div>
+  </div>
+  <div id="tapMsg" style="margin:10px 16px 0;width:calc(100% - 32px);text-align:center;font-size:12px;color:rgba(255,255,255,.7);background:rgba(255,255,255,.08);border-radius:10px;padding:8px 12px;transition:opacity .5s">
+    👆 Appuie <strong>3 fois</strong> sur le score pour revenir au site
+  </div>
+  <div style="margin:12px 16px 0;width:calc(100% - 32px)"><div style="display:grid;grid-template-columns:repeat(7,1fr);gap:4px" id="candyGrid"></div></div>
+  <div style="margin:12px 16px 0;width:calc(100% - 32px);display:flex;gap:8px;justify-content:center">
+    <div style="background:rgba(255,255,255,.08);border-radius:12px;padding:10px;text-align:center;flex:1;border:1px solid rgba(255,255,255,.1)"><div style="font-size:22px">🍭</div><div style="font-size:9px;color:#c084fc">Lolipop</div><div style="font-size:11px;font-weight:700;color:white">x3</div></div>
+    <div style="background:rgba(255,255,255,.08);border-radius:12px;padding:10px;text-align:center;flex:1;border:1px solid rgba(255,255,255,.1)"><div style="font-size:22px">🍫</div><div style="font-size:9px;color:#c084fc">Choco</div><div style="font-size:11px;font-weight:700;color:white">x1</div></div>
+    <div style="background:rgba(255,255,255,.08);border-radius:12px;padding:10px;text-align:center;flex:1;border:1px solid rgba(255,255,255,.1)"><div style="font-size:22px">🌈</div><div style="font-size:9px;color:#c084fc">Arc-en-ciel</div><div style="font-size:11px;font-weight:700;color:white">x2</div></div>
+    <div style="background:rgba(255,255,255,.08);border-radius:12px;padding:10px;text-align:center;flex:1;border:1px solid rgba(255,255,255,.1)"><div style="font-size:22px">⭐</div><div style="font-size:9px;color:#c084fc">Étoile</div><div style="font-size:11px;font-weight:700;color:white">x5</div></div>
+  </div>
+  <div style="margin:12px 16px 0;width:calc(100% - 32px)">
+    <button onclick="fakeTap()" style="width:100%;padding:15px;background:linear-gradient(135deg,#ff6b9d,#c44dff);border:none;border-radius:100px;font-size:16px;font-weight:800;color:white;box-shadow:0 6px 20px rgba(196,77,255,.4);cursor:pointer;font-family:Arial">🎮 JOUER !</button>
+  </div>
+  <div style="margin:14px 16px 0;width:calc(100% - 32px)">
+    <div style="font-size:10px;color:#c084fc;font-weight:600;margin-bottom:8px">MES AMIS</div>
+    <div style="display:flex;gap:10px">
+      <div style="text-align:center"><div style="width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#ff6b9d,#c44dff);display:flex;align-items:center;justify-content:center;font-size:20px;border:2px solid #f9d849">😊</div><div style="font-size:9px;color:#c084fc;margin-top:2px">Sophie</div><div style="font-size:8px;color:#f9d849">Niv.312</div></div>
+      <div style="text-align:center"><div style="width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#f9d849,#ff9f43);display:flex;align-items:center;justify-content:center;font-size:20px;border:2px solid rgba(255,255,255,.2)">🌸</div><div style="font-size:9px;color:#c084fc;margin-top:2px">Marie</div><div style="font-size:8px;color:#c084fc">Niv.198</div></div>
+      <div style="text-align:center"><div style="width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#4ecdc4,#44a8b3);display:flex;align-items:center;justify-content:center;font-size:20px;border:2px solid rgba(255,255,255,.2)">🦋</div><div style="font-size:9px;color:#c084fc;margin-top:2px">Léa</div><div style="font-size:8px;color:#c084fc">Niv.156</div></div>
+      <div style="text-align:center"><div style="width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#ff9f43,#ee5a24);display:flex;align-items:center;justify-content:center;font-size:20px;border:2px solid rgba(255,255,255,.2)">🌺</div><div style="font-size:9px;color:#c084fc;margin-top:2px">Clara</div><div style="font-size:8px;color:#c084fc">Niv.89</div></div>
+    </div>
+  </div>
+</div>
+</div>
+
+<button class="back-btn" id="back" onclick="goHome()">← Retour</button>
+<div style="position:fixed;bottom:46px;right:14px;z-index:400;text-align:right;max-width:200px">
+  <div style="font-size:10px;color:rgba(100,100,100,.7);font-family:'DM Sans',sans-serif;line-height:1.5;margin-bottom:4px">
+    🎮 Mode discret — protège ta navigation si tu n'es pas seul·e.<br><span style="opacity:.8">Appuie 3× sur le score pour revenir.</span>
+  </div>
+</div>
+<button onclick="enterDiscret()" style="position:fixed;bottom:18px;right:14px;z-index:400;background:rgba(255,255,255,.9);border:1px solid rgba(0,0,0,.15);border-radius:20px;padding:5px 11px;font-size:10px;color:#999;cursor:pointer;font-family:sans-serif;white-space:nowrap;box-shadow:0 1px 4px rgba(0,0,0,.1)">🎮 Discret</button>
+
+<!-- ════ ACCUEIL ════ -->
+<div id="home" class="page active">
+  <div class="home-bg"></div>
+  <div class="deco-top"></div>
+  <div class="home-center">
+    <div class="gold-sep"><div class="gs-line"></div><div class="gs-diamond"></div><div class="gs-line"></div></div>
+    <div class="logo-name">Manatoa</div>
+    <div class="logo-tagline">
+      Fondée par une maman solo, d'origine tahitienne,<br>
+      <em>survivante de plusieurs années de violences conjugales.</em><br>
+      Qui soutient une association venant en aide aux victimes de violences conjugales.<br>
+      Je dédie ce site à mes trois enfants ❤️<br>
+      <span style="font-size:11px">🌍 Site international — Accessible partout dans le monde. Traduit automatiquement avec Google Chrome.</span><br>
+      <span style="font-size:11px;color:var(--rose-d)">Pour toute personne qui traverse quelque chose, qui a vu ou entendu, qui veut aider ou comprendre. Protéger les enfants dans le futur, c'est agir maintenant.</span>
+    </div>
+    <div style="height:18px"></div>
+    <div class="mot-du-jour">
+      <div class="mdj-label">✦ Mot du jour</div>
+      <div class="mdj-text" id="motDuJour">Chargement…</div>
+    </div>
+    <h1 class="home-title">Aujourd'hui,<br>tu es <strong>plutôt…</strong></h1>
+    <p class="home-sub">Ce site existe pour toi — que tu traverses quelque chose, que tu aies vu quelque chose, ou que tu veuilles aider.</p>
+    <div class="choices">
+      <button class="choice" onclick="go('give')">
+        <div class="ch-ico">✨</div>
+        <div class="ch-body"><p class="ch-num">01</p><p class="ch-label">J'encourage / Je témoigne</p><p class="ch-desc">Laisser un mot, une lettre, ou agir en tant que témoin</p></div>
+        <div class="ch-arr">›</div>
+      </button>
+      <button class="choice" onclick="go('support')">
+        <div class="ch-ico">🤲</div>
+        <div class="ch-body"><p class="ch-num">02</p><p class="ch-label">J'ai besoin de soutien</p><p class="ch-desc">Mots, exercices, aide, numéros et plan personnalisé</p></div>
+        <div class="ch-arr">›</div>
+      </button>
+      <button class="choice" onclick="go('comprendre')">
+        <div class="ch-ico">🧠</div>
+        <div class="ch-body"><p class="ch-num">03</p><p class="ch-label">Comprendre</p><p class="ch-desc">L'emprise, les signes, les cycles, la reconstruction</p></div>
+        <div class="ch-arr">›</div>
+      </button>
+      <button class="choice" onclick="go('boutique')">
+        <div class="ch-ico">🌿</div>
+        <div class="ch-body"><p class="ch-num">04</p><p class="ch-label">Découvrir Manatoa</p><p class="ch-desc">La boutique, la mission, l'association</p></div>
+        <div class="ch-arr">›</div>
+      </button>      <button class="choice" onclick="go('droits')">
+        <div class="ch-ico">⚖️</div>
+        <div class="ch-body"><p class="ch-num">05</p><p class="ch-label">Mes droits & les lois</p><p class="ch-desc">Lois françaises, protection des enfants, aides financières d'urgence</p></div>
+        <div class="ch-arr">›</div>
+      </button>
+    </div>
+    <div class="home-stats">
+      <div class="hs-item"><div class="hs-n" id="msgCount">0</div><div class="hs-l">Messages d'espoir</div></div>
+      <div class="hs-item"><div class="hs-n">10€</div><div class="hs-l">Reversés par vente</div></div>
+      <div class="hs-item"><div class="hs-n">🛡️</div><div class="hs-l">QR Protecteur</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ════ 01 — ENCOURAGER / TÉMOIN ════ -->
+<div id="give" class="page">
+  <div class="page-band"></div>
+  <div class="page-wrap"><div class="inner">
+    <p class="eyebrow">Agir ensemble</p>
+    <h2 class="p-title">Chaque geste<br><em>compte.</em></h2>
+    <p class="p-intro">Que tu veuilles encourager, partager ton expérience, ou agir en tant que témoin — ta voix a de la valeur.</p>
+
+    <!-- ── MESSAGES ── -->
+    <div class="comprendre-cat-title" style="margin-bottom:14px">💛 Laisser un message</div>
+
+    <!-- Onglets adulte / enfant -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px">
+      <button class="wtab on" id="tabAdulte" onclick="switchMsgTab('adulte')" style="border-radius:12px;padding:12px 8px;display:flex;flex-direction:column;align-items:center;gap:4px;font-size:11px">
+        <span style="font-size:18px">💬</span>Pour un adulte
+      </button>
+      <button class="wtab" id="tabEnfant" onclick="switchMsgTab('enfant')" style="border-radius:12px;padding:12px 8px;display:flex;flex-direction:column;align-items:center;gap:4px;font-size:11px">
+        <span style="font-size:18px">🌸</span>Pour un enfant
+      </button>
+    </div>
+
+    <!-- Formulaire adulte -->
+    <div id="panelAdulte">
+      <div id="writeForm">
+        <div class="write-tabs">
+          <button class="wtab on" onclick="setTab(this,'Un mot pour toi…')"><span class="wtab-ico">💬</span>Un mot</button>
+          <button class="wtab" onclick="setTab(this,'Chère personne,\n\n')"><span class="wtab-ico">✉️</span>Une lettre</button>
+          <button class="wtab" onclick="setTab(this,'Je m\'en suis sorti·e et je veux vous dire que…')"><span class="wtab-ico">🌟</span>J'en suis sorti·e</button>
+        </div>
+        <div class="write-box">
+          <textarea class="write-area" id="writeArea" placeholder="Un mot pour toi…" maxlength="500" oninput="document.getElementById('wcount').textContent=this.value.length+' / 500'"></textarea>
+          <p class="write-count" id="wcount">0 / 500</p>
+        </div>
+        <div class="write-note"><span>🔒</span><span>100% anonyme. Filtré automatiquement. Vérifié avant publication.</span></div>
+        <button class="write-submit" id="writeBtn" onclick="submitMsg()"><span>Envoyer mon message</span><span>→</span></button>
+      </div>
+      <div class="success-card" id="successCard">
+        <div class="success-ico">✨</div>
+        <h3 class="success-title">Merci du fond du cœur.</h3>
+        <p class="success-txt">Ton message va être lu avec soin. Bientôt quelqu'un qui en a besoin le lira et se sentira moins seul·e.</p>
+      </div>
+    </div>
+
+    <!-- Formulaire enfant -->
+    <div id="panelEnfant" style="display:none">
+      <div style="background:linear-gradient(135deg,var(--gold-p),var(--rose-p));border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin-bottom:12px;font-size:12px;color:var(--muted);line-height:1.7">
+        🌸 Un mot d'espoir pour un enfant qui traverse des violences. Ces mots sont lus par des enfants qui ont besoin de savoir qu'ils comptent.
+      </div>
+      <div class="write-box">
+        <textarea class="write-area" id="writeAreaEnfant" placeholder="Un mot pour toi, petit·e guerrier·e…" maxlength="300" oninput="document.getElementById('wcountEnfant').textContent=this.value.length+' / 300'"></textarea>
+        <p class="write-count" id="wcountEnfant">0 / 300</p>
+      </div>
+      <div class="write-note"><span>🔒</span><span>Anonyme · Filtré · Bienveillant uniquement</span></div>
+      <button class="write-submit" onclick="submitMsgEnfant()"><span>Envoyer mon mot aux enfants</span><span>🌸</span></button>
+    </div>
+
+    <!-- ── TÉMOIN ── -->
+    <div class="divider"><div class="div-line"></div><div class="div-txt">Je suis témoin — quoi faire ?</div><div class="div-line"></div></div>
+    <div style="background:linear-gradient(135deg,var(--gold-p2),var(--rose-p));border:1px solid var(--line);border-radius:14px;padding:14px 16px;margin-bottom:12px;font-size:13px;color:var(--ink2);line-height:1.7">
+      ✋ <strong style="color:var(--ink)">Le Signal d'Alerte :</strong> si quelqu'un te montre la paume ouverte puis replie le pouce sous ses doigts — c'est un appel à l'aide discret.
+    </div>
+    <div class="temoin-options">
+      <div class="temoin-option" onclick="showTemoin('signal')">
+        <div class="temoin-option-label">✋ J'ai vu le Signal d'Alerte</div>
+        <div class="temoin-option-desc">Quelqu'un m'a fait ce geste — paume ouverte, pouce replié</div>
+      </div>
+      <div class="temoin-option" onclick="showTemoin('physique')">
+        <div class="temoin-option-label">👁️ J'ai vu des signes de violences physiques</div>
+        <div class="temoin-option-desc">Traces, blessures, comportements alarmants</div>
+      </div>
+      <div class="temoin-option" onclick="showTemoin('controle')">
+        <div class="temoin-option-label">⚠️ J'observe des comportements de contrôle</div>
+        <div class="temoin-option-desc">Isolement, humiliation, surveillance constante</div>
+      </div>
+      <div class="temoin-option" onclick="showTemoin('enfant')">
+        <div class="temoin-option-label">👶 Un enfant semble en danger</div>
+        <div class="temoin-option-desc">Comportement inquiétant, peur, négligence</div>
+      </div>
+      <div class="temoin-option" onclick="showTemoin('voisin')">
+        <div class="temoin-option-label">🏠 J'entends des cris chez un voisin</div>
+        <div class="temoin-option-desc">Bruit, cris, disputes qui se répètent</div>
+      </div>
+    </div>
+    <div class="temoin-result" id="temoinResult"></div>
+
+    <!-- ── CENTRE ENFANTS ── -->
+    <div class="divider"><div class="div-line"></div><div class="div-txt">Une première en France</div><div class="div-line"></div></div>
+    <div class="centre-card">
+      <span class="centre-badge">✦ Une première en France</span>
+      <div style="font-family:'Playfair Display',serif;font-size:18px;font-weight:700;color:var(--ink);margin-bottom:10px;line-height:1.3">Des enfants qui réapprennent<br><em style="background:linear-gradient(135deg,var(--gold),var(--rose));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">à jouer. À faire confiance. À vivre.</em></div>
+      <p style="font-size:13px;color:var(--muted);line-height:1.85;margin-bottom:14px">L'association que Manatoa soutient a créé le <strong style="color:var(--ink2)">premier centre de reconstruction en France dédié aux enfants</strong> ayant grandi dans un foyer de violences intrafamiliales. Un endroit où les enfants retrouvent le droit d'être des enfants.</p>
+      <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:14px">
+        <div style="display:flex;align-items:flex-start;gap:12px;background:rgba(255,255,255,.75);border-radius:10px;padding:11px 13px"><span style="font-size:20px;flex-shrink:0">🎮</span><div style="font-size:12px;color:var(--muted);line-height:1.55"><strong style="color:var(--ink)">Réapprendre à jouer</strong> — des espaces sécurisés où le jeu devient un outil de guérison.</div></div>
+        <div style="display:flex;align-items:flex-start;gap:12px;background:rgba(255,255,255,.75);border-radius:10px;padding:11px 13px"><span style="font-size:20px;flex-shrink:0">🤝</span><div style="font-size:12px;color:var(--muted);line-height:1.55"><strong style="color:var(--ink)">Recréer des liens sains</strong> — apprendre qu'un adulte peut être doux, qu'une relation peut être sûre.</div></div>
+        <div style="display:flex;align-items:flex-start;gap:12px;background:rgba(255,255,255,.75);border-radius:10px;padding:11px 13px"><span style="font-size:20px;flex-shrink:0">🌱</span><div style="font-size:12px;color:var(--muted);line-height:1.55"><strong style="color:var(--ink)">Briser le cycle</strong> — un enfant qui guérit aujourd'hui ne reproduira pas la violence demain.</div></div>
+      </div>
+      <div style="padding:12px 14px;background:rgba(255,255,255,.6);border-radius:10px;font-size:12px;color:var(--rose-d);line-height:1.65;font-style:italic">
+        💜 Chaque achat Manatoa permet de soutenir l'association et donc ce centre pour les enfants. Porter Manatoa, c'est contribuer à ce que des enfants retrouvent le droit d'être des enfants.
+      </div>
+    </div>
+
+    <div class="legal-note" style="margin-top:8px">🌍 Ce site est international — accessible partout dans le monde.<br>Disponible dans toutes les langues via <strong>Google Chrome</strong> (traduction automatique).<br>→ <a href="#" onclick="go('numMonde');return false" style="color:var(--rose-d)">Voir les numéros d'aide mondiaux</a></div>
+  </div></div>
+</div>
+
+<!-- ════ 02 — SOUTIEN ════ -->
+<div id="support" class="page">
+  <div class="page-band"></div>
+  <div class="page-wrap"><div class="inner">
+    <p class="eyebrow">Pour toi</p>
+    <h2 class="p-title">Tu n'es pas<br><em>seul·e.</em></h2>
+    <p class="p-intro">Des gens ont laissé des mots pour toi. Et des professionnels sont là, maintenant, gratuitement.</p>
+    <div class="msgs-banner">
+      <div class="msgs-banner-title">💛 Mots d'encouragement</div>
+      <div class="msgs-banner-sub">Laissés anonymement par des porteurs Manatoa</div>
+      <div class="msgs-count-badge" id="supportMsgCount">Chargement…</div>
+    </div>
+    <div class="msgs-list" id="supportMsgsList"></div>
+    <div class="divider"><div class="div-line"></div><div class="div-txt">Exercice de respiration</div><div class="div-line"></div></div>
+    <div class="breath-card">
+      <div class="breath-title">🌬️ Respiration apaisante</div>
+      <div class="breath-sub">Si tu te sens submergé·e, commence par respirer.</div>
+      <div class="breath-circle" id="breathCircle"><div class="breath-count" id="breathCount">4</div></div>
+      <div class="breath-instruction" id="breathInstruction">Prêt·e ?</div>
+      <button class="breath-btn" id="breathBtn" onclick="toggleBreath()">Commencer</button>
+    </div>
+    <div class="divider"><div class="div-line"></div><div class="div-txt">Numéros d'aide — Gratuits</div><div class="div-line"></div></div>
+    <div class="num-grid">
+      <a href="tel:3919" class="num-card"><div class="num-ico">📞</div><div class="num-body"><div class="num-name">Violences Femmes Info</div><div class="num-number">3919</div><div class="num-detail">Gratuit · 24h/24 · 7j/7</div></div><div class="num-arr">→</div></a>
+      <a href="tel:119" class="num-card"><div class="num-ico">🛡️</div><div class="num-body"><div class="num-name">Allô Enfance en Danger</div><div class="num-number">119</div><div class="num-detail">Gratuit · 24h/24 · 7j/7</div></div><div class="num-arr">→</div></a>
+      <a href="tel:3114" class="num-card"><div class="num-ico">💙</div><div class="num-body"><div class="num-name">Prévention Suicide</div><div class="num-number">3114</div><div class="num-detail">Gratuit · 24h/24 · 7j/7</div></div><div class="num-arr">→</div></a>
+      <a href="tel:17" class="num-card"><div class="num-ico">🚨</div><div class="num-body"><div class="num-name">Police Secours</div><div class="num-number">17</div><div class="num-detail">Urgence immédiate</div></div><div class="num-arr">→</div></a>
+      <a href="tel:15" class="num-card"><div class="num-ico">🏥</div><div class="num-body"><div class="num-name">SAMU</div><div class="num-number">15</div><div class="num-detail">Urgence médicale</div></div><div class="num-arr">→</div></a>
+      <a href="sms:114" class="num-card"><div class="num-ico">✉️</div><div class="num-body"><div class="num-name">SMS si tu ne peux pas parler</div><div class="num-number">114</div><div class="num-detail">Envoie juste "aide"</div></div><div class="num-arr">→</div></a>
+    </div>
+    <button onclick="go('numMonde')" style="width:100%;margin-top:12px;padding:16px 20px;background:linear-gradient(135deg,var(--gold-p2),var(--rose-p));border:1px solid var(--line);border-radius:14px;font-family:'DM Sans',sans-serif;cursor:pointer;display:flex;align-items:center;justify-content:space-between;transition:all .2s">
+      <div style="display:flex;align-items:center;gap:14px"><span style="font-size:24px">🌍</span><div style="text-align:left"><div style="font-size:14px;font-weight:600;color:var(--ink)">Numéros d'aide dans d'autres pays</div><div style="font-size:11px;color:var(--muted);margin-top:3px">UK, USA, Espagne, Allemagne, Italie, Portugal...</div></div></div>
+      <span style="color:var(--gold-d);font-size:20px">›</span>
+    </button>
+    <div class="divider"><div class="div-line"></div><div class="div-txt">Je ne suis pas en sécurité</div><div class="div-line"></div></div>
+    <div class="urgence-card">
+      <div class="urg-pulse">🕊️</div>
+      <div class="urg-title">Je ne suis pas en sécurité</div>
+      <div class="urg-sub">Tu n'es pas seul·e. Voici quoi faire maintenant.</div>
+      <button class="urg-btn" onclick="go('unsafe')">Voir les étapes →</button>
+    </div>
+    <div class="divider"><div class="div-line"></div><div class="div-txt">Alerter un proche</div><div class="div-line"></div></div>
+    <div class="contacts-box">
+      <div class="contacts-box-title">🔔 Mes proches de confiance</div>
+      <div class="contacts-box-sub">Ami·e, famille, thérapeute... En cas de danger, ils reçoivent un SMS en un clic.</div>
+      <div class="contact-list" id="contactList"></div>
+      <div class="add-contact-row">
+        <input type="text" class="contact-input" id="contactName" placeholder="Prénom"/>
+        <input type="tel" class="contact-input" id="contactNum" placeholder="+33 6 ..."/>
+      </div>
+      <button class="add-contact-btn" onclick="addContact()">+ Ajouter ce proche</button>
+    </div>
+  </div></div>
+</div>
+<!-- ════ PAS EN SÉCURITÉ ════ -->
+<div id="unsafe" class="page">
+  <div class="page-band"></div>
+  <div class="page-wrap"><div class="inner">
+    <p class="eyebrow">Aide immédiate</p>
+    <h2 class="p-title">Respire.<br><em>On est là.</em></h2>
+    <p class="p-intro">Tu n'es pas seul·e. Voici exactement quoi faire, étape par étape.</p>
+    <div style="background:linear-gradient(135deg,var(--gold-p2),var(--rose-p));border:1px solid var(--line);border-radius:18px;padding:20px 22px;margin-bottom:16px;position:relative;overflow:hidden">
+      <div style="position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(to right,transparent,var(--gold),var(--rose-l),transparent)"></div>
+      <p style="font-family:'Playfair Display',serif;font-size:17px;font-weight:700;color:var(--ink);margin-bottom:6px">✋ Le Signal d'Alerte</p>
+      <p style="font-size:13px;color:var(--muted);line-height:1.7;margin-bottom:14px">Un geste discret, reconnu internationalement, pour signaler que tu es en danger sans dire un mot.</p>
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <div style="display:flex;align-items:center;gap:14px;background:rgba(255,255,255,.7);border-radius:12px;padding:12px 14px"><div style="font-size:28px;flex-shrink:0">🖐️</div><div><div style="font-size:13px;font-weight:600;color:var(--ink);margin-bottom:2px">Étape 1</div><div style="font-size:12px;color:var(--muted);line-height:1.5">Montre ta paume ouverte face à l'autre personne</div></div></div>
+        <div style="display:flex;align-items:center;gap:14px;background:rgba(255,255,255,.7);border-radius:12px;padding:12px 14px"><div style="font-size:28px;flex-shrink:0">👍</div><div><div style="font-size:13px;font-weight:600;color:var(--ink);margin-bottom:2px">Étape 2</div><div style="font-size:12px;color:var(--muted);line-height:1.5">Replie le pouce vers l'intérieur de ta paume</div></div></div>
+        <div style="display:flex;align-items:center;gap:14px;background:rgba(255,255,255,.7);border-radius:12px;padding:12px 14px"><div style="font-size:28px;flex-shrink:0">✊</div><div><div style="font-size:13px;font-weight:600;color:var(--ink);margin-bottom:2px">Étape 3</div><div style="font-size:12px;color:var(--muted);line-height:1.5">Referme les quatre doigts sur le pouce — c'est le signal</div></div></div>
+      </div>
+      <div style="margin-top:12px;padding:10px 12px;background:rgba(255,255,255,.6);border-radius:10px;font-size:12px;color:var(--rose-d);line-height:1.6;font-weight:500">💡 Fais ce geste à un proche, un pharmacien, un commerçant — toute personne de confiance comprendra.</div>
+    </div>
+    <div style="background:linear-gradient(135deg,var(--rose-p2),rgba(196,133,122,.04));border-radius:20px;padding:22px;border:1px solid rgba(196,133,122,.18);margin-bottom:14px">
+      <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:16px">
+        <div style="display:flex;align-items:flex-start;gap:12px;background:rgba(255,255,255,.8);border:1px solid rgba(196,133,122,.12);border-radius:12px;padding:13px 15px"><div style="width:26px;height:26px;border-radius:50%;flex-shrink:0;background:linear-gradient(135deg,var(--rose-d),var(--rose));color:white;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700">1</div><div style="font-size:13px;color:var(--ink2);line-height:1.6"><strong>Appelle le 17 (Police) ou le 15 (SAMU).</strong> Dis juste "j'ai besoin d'aide" si tu ne peux pas parler fort.</div></div>
+        <div style="display:flex;align-items:flex-start;gap:12px;background:rgba(255,255,255,.8);border:1px solid rgba(196,133,122,.12);border-radius:12px;padding:13px 15px"><div style="width:26px;height:26px;border-radius:50%;flex-shrink:0;background:linear-gradient(135deg,var(--rose-d),var(--rose));color:white;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700">2</div><div style="font-size:13px;color:var(--ink2);line-height:1.6"><strong>Si tu ne peux pas parler,</strong> envoie un SMS au 114.</div></div>
+        <div style="display:flex;align-items:flex-start;gap:12px;background:rgba(255,255,255,.8);border:1px solid rgba(196,133,122,.12);border-radius:12px;padding:13px 15px"><div style="width:26px;height:26px;border-radius:50%;flex-shrink:0;background:linear-gradient(135deg,var(--rose-d),var(--rose));color:white;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700">3</div><div style="font-size:13px;color:var(--ink2);line-height:1.6"><strong>Rejoins un lieu sûr :</strong> voisin, commerce ouvert, pharmacie, hôpital.</div></div>
+        <div style="display:flex;align-items:flex-start;gap:12px;background:rgba(255,255,255,.8);border:1px solid rgba(196,133,122,.12);border-radius:12px;padding:13px 15px"><div style="width:26px;height:26px;border-radius:50%;flex-shrink:0;background:linear-gradient(135deg,var(--rose-d),var(--rose));color:white;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700">4</div><div style="font-size:13px;color:var(--ink2);line-height:1.6"><strong>Préviens un proche</strong> en utilisant le bouton ci-dessous.</div></div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <a href="tel:17" style="display:flex;align-items:center;gap:14px;padding:14px 16px;border-radius:12px;text-decoration:none;background:linear-gradient(135deg,var(--rose-d),var(--rose));color:white"><span style="font-size:18px">📞</span><div><div style="font-size:13px;font-weight:600">Appeler le 17 — Police Secours</div><div style="font-size:11px;opacity:.75">Urgence immédiate · Gratuit</div></div></a>
+        <a href="tel:3919" style="display:flex;align-items:center;gap:14px;padding:14px 16px;border-radius:12px;text-decoration:none;background:var(--white2);border:1px solid var(--line2);color:var(--ink2)"><span style="font-size:18px">💬</span><div><div style="font-size:13px;font-weight:600">Appeler le 3919 — Violences</div><div style="font-size:11px;color:var(--muted)">Écoute spécialisée · Gratuit · 24h/24</div></div></a>
+        <a href="sms:114" style="display:flex;align-items:center;gap:14px;padding:14px 16px;border-radius:12px;text-decoration:none;background:var(--white2);border:1px solid var(--line2);color:var(--ink2)"><span style="font-size:18px">✉️</span><div><div style="font-size:13px;font-weight:600">SMS au 114</div><div style="font-size:11px;color:var(--muted)">Si tu ne peux pas appeler</div></div></a>
+      </div>
+    </div>
+    <div style="background:linear-gradient(135deg,var(--gold-p),var(--rose-p));border:1px solid var(--line);border-radius:14px;padding:14px 16px;font-size:13px;color:var(--muted);line-height:1.7;margin-bottom:16px">🕊️ <strong style="color:var(--rose-d)">Rappelle-toi :</strong> tu mérites d'être en sécurité. Ce n'est pas ta faute.</div>
+    <div class="contacts-box">
+      <div class="contacts-box-title">🔔 Alerter un proche</div>
+      <div class="contacts-box-sub">Ils reçoivent un SMS depuis ton téléphone en un clic.</div>
+      <div class="contact-list" id="contactListUnsafe"></div>
+      <div class="add-contact-row">
+        <input type="text" class="contact-input" id="contactNameU" placeholder="Prénom"/>
+        <input type="tel" class="contact-input" id="contactNumU" placeholder="+33 6 ..."/>
+      </div>
+      <button class="add-contact-btn" onclick="addContactU()">+ Ajouter ce proche</button>
+    </div>
+    <div class="divider"><div class="div-line"></div><div class="div-txt">Mon plan de sécurité personnalisé</div><div class="div-line"></div></div>
+    <div class="plan-card" id="planQ1">
+      <div class="plan-question">Tu vis avec la personne qui te fait du mal ?</div>
+      <div class="plan-options">
+        <button class="plan-option" onclick="selectPlan('q1','oui',event)">Oui, on vit ensemble</button>
+        <button class="plan-option" onclick="selectPlan('q1','non',event)">Non, on ne vit pas ensemble</button>
+      </div>
+    </div>
+    <div class="plan-card" id="planQ2" style="display:none">
+      <div class="plan-question">Tu as des enfants avec toi ?</div>
+      <div class="plan-options">
+        <button class="plan-option" onclick="selectPlan('q2','oui',event)">Oui</button>
+        <button class="plan-option" onclick="selectPlan('q2','non',event)">Non</button>
+      </div>
+    </div>
+    <div class="plan-card" id="planQ3" style="display:none">
+      <div class="plan-question">Tu as un proche de confiance ?</div>
+      <div class="plan-options">
+        <button class="plan-option" onclick="selectPlan('q3','oui',event)">Oui, j'ai quelqu'un</button>
+        <button class="plan-option" onclick="selectPlan('q3','non',event)">Non, je suis isolé·e</button>
+      </div>
+    </div>
+    <div class="plan-result" id="planResult"></div>
+  </div></div>
+</div>
+
+<!-- ════ 03 — COMPRENDRE ════ -->
+<div id="comprendre" class="page">
+  <div class="page-band"></div>
+  <div class="page-wrap"><div class="inner">
+    <p class="eyebrow">Comprendre</p>
+    <h2 class="p-title">Mettre des mots<br><em>sur ce qui arrive.</em></h2>
+    <p class="p-intro">Comprendre c'est déjà reprendre du pouvoir. Ces réponses sont pour toi — victime, proche, ou simplement curieux·se.</p>
+
+    <!-- L'EMPRISE -->
+    <div class="comprendre-category">
+      <div class="comprendre-cat-title">L'emprise</div>
+      <div class="accordion-item"><div class="accordion-header" onclick="toggleAccordion(this)"><div class="accordion-question">Pourquoi je suis resté·e ?</div><div class="accordion-arrow">▾</div></div><div class="accordion-body"><div class="accordion-short">Parce que l'emprise est réelle. Rester n'est pas un choix libre — c'est une réponse à une manipulation profonde.</div><div class="accordion-long"><p>Rester dans une relation violente n'est pas une question de faiblesse ou d'amour mal placé. C'est le résultat d'un processus de manipulation appelé <strong>emprise</strong>.</p><p>L'agresseur construit progressivement un système de contrôle : isolement des proches, destruction de l'estime de soi, alternance de moments doux et de moments violents. Cette alternance crée une dépendance émotionnelle puissante.</p><p>À cela s'ajoutent des raisons très concrètes : peur des représailles, dépendance financière, enfants en commun, logement partagé. <strong>Partir est souvent le moment le plus dangereux.</strong></p></div><div class="accordion-note">Le 3919 peut t'aider à préparer un départ en sécurité, gratuitement et anonymement.</div></div></div>
+      <div class="accordion-item"><div class="accordion-header" onclick="toggleAccordion(this)"><div class="accordion-question">C'est quoi l'emprise exactement ?</div><div class="accordion-arrow">▾</div></div><div class="accordion-body"><div class="accordion-short">L'emprise est un processus par lequel une personne prend le contrôle progressif de la pensée, des émotions et des comportements d'une autre.</div><div class="accordion-long"><p>L'emprise ne s'installe pas du jour au lendemain. Elle se construit sur des mois, parfois des années, par des mécanismes discrets :</p></div><div class="accordion-signs"><div class="accordion-sign"><div class="sign-dot"></div>Isolement progressif des amis et de la famille</div><div class="accordion-sign"><div class="sign-dot"></div>Dévalorisation constante, critiques, humiliations</div><div class="accordion-sign"><div class="sign-dot"></div>Contrôle des sorties, de l'argent, du téléphone</div><div class="accordion-sign"><div class="sign-dot"></div>Culpabilisation — "c'est de ta faute si je suis comme ça"</div><div class="accordion-sign"><div class="sign-dot"></div>Alternance de moments très doux et de moments violents</div><div class="accordion-sign"><div class="sign-dot"></div>Remise en question permanente de sa propre réalité</div></div><div class="accordion-note">Quand on est sous emprise, on ne s'en rend souvent pas compte. C'est normal. Ce n'est pas ta faute.</div></div></div>
+      <div class="accordion-item"><div class="accordion-header" onclick="toggleAccordion(this)"><div class="accordion-question">Les cycles de la violence — pourquoi ça recommence ?</div><div class="accordion-arrow">▾</div></div><div class="accordion-body"><div class="accordion-short">La violence conjugale suit souvent un cycle en 4 phases. Comprendre ce cycle aide à sortir de la confusion.</div><div class="accordion-long"><p><strong>Phase 1 — La tension</strong> : L'atmosphère se tend. La victime marche sur des œufs, essaie d'éviter la crise.</p><p><strong>Phase 2 — L'explosion</strong> : La violence éclate — physique, verbale, psychologique ou sexuelle.</p><p><strong>Phase 3 — La réconciliation</strong> : L'agresseur s'excuse, promet de changer, est très attentionné. C'est la "lune de miel".</p><p><strong>Phase 4 — Le calme</strong> : Une période de relative tranquillité. La victime espère que ça a changé.</p><p>Puis le cycle recommence, souvent avec une violence qui s'intensifie au fil du temps.</p></div><div class="accordion-note">Ce cycle est bien documenté. Il ne change pas sans une aide professionnelle spécialisée.</div></div></div>
+    </div>
+
+    <!-- RECONNAÎTRE -->
+    <div class="comprendre-category">
+      <div class="comprendre-cat-title">Reconnaître</div>
+      <div class="accordion-item"><div class="accordion-header" onclick="toggleAccordion(this)"><div class="accordion-question">Relation saine vs relation toxique — les différences</div><div class="accordion-arrow">▾</div></div><div class="accordion-body"><div class="accordion-short">Dans une relation saine, les deux partenaires se respectent, communiquent librement et gardent leur indépendance.</div><div class="accordion-long"><p><strong>Relation saine :</strong></p></div><div class="accordion-signs"><div class="accordion-sign"><div class="sign-dot"></div>Tu peux voir tes amis et ta famille librement</div><div class="accordion-sign"><div class="sign-dot"></div>Tu peux exprimer tes opinions sans avoir peur</div><div class="accordion-sign"><div class="sign-dot"></div>Les disputes se résolvent sans violence ni humiliation</div><div class="accordion-sign"><div class="sign-dot"></div>Tu te sens en sécurité physiquement et émotionnellement</div><div class="accordion-sign"><div class="sign-dot"></div>Tu gardes ta propre identité, tes passions, tes projets</div></div><div class="accordion-long"><p><strong>Relation toxique :</strong></p></div><div class="accordion-signs"><div class="accordion-sign"><div class="sign-dot"></div>Tu t'éloignes progressivement de tes proches</div><div class="accordion-sign"><div class="sign-dot"></div>Tu surveilles tes mots pour ne pas "provoquer"</div><div class="accordion-sign"><div class="sign-dot"></div>Tu te sens responsable de l'humeur de l'autre</div><div class="accordion-sign"><div class="sign-dot"></div>Tu marches sur des œufs à la maison</div><div class="accordion-sign"><div class="sign-dot"></div>Tu t'oublies toi-même pour satisfaire l'autre</div></div></div></div>
+      <div class="accordion-item"><div class="accordion-header" onclick="toggleAccordion(this)"><div class="accordion-question">Dispute normale vs dispute toxique</div><div class="accordion-arrow">▾</div></div><div class="accordion-body"><div class="accordion-short">Se disputer fait partie de toute relation. La question c'est : comment ça se passe, et qu'est-ce que ça laisse après ?</div><div class="accordion-long"><p><strong>Dispute normale :</strong></p></div><div class="accordion-signs"><div class="accordion-sign"><div class="sign-dot"></div>On parle du problème — pas de l'autre en tant que personne</div><div class="accordion-sign"><div class="sign-dot"></div>On peut s'arrêter quand ça monte trop</div><div class="accordion-sign"><div class="sign-dot"></div>On cherche un compromis ou une solution</div><div class="accordion-sign"><div class="sign-dot"></div>Après, on se réconcilie sans rancœur profonde</div></div><div class="accordion-long"><p><strong>Dispute toxique :</strong></p></div><div class="accordion-signs"><div class="accordion-sign"><div class="sign-dot"></div>Insultes, humiliations, attaques personnelles</div><div class="accordion-sign"><div class="sign-dot"></div>Tu n'as pas le droit de t'exprimer ou de partir</div><div class="accordion-sign"><div class="sign-dot"></div>Tu finis toujours par te sentir coupable, même sans l'être</div><div class="accordion-sign"><div class="sign-dot"></div>La violence — même verbale — apparaît régulièrement</div><div class="accordion-sign"><div class="sign-dot"></div>Tu as peur des réactions de l'autre</div></div><div class="accordion-note">Si tu as peur pendant une dispute, ce n'est plus une dispute normale.</div></div></div>
+      <div class="accordion-item"><div class="accordion-header" onclick="toggleAccordion(this)"><div class="accordion-question">Les différentes formes de violences conjugales</div><div class="accordion-arrow">▾</div></div><div class="accordion-body"><div class="accordion-short">La violence ne se voit pas toujours. Elle peut être physique, psychologique, sexuelle, économique ou numérique.</div><div class="accordion-signs"><div class="accordion-sign"><div class="sign-dot"></div><strong>Physique</strong> — coups, bousculades, séquestration</div><div class="accordion-sign"><div class="sign-dot"></div><strong>Psychologique</strong> — insultes, humiliations, menaces, gaslighting</div><div class="accordion-sign"><div class="sign-dot"></div><strong>Sexuelle</strong> — rapports imposés, contrainte, humiliation</div><div class="accordion-sign"><div class="sign-dot"></div><strong>Économique</strong> — contrôle de l'argent, interdiction de travailler</div><div class="accordion-sign"><div class="sign-dot"></div><strong>Numérique</strong> — surveillance du téléphone, réseaux sociaux, harcèlement en ligne</div><div class="accordion-sign"><div class="sign-dot"></div><strong>Administrative</strong> — contrôle des papiers, isolement administratif</div></div><div class="accordion-note">Toutes ces formes sont reconnues par la loi française et peuvent faire l'objet d'une plainte.</div></div></div>
+    </div>
+
+    <!-- IMPACT -->
+    <div class="comprendre-category">
+      <div class="comprendre-cat-title">Les impacts</div>
+      <div class="accordion-item"><div class="accordion-header" onclick="toggleAccordion(this)"><div class="accordion-question">Ce que les violences conjugales peuvent engendrer sur soi</div><div class="accordion-arrow">▾</div></div><div class="accordion-body"><div class="accordion-short">Les violences conjugales laissent des traces invisibles mais réelles — sur le corps, la psyché, l'identité.</div><div class="accordion-signs"><div class="accordion-sign"><div class="sign-dot"></div>Perte de confiance en soi et en son jugement</div><div class="accordion-sign"><div class="sign-dot"></div>Stress post-traumatique, cauchemars, hypervigilance</div><div class="accordion-sign"><div class="sign-dot"></div>Dépression, anxiété, sentiment de vide</div><div class="accordion-sign"><div class="sign-dot"></div>Difficulté à faire confiance aux autres</div><div class="accordion-sign"><div class="sign-dot"></div>Honte et culpabilité intégrées</div><div class="accordion-sign"><div class="sign-dot"></div>Problèmes physiques liés au stress chronique</div></div><div class="accordion-note">Ces séquelles sont normales et soignables. Un accompagnement psychologique peut faire toute la différence.</div></div></div>
+      <div class="accordion-item"><div class="accordion-header" onclick="toggleAccordion(this)"><div class="accordion-question">L'impact sur les enfants qui grandissent dans ce contexte</div><div class="accordion-arrow">▾</div></div><div class="accordion-body"><div class="accordion-short">Les enfants témoins de violences conjugales sont des victimes directes, même sans subir de violence physique eux-mêmes.</div><div class="accordion-long"><p>Un enfant qui grandit dans un foyer violent absorbe ce qu'il voit. Il apprend que la violence fait partie des relations. Cela peut impacter :</p></div><div class="accordion-signs"><div class="accordion-sign"><div class="sign-dot"></div>Leur développement émotionnel et social</div><div class="accordion-sign"><div class="sign-dot"></div>Leurs résultats scolaires et leur concentration</div><div class="accordion-sign"><div class="sign-dot"></div>Leur rapport aux autres et à l'autorité</div><div class="accordion-sign"><div class="sign-dot"></div>Leur vision de ce qu'est une relation amoureuse</div><div class="accordion-sign"><div class="sign-dot"></div>Leur propre risque d'être victime ou auteur de violences à l'âge adulte</div></div><div class="accordion-note">Protéger les enfants de la violence, c'est aussi briser le cycle pour les générations futures. Le 119 peut vous orienter.</div></div></div>
+      <div class="accordion-item"><div class="accordion-header" onclick="toggleAccordion(this)"><div class="accordion-question">Comment en parler à ses enfants ?</div><div class="accordion-arrow">▾</div></div><div class="accordion-body"><div class="accordion-short">Mettre des mots sur ce que l'enfant a vécu est essentiel. Le silence ne les protège pas — il les isole.</div><div class="accordion-long"><p>Les enfants ont souvent compris bien plus qu'on ne le pense. Ne pas en parler crée de la confusion et de la honte.</p><p><strong>Quelques principes :</strong></p></div><div class="accordion-signs"><div class="accordion-sign"><div class="sign-dot"></div>Adapter le langage à l'âge de l'enfant</div><div class="accordion-sign"><div class="sign-dot"></div>Lui dire clairement que ce n'est pas de sa faute</div><div class="accordion-sign"><div class="sign-dot"></div>Valider ses émotions sans les minimiser</div><div class="accordion-sign"><div class="sign-dot"></div>Ne pas le mettre en position de médiateur ou de confident</div><div class="accordion-sign"><div class="sign-dot"></div>L'encourager à parler à un adulte de confiance</div></div><div class="accordion-note">Des professionnels comme les psychologues scolaires peuvent accompagner les enfants gratuitement.</div></div></div>
+    </div>
+
+    <!-- RECONSTRUCTION -->
+    <div class="comprendre-category">
+      <div class="comprendre-cat-title">La reconstruction</div>
+      <div class="accordion-item"><div class="accordion-header" onclick="toggleAccordion(this)"><div class="accordion-question">Après, c'est possible. Comment on se reconstruit ?</div><div class="accordion-arrow">▾</div></div><div class="accordion-body"><div class="accordion-short">La reconstruction est possible. Ce n'est pas linéaire, ce n'est pas rapide, mais c'est réel.</div><div class="accordion-long"><p>Sortir d'une relation violente c'est traverser un deuil complexe — celui de la relation, mais aussi d'une partie de soi-même. C'est normal de ressentir du vide, de la nostalgie, parfois même de manquer à l'agresseur.</p><p>La reconstruction passe souvent par :</p></div><div class="accordion-signs"><div class="accordion-sign"><div class="sign-dot"></div>Accepter de ne pas aller bien tout de suite</div><div class="accordion-sign"><div class="sign-dot"></div>S'entourer de personnes bienveillantes</div><div class="accordion-sign"><div class="sign-dot"></div>Un accompagnement psychologique spécialisé</div><div class="accordion-sign"><div class="sign-dot"></div>Redécouvrir ses propres désirs, goûts, valeurs</div><div class="accordion-sign"><div class="sign-dot"></div>Apprendre à reconnaître les signaux d'alerte</div><div class="accordion-sign"><div class="sign-dot"></div>Se permettre d'avoir confiance à nouveau — progressivement</div></div><div class="accordion-note">Des milliers de personnes s'en sont sorties. Tu peux en faire partie.</div></div></div>
+      <div class="accordion-item"><div class="accordion-header" onclick="toggleAccordion(this)"><div class="accordion-question">Comment aider un·e proche qui vit des violences ?</div><div class="accordion-arrow">▾</div></div><div class="accordion-body"><div class="accordion-short">La meilleure chose que tu puisses faire c'est être présent·e, sans juger, sans forcer.</div><div class="accordion-signs"><div class="accordion-sign"><div class="sign-dot"></div>Écoute sans minimiser ni dramatiser</div><div class="accordion-sign"><div class="sign-dot"></div>Dis-lui clairement que tu es là, quoi qu'il arrive</div><div class="accordion-sign"><div class="sign-dot"></div>Ne la force pas à partir — ça peut la mettre en danger</div><div class="accordion-sign"><div class="sign-dot"></div>Aide-la à avoir un plan de sortie en sécurité</div><div class="accordion-sign"><div class="sign-dot"></div>Propose-lui d'appeler le 3919 ensemble</div><div class="accordion-sign"><div class="sign-dot"></div>Prends soin de toi aussi — accompagner est épuisant</div></div><div class="accordion-note">Tu ne peux pas la sauver à sa place. Mais ta présence peut lui sauver la vie.</div></div></div>
+      <div class="accordion-item"><div class="accordion-header" onclick="toggleAccordion(this)"><div class="accordion-question">Le gaslighting — qu'est-ce que c'est ?</div><div class="accordion-arrow">▾</div></div><div class="accordion-body"><div class="accordion-short">Le gaslighting c'est quand l'agresseur te fait douter de ta propre réalité. "Tu es folle", "Ce n'est jamais arrivé", "Tu exagères toujours".</div><div class="accordion-long"><p>C'est une forme de manipulation psychologique qui vise à te faire perdre confiance en ta propre perception. Tu finis par douter de tes souvenirs, de tes émotions, de ton jugement.</p><p><strong>Signes que tu subis du gaslighting :</strong></p></div><div class="accordion-signs"><div class="accordion-sign"><div class="sign-dot"></div>Tu te demandes souvent si tu "exagères"</div><div class="accordion-sign"><div class="sign-dot"></div>Tu t'excuses constamment sans savoir pourquoi</div><div class="accordion-sign"><div class="sign-dot"></div>Tu as du mal à prendre des décisions simples</div><div class="accordion-sign"><div class="sign-dot"></div>Tu te sens "folle" ou "trop sensible" régulièrement</div><div class="accordion-sign"><div class="sign-dot"></div>Tu mentionnes des faits et on te dit que tu "inventes"</div></div><div class="accordion-note">Ta réalité est réelle. Tes émotions sont valides. Ne les laisse pas t'en convaincre autrement.</div></div></div>
+    </div>
+
+    <!-- SE RECONSTRUIRE -->
+    <div class="comprendre-category">
+      <div class="comprendre-cat-title">Se reconstruire</div>
+      <div class="accordion-item"><div class="accordion-header" onclick="toggleAccordion(this)"><div class="accordion-question">Se reconstruire en tant qu'adulte — par où commencer ?</div><div class="accordion-arrow">▾</div></div><div class="accordion-body"><div class="accordion-short">La reconstruction ne se fait pas seul·e. Il faut du temps, de la bienveillance envers soi, et souvent un accompagnement professionnel.</div><div class="accordion-signs"><div class="accordion-sign"><div class="sign-dot"></div>Consulter un·e psychologue ou thérapeute spécialisé·e en traumatismes</div><div class="accordion-sign"><div class="sign-dot"></div>Rejoindre un groupe de parole — briser l'isolement est essentiel</div><div class="accordion-sign"><div class="sign-dot"></div>Reprendre contact progressivement avec ses proches de confiance</div><div class="accordion-sign"><div class="sign-dot"></div>Se fixer de petits objectifs concrets chaque semaine</div><div class="accordion-sign"><div class="sign-dot"></div>Apprendre à identifier et nommer ses émotions</div><div class="accordion-sign"><div class="sign-dot"></div>Pratiquer une activité douce — marche, yoga, natation</div><div class="accordion-sign"><div class="sign-dot"></div>Être patient·e avec soi-même — deux pas en avant, un en arrière est normal</div></div><div class="accordion-note">Un·e thérapeute spécialisé·e peut faire toute la différence. Le 3919 peut orienter vers des professionnels gratuits.</div></div></div>
+      <div class="accordion-item"><div class="accordion-header" onclick="toggleAccordion(this)"><div class="accordion-question">Aider un enfant à se reconstruire après avoir vécu des violences</div><div class="accordion-arrow">▾</div></div><div class="accordion-body"><div class="accordion-short">Un enfant qui a grandi dans un foyer violent porte des blessures invisibles. Avec le bon accompagnement, il peut guérir.</div><div class="accordion-signs"><div class="accordion-sign"><div class="sign-dot"></div>Consulter un pédopsychologue ou le psychologue scolaire (gratuit)</div><div class="accordion-sign"><div class="sign-dot"></div>Maintenir une routine stable et sécurisante au quotidien</div><div class="accordion-sign"><div class="sign-dot"></div>Lui dire clairement et régulièrement : ce n'est pas ta faute</div><div class="accordion-sign"><div class="sign-dot"></div>Le laisser exprimer ses émotions sans les minimiser</div><div class="accordion-sign"><div class="sign-dot"></div>Éviter de le mettre au courant des conflits légaux</div><div class="accordion-sign"><div class="sign-dot"></div>L'encourager à voir ses ami·es et à avoir des activités</div><div class="accordion-sign"><div class="sign-dot"></div>Être attentif·ve aux signaux : repli sur soi, agressivité, cauchemars</div></div><div class="accordion-note">Le psychologue scolaire est gratuit dans chaque établissement. Le 119 peut orienter vers des professionnels de l'enfance.</div></div></div>
+      <div class="accordion-item"><div class="accordion-header" onclick="toggleAccordion(this)"><div class="accordion-question">Pourquoi consulter un·e thérapeute ? Et comment en trouver un·e gratuitement ?</div><div class="accordion-arrow">▾</div></div><div class="accordion-body"><div class="accordion-short">Un·e thérapeute spécialisé·e n'est pas un luxe. C'est souvent le maillon manquant pour vraiment guérir.</div><div class="accordion-long"><p>Les violences laissent des traces que le temps seul ne suffit pas à effacer. Un·e thérapeute peut aider à :</p></div><div class="accordion-signs"><div class="accordion-sign"><div class="sign-dot"></div>Comprendre et dénouer les mécanismes de l'emprise</div><div class="accordion-sign"><div class="sign-dot"></div>Traiter le stress post-traumatique (EMDR, TCC, thérapies corporelles)</div><div class="accordion-sign"><div class="sign-dot"></div>Reconstruire l'estime de soi progressivement</div><div class="accordion-sign"><div class="sign-dot"></div>Apprendre à faire confiance à nouveau</div><div class="accordion-sign"><div class="sign-dot"></div>Préparer de futures relations saines et équilibrées</div></div><div class="accordion-long"><p><strong>Comment trouver un·e thérapeute gratuit·e :</strong></p></div><div class="accordion-signs"><div class="accordion-sign"><div class="sign-dot"></div>Le 3919 oriente vers des professionnels gratuits près de chez toi</div><div class="accordion-sign"><div class="sign-dot"></div>Les CPEF proposent des consultations gratuites</div><div class="accordion-sign"><div class="sign-dot"></div>Les CMP — accès gratuit sur ordonnance</div><div class="accordion-sign"><div class="sign-dot"></div>Les associations locales ont souvent des permanences psy gratuites</div><div class="accordion-sign"><div class="sign-dot"></div>MonPsy.sante.gouv.fr — 8 séances remboursées par an</div></div><div class="accordion-note">Tu mérites d'être accompagné·e. Demander de l'aide professionnelle est un acte de courage.</div></div></div>
+    </div>
+
+    <!-- AIDES FINANCIÈRES -->
+    <div class="accordion-item"><div class="accordion-header" onclick="toggleAccordion(this)"><div class="accordion-question">💰 Aides financières — je peux m'en sortir seul·e avec mes enfants ?</div><div class="accordion-arrow">▾</div></div><div class="accordion-body"><div class="accordion-short">Oui. Tu as des droits. La peur de ne pas y arriver financièrement ne doit pas te retenir — des aides existent précisément pour ça.</div><div class="accordion-long"><p><strong>🆘 L'aide d'urgence CAF — spéciale victimes de violences conjugales</strong></p></div><div class="accordion-signs"><div class="accordion-sign"><div class="sign-dot"></div>Disponible depuis décembre 2023 — pour toute victime, homme ou femme, avec ou sans enfants</div><div class="accordion-sign"><div class="sign-dot"></div>Entre <strong>243€ et 1 330€</strong> selon tes revenus et le nombre d'enfants</div><div class="accordion-sign"><div class="sign-dot"></div>Versée en moins de <strong>72 heures</strong> après la demande</div><div class="accordion-sign"><div class="sign-dot"></div>Non remboursable si tes revenus sont faibles — sinon c'est un prêt sans intérêts</div><div class="accordion-sign"><div class="sign-dot"></div>Condition : avoir un dépôt de plainte, une ordonnance de protection ou un signalement au procureur datant de moins de 12 mois</div><div class="accordion-sign"><div class="sign-dot"></div>Demande en ligne sur <strong>caf.fr</strong> > Mes démarches > Vie personnelle > Aide d'urgence violences conjugales</div></div><div class="accordion-long"><p><strong>📋 Aides pour les parents seuls :</strong></p></div><div class="accordion-signs"><div class="accordion-sign"><div class="sign-dot"></div><strong>RSA majoré (parent isolé)</strong> — montant plus élevé si tu élèves seul·e un enfant</div><div class="accordion-sign"><div class="sign-dot"></div><strong>APL</strong> — aide au logement dès que tu as une nouvelle adresse</div><div class="accordion-sign"><div class="sign-dot"></div><strong>Allocations familiales + AEEH</strong> — pour chaque enfant à charge</div><div class="accordion-sign"><div class="sign-dot"></div><strong>Pension alimentaire</strong> — le juge aux affaires familiales peut la fixer en urgence, sans accord de l'autre parent</div><div class="accordion-sign"><div class="sign-dot"></div><strong>ARIPA</strong> — si l'autre parent ne paie pas, l'État te verse la pension et se retourne contre lui</div><div class="accordion-sign"><div class="sign-dot"></div><strong>Aide juridictionnelle</strong> — avocat gratuit ou à tarif réduit selon tes revenus</div><div class="accordion-sign"><div class="sign-dot"></div><strong>Hébergement d'urgence</strong> — des structures accueillent gratuitement les victimes avec enfants</div></div><div class="accordion-long"><p><strong>📊 La pension alimentaire — ce qu'il faut savoir :</strong></p></div><div class="accordion-signs"><div class="accordion-sign"><div class="sign-dot"></div>Elle est <strong>revalorisée chaque année automatiquement</strong> selon l'indice des prix à la consommation</div><div class="accordion-sign"><div class="sign-dot"></div>Elle peut être <strong>révisée à la hausse</strong> si les besoins de l'enfant augmentent</div><div class="accordion-sign"><div class="sign-dot"></div>Si l'autre parent ne paie pas : l'ARIPA avance les sommes et les récupère à sa place</div><div class="accordion-sign"><div class="sign-dot"></div>Simulateur officiel : <strong>pension-alimentaire.caf.fr</strong></div></div><div class="accordion-long"><p><strong>🧾 Avantages fiscaux pour les parents isolés :</strong></p></div><div class="accordion-signs"><div class="accordion-sign"><div class="sign-dot"></div><strong>Demi-part supplémentaire</strong> — en tant que parent isolé, tu paies moins d'impôts</div><div class="accordion-sign"><div class="sign-dot"></div><strong>Case T à cocher</strong> sur ta déclaration d'impôts — "parent isolé" — ne pas l'oublier !</div><div class="accordion-sign"><div class="sign-dot"></div>La pension alimentaire reçue est à déclarer mais souvent peu ou pas imposée selon tes revenus</div><div class="accordion-sign"><div class="sign-dot"></div>Crédit d'impôt pour les frais de garde d'enfants jusqu'à 6 ans</div></div><div class="accordion-long"><p><strong>🚀 Par où commencer maintenant :</strong></p></div><div class="accordion-signs"><div class="accordion-sign"><div class="sign-dot"></div>Le <strong>3919</strong> oriente vers les assistantes sociales et toutes les aides disponibles</div><div class="accordion-sign"><div class="sign-dot"></div><strong>caf.fr</strong> — simule tes droits en 5 minutes avec le simulateur en ligne</div><div class="accordion-sign"><div class="sign-dot"></div>Le <strong>CCAS</strong> de ta mairie — aide alimentaire, mobilité, logement d'urgence</div><div class="accordion-sign"><div class="sign-dot"></div>Une <strong>assistante sociale</strong> peut faire le point complet sur tes droits gratuitement</div></div><div class="accordion-note">💜 Des milliers de parents seuls s'en sortent chaque année grâce à ces aides. Tu n'es pas seul·e face à ça — et tu as plus de droits que tu ne le crois.</div></div></div>
+
+    <div class="accordion-item"><div class="accordion-header" onclick="toggleAccordion(this)"><div class="accordion-question">🤝 Contacter une association — pourquoi et comment ?</div><div class="accordion-arrow">▾</div></div><div class="accordion-body"><div class="accordion-short">Une association spécialisée dans les violences conjugales peut tout changer. C'est gratuit, confidentiel, et elles connaissent exactement ta situation.</div><div class="accordion-long"><p><strong>Ce qu'une association peut faire pour toi, concrètement :</strong></p></div><div class="accordion-signs"><div class="accordion-sign"><div class="sign-dot"></div>T'écouter sans te juger — des personnes formées, souvent elles-mêmes concernées</div><div class="accordion-sign"><div class="sign-dot"></div>T'accompagner dans tes démarches légales — plainte, ordonnance de protection, divorce</div><div class="accordion-sign"><div class="sign-dot"></div>T'orienter vers un hébergement d'urgence si tu dois partir rapidement</div><div class="accordion-sign"><div class="sign-dot"></div>T'aider à accéder aux aides financières et sociales</div><div class="accordion-sign"><div class="sign-dot"></div>Proposer un suivi psychologique gratuit ou à tarif réduit</div><div class="accordion-sign"><div class="sign-dot"></div>T'accompagner physiquement si tu as peur de faire des démarches seul·e</div></div><div class="accordion-long"><p><strong>Comment trouver une association près de chez toi :</strong></p></div><div class="accordion-signs"><div class="accordion-sign"><div class="sign-dot"></div>Appelle le <strong>3919</strong> — ils te mettent en contact avec les associations locales</div><div class="accordion-sign"><div class="sign-dot"></div>Tape "association violences conjugales + ta ville" sur Google</div><div class="accordion-sign"><div class="sign-dot"></div>Rends-toi directement dans une association — pas besoin de rendez-vous en urgence</div><div class="accordion-sign"><div class="sign-dot"></div>Ton médecin traitant peut aussi t'orienter vers les bonnes structures</div></div><div class="accordion-note">Tu n'as pas à tout porter seul·e. Ces associations existent précisément pour toi.</div></div></div>
+
+    <div class="legal-note">Ce contenu est informatif et ne remplace pas un accompagnement professionnel.<br>Pour une aide personnalisée : <strong>3919</strong> (gratuit, 24h/24)</div>
+  </div></div>
+</div>
+
+<!-- ════ 04 — BOUTIQUE ════ -->
+<div id="boutique" class="page">
+  <div class="page-band"></div>
+  <div class="page-wrap"><div class="inner">
+    <p class="eyebrow">Le projet</p>
+    <h2 class="p-title">Manatoa,<br><em>c'est quoi ?</em></h2>
+    <p class="p-intro">Une marque engagée, fondée par une maman solo d'origine tahitienne, survivante de violences conjugales. Chaque produit soutient directement une association d'aide aux victimes.</p>
+    <div style="background:linear-gradient(135deg,var(--gold-p),var(--rose-p));border:1px solid var(--line);border-radius:16px;padding:18px 20px;margin-bottom:18px">
+      <p style="font-family:'Playfair Display',serif;font-size:16px;font-weight:700;color:var(--ink);margin-bottom:8px">💡 Comment ça marche ?</p>
+      <p style="font-size:13px;color:var(--muted);line-height:1.7">Chaque vêtement et basket Manatoa porte un QR code. N'importe qui peut le scanner — victime, témoin, ou passant — et accéder à ce site de soutien gratuitement. <strong style="color:var(--ink2)">Porter Manatoa, c'est porter une main tendue invisible.</strong></p>
+    </div>
+    <div class="boutique-hero">
+      <div class="boutique-title">🌿 La Boutique Manatoa</div>
+      <div class="boutique-sub">Baskets personnalisables · Sweats · Tee-shirts<br>QR code protecteur inclus sur chaque pièce</div>
+      <a href="https://manatoa87.com/" target="_blank" class="boutique-btn">Voir tous les produits →</a>
+    </div>
+    <div class="impact-grid">
+      <div class="impact-card"><div class="impact-n">10€</div><div class="impact-l">reversés à une association d'aide aux victimes par vente</div></div>
+      <div class="impact-card"><div class="impact-n">3919</div><div class="impact-l">accessible via le QR code</div></div>
+      <div class="impact-card"><div class="impact-n" id="impactMsgs">0</div><div class="impact-l">messages d'espoir publiés</div></div>
+      <div class="impact-card"><div class="impact-n">∞</div><div class="impact-l">vies qui peuvent changer</div></div>
+    </div>
+    <div class="mission-card">
+      <p class="eyebrow">Notre mission</p>
+      <h3 style="font-family:'Playfair Display',serif;font-size:20px;font-weight:700;color:var(--ink);margin:10px 0">Chaque achat <span style="background:linear-gradient(135deg,var(--gold),var(--rose));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">compte vraiment</span></h3>
+      <p style="font-size:13px;color:var(--muted);line-height:1.7">Manatoa finance directement une association qui accompagne les victimes de violences conjugales — avec écoute, protection et dignité.</p>
+      <div class="mission-quote">
+        <div class="mq-mark">«</div>
+        <p class="mq-txt">Je n'ai jamais eu la chance d'être marraine dans la vie. Alors j'ai décidé de l'être — la marraine de celles et ceux qui traversent ce que j'ai traversé.</p>
+        <p class="mq-auth">Maeva, fondatrice de Manatoa</p>
+      </div>
+    </div>
+  </div></div>
+</div>
+
+<!-- ════ NUMÉROS MONDE ════ -->
+<div id="numMonde" class="page">
+  <div class="page-band"></div>
+  <div class="page-wrap"><div class="inner">
+    <p class="eyebrow">Aide internationale</p>
+    <h2 class="p-title">Numéros d'aide<br><em>dans le monde</em></h2>
+    <p class="p-intro">Appuie directement sur un numéro pour appeler. Tous ces numéros sont gratuits.</p>
+    <a href="https://nomoredirectory.org" target="_blank" style="display:flex;align-items:center;gap:14px;padding:16px 20px;background:linear-gradient(135deg,var(--gold-p2),var(--rose-p));border:1px solid var(--line);border-radius:16px;text-decoration:none;margin-bottom:20px"><span style="font-size:28px">🌐</span><div><div style="font-family:'Playfair Display',serif;font-size:16px;font-weight:700;color:var(--ink);margin-bottom:3px">Tous les pays du monde</div><div style="font-size:12px;color:var(--muted);line-height:1.5">Répertoire officiel ONU & Banque Mondiale<br>nomoredirectory.org — recherche par pays</div></div><span style="color:var(--gold-d);font-size:20px;margin-left:auto">›</span></a>
+    <div style="display:flex;flex-direction:column;gap:14px">
+      <div style="font-family:'Playfair Display',serif;font-size:16px;font-weight:700;color:var(--ink);border-left:3px solid var(--gold);padding-left:12px">🌍 Europe</div>
+      <div style="background:var(--white2);border:1px solid var(--line);border-radius:14px;overflow:hidden">
+        <div style="padding:10px 16px;background:linear-gradient(135deg,var(--gold-p2),var(--rose-p));font-weight:600;color:var(--ink);font-size:13px;border-bottom:1px solid var(--line)">🇫🇷 France · 🇵🇫 Polynésie · 🇧🇪 Belgique</div>
+        <a href="tel:3919" class="num-card" style="border-radius:0;border:none;border-bottom:1px solid var(--line2)"><div class="num-ico">📞</div><div class="num-body"><div class="num-name">Violences Femmes Info</div><div class="num-number">3919</div><div class="num-detail">Gratuit · 24h/24</div></div><div class="num-arr">→</div></a>
+        <a href="tel:119" class="num-card" style="border-radius:0;border:none;border-bottom:1px solid var(--line2)"><div class="num-ico">🛡️</div><div class="num-body"><div class="num-name">Enfance en Danger</div><div class="num-number">119</div><div class="num-detail">Gratuit · 24h/24</div></div><div class="num-arr">→</div></a>
+        <a href="tel:17" class="num-card" style="border-radius:0;border:none"><div class="num-ico">🚨</div><div class="num-body"><div class="num-name">Police Secours</div><div class="num-number">17</div><div class="num-detail">Urgence immédiate</div></div><div class="num-arr">→</div></a>
+      </div>
+      <div style="background:var(--white2);border:1px solid var(--line);border-radius:14px;overflow:hidden">
+        <div style="padding:10px 16px;background:linear-gradient(135deg,var(--gold-p2),var(--rose-p));font-weight:600;color:var(--ink);font-size:13px;border-bottom:1px solid var(--line)">🇬🇧 United Kingdom</div>
+        <a href="tel:08082000247" class="num-card" style="border-radius:0;border:none;border-bottom:1px solid var(--line2)"><div class="num-ico">📞</div><div class="num-body"><div class="num-name">National DV Helpline</div><div class="num-number">0808 2000 247</div><div class="num-detail">Free · 24h/7</div></div><div class="num-arr">→</div></a>
+        <a href="tel:999" class="num-card" style="border-radius:0;border:none"><div class="num-ico">🚨</div><div class="num-body"><div class="num-name">Police Emergency</div><div class="num-number">999</div><div class="num-detail">Immediate emergency</div></div><div class="num-arr">→</div></a>
+      </div>
+      <div style="background:var(--white2);border:1px solid var(--line);border-radius:14px;overflow:hidden">
+        <div style="padding:10px 16px;background:linear-gradient(135deg,var(--gold-p2),var(--rose-p));font-weight:600;color:var(--ink);font-size:13px;border-bottom:1px solid var(--line)">🇩🇪 Deutschland · 🇦🇹 Österreich</div>
+        <a href="tel:08000116016" class="num-card" style="border-radius:0;border:none;border-bottom:1px solid var(--line2)"><div class="num-ico">📞</div><div class="num-body"><div class="num-name">Häusliche Gewalt</div><div class="num-number">08000 116 016</div><div class="num-detail">Kostenlos · 24h/7</div></div><div class="num-arr">→</div></a>
+        <a href="tel:110" class="num-card" style="border-radius:0;border:none"><div class="num-ico">🚨</div><div class="num-body"><div class="num-name">Polizei</div><div class="num-number">110</div><div class="num-detail">Sofortiger Notfall</div></div><div class="num-arr">→</div></a>
+      </div>
+      <div style="background:var(--white2);border:1px solid var(--line);border-radius:14px;overflow:hidden">
+        <div style="padding:10px 16px;background:linear-gradient(135deg,var(--gold-p2),var(--rose-p));font-weight:600;color:var(--ink);font-size:13px;border-bottom:1px solid var(--line)">🇪🇸 España</div>
+        <a href="tel:016" class="num-card" style="border-radius:0;border:none;border-bottom:1px solid var(--line2)"><div class="num-ico">📞</div><div class="num-body"><div class="num-name">Violencia de género</div><div class="num-number">016</div><div class="num-detail">Gratuito · 24h/7</div></div><div class="num-arr">→</div></a>
+        <a href="tel:112" class="num-card" style="border-radius:0;border:none"><div class="num-ico">🚨</div><div class="num-body"><div class="num-name">Policía</div><div class="num-number">112</div><div class="num-detail">Urgencia inmediata</div></div><div class="num-arr">→</div></a>
+      </div>
+      <div style="background:var(--white2);border:1px solid var(--line);border-radius:14px;overflow:hidden">
+        <div style="padding:10px 16px;background:linear-gradient(135deg,var(--gold-p2),var(--rose-p));font-weight:600;color:var(--ink);font-size:13px;border-bottom:1px solid var(--line)">🇵🇹 Portugal · 🇮🇹 Italia · 🇳🇱 Nederland</div>
+        <a href="tel:800202148" class="num-card" style="border-radius:0;border:none;border-bottom:1px solid var(--line2)"><div class="num-ico">📞</div><div class="num-body"><div class="num-name">Violência doméstica (PT)</div><div class="num-number">800 202 148</div><div class="num-detail">Gratuito · 24h/7</div></div><div class="num-arr">→</div></a>
+        <a href="tel:1522" class="num-card" style="border-radius:0;border:none;border-bottom:1px solid var(--line2)"><div class="num-ico">📞</div><div class="num-body"><div class="num-name">Violenza domestica (IT)</div><div class="num-number">1522</div><div class="num-detail">Gratuito · 24h/7</div></div><div class="num-arr">→</div></a>
+        <a href="tel:112" class="num-card" style="border-radius:0;border:none"><div class="num-ico">🚨</div><div class="num-body"><div class="num-name">Urgences Europe</div><div class="num-number">112</div><div class="num-detail">Valable dans toute l'UE</div></div><div class="num-arr">→</div></a>
+      </div>
+      <div style="font-family:'Playfair Display',serif;font-size:16px;font-weight:700;color:var(--ink);border-left:3px solid var(--gold);padding-left:12px;margin-top:6px">🌎 Amérique</div>
+      <div style="background:var(--white2);border:1px solid var(--line);border-radius:14px;overflow:hidden">
+        <div style="padding:10px 16px;background:linear-gradient(135deg,var(--gold-p2),var(--rose-p));font-weight:600;color:var(--ink);font-size:13px;border-bottom:1px solid var(--line)">🇺🇸 United States · 🇨🇦 Canada</div>
+        <a href="tel:18007997233" class="num-card" style="border-radius:0;border:none;border-bottom:1px solid var(--line2)"><div class="num-ico">📞</div><div class="num-body"><div class="num-name">National DV Hotline</div><div class="num-number">1-800-799-7233</div><div class="num-detail">Free · 24h/7</div></div><div class="num-arr">→</div></a>
+        <a href="tel:911" class="num-card" style="border-radius:0;border:none"><div class="num-ico">🚨</div><div class="num-body"><div class="num-name">Police Emergency</div><div class="num-number">911</div><div class="num-detail">Immediate emergency</div></div><div class="num-arr">→</div></a>
+      </div>
+      <div style="background:var(--white2);border:1px solid var(--line);border-radius:14px;overflow:hidden">
+        <div style="padding:10px 16px;background:linear-gradient(135deg,var(--gold-p2),var(--rose-p));font-weight:600;color:var(--ink);font-size:13px;border-bottom:1px solid var(--line)">🇲🇽 México · 🇦🇷 Argentina · 🇧🇷 Brasil</div>
+        <a href="tel:800290000" class="num-card" style="border-radius:0;border:none;border-bottom:1px solid var(--line2)"><div class="num-ico">📞</div><div class="num-body"><div class="num-name">INMUJERES (MX)</div><div class="num-number">800 290 0024</div><div class="num-detail">Gratuito · 24h/7</div></div><div class="num-arr">→</div></a>
+        <a href="tel:144" class="num-card" style="border-radius:0;border:none;border-bottom:1px solid var(--line2)"><div class="num-ico">📞</div><div class="num-body"><div class="num-name">Línea 144 (AR)</div><div class="num-number">144</div><div class="num-detail">Gratuito · 24h/7</div></div><div class="num-arr">→</div></a>
+        <a href="tel:180" class="num-card" style="border-radius:0;border:none"><div class="num-ico">📞</div><div class="num-body"><div class="num-name">Central da Mulher (BR)</div><div class="num-number">180</div><div class="num-detail">Gratuito · 24h/7</div></div><div class="num-arr">→</div></a>
+      </div>
+      <div style="font-family:'Playfair Display',serif;font-size:16px;font-weight:700;color:var(--ink);border-left:3px solid var(--gold);padding-left:12px;margin-top:6px">🌏 Océanie & Asie</div>
+      <div style="background:var(--white2);border:1px solid var(--line);border-radius:14px;overflow:hidden">
+        <div style="padding:10px 16px;background:linear-gradient(135deg,var(--gold-p2),var(--rose-p));font-weight:600;color:var(--ink);font-size:13px;border-bottom:1px solid var(--line)">🇦🇺 Australia · 🇳🇿 New Zealand</div>
+        <a href="tel:1800737732" class="num-card" style="border-radius:0;border:none;border-bottom:1px solid var(--line2)"><div class="num-ico">📞</div><div class="num-body"><div class="num-name">1800RESPECT (AU)</div><div class="num-number">1800 737 732</div><div class="num-detail">Free · 24h/7</div></div><div class="num-arr">→</div></a>
+        <a href="tel:000" class="num-card" style="border-radius:0;border:none"><div class="num-ico">🚨</div><div class="num-body"><div class="num-name">Emergency (AU)</div><div class="num-number">000</div><div class="num-detail">Immediate emergency</div></div><div class="num-arr">→</div></a>
+      </div>
+      <div style="font-family:'Playfair Display',serif;font-size:16px;font-weight:700;color:var(--ink);border-left:3px solid var(--gold);padding-left:12px;margin-top:6px">🌍 Afrique & Moyen-Orient</div>
+      <div style="background:var(--white2);border:1px solid var(--line);border-radius:14px;overflow:hidden">
+        <div style="padding:10px 16px;background:linear-gradient(135deg,var(--gold-p2),var(--rose-p));font-weight:600;color:var(--ink);font-size:13px;border-bottom:1px solid var(--line)">🇲🇦 Maroc · 🇩🇿 Algérie · 🇿🇦 South Africa</div>
+        <a href="tel:8080" class="num-card" style="border-radius:0;border:none;border-bottom:1px solid var(--line2)"><div class="num-ico">📞</div><div class="num-body"><div class="num-name">SOS Femmes (MA)</div><div class="num-number">8080</div><div class="num-detail">Gratuit · Maroc</div></div><div class="num-arr">→</div></a>
+        <a href="tel:0800150150" class="num-card" style="border-radius:0;border:none;border-bottom:1px solid var(--line2)"><div class="num-ico">📞</div><div class="num-body"><div class="num-name">GBV Command Centre (ZA)</div><div class="num-number">0800 150 150</div><div class="num-detail">Free · 24h/7</div></div><div class="num-arr">→</div></a>
+        <a href="tel:112" class="num-card" style="border-radius:0;border:none"><div class="num-ico">🚨</div><div class="num-body"><div class="num-name">Urgences internationales</div><div class="num-number">112</div><div class="num-detail">Disponible dans la plupart des pays</div></div><div class="num-arr">→</div></a>
+      </div>
+    </div>
+    <div style="margin-top:20px;padding:14px 16px;background:linear-gradient(135deg,var(--gold-p),var(--rose-p));border:1px solid var(--line);border-radius:14px;font-size:12px;color:var(--muted);line-height:1.7;text-align:center">Tu ne trouves pas ton pays ? 👉 <strong><a href="https://nomoredirectory.org" target="_blank" style="color:var(--rose-d)">nomoredirectory.org</a></strong><br>Répertoire mondial officiel ONU — tous les pays</div>
+  </div></div>
+</div>
+
+<!-- ════ DROITS & LOIS ════ -->
+<div id="droits" class="page">
+  <div class="page-band"></div>
+  <div class="page-wrap"><div class="inner">
+    <p class="eyebrow">Vos droits</p>
+    <h2 class="p-title">La loi est<br><em>de votre côté.</em></h2>
+    <div class="droits-intro">
+      <div class="droits-intro-title">⚖️ Pourquoi connaître ses droits ?</div>
+      <p class="droits-intro-text">Trop de victimes perdent leurs enfants, leur logement, leur sécurité — <strong>parce qu'elles ne connaissent pas les lois qui les protègent.</strong> Ces lois existent. Elles sont puissantes. Tu as le droit de les utiliser.<br><br>Cette page regroupe les textes de loi français clés. Chaque loi inclut <strong>la phrase exacte à dire au tribunal.</strong></p>
+    </div>
+    <div style="background:linear-gradient(135deg,rgba(196,133,122,.08),rgba(201,168,76,.05));border:1px solid rgba(196,133,122,.15);border-radius:14px;padding:14px 16px;margin-bottom:20px;font-size:12px;color:var(--muted);line-height:1.7">
+      🇫🇷 <strong style="color:var(--ink2)">Ces lois sont françaises.</strong> Si tu es dans un autre pays → <a href="#" onclick="go('numMonde');return false" style="color:var(--rose-d);text-decoration:underline">ressources internationales</a> · 🌍 Site disponible dans toutes les langues via Google Chrome
+    </div>
+    <div class="droits-category-title">🛡️ Protection immédiate</div>
+    <div class="loi-card">
+      <div class="loi-header" onclick="toggleLoi(this)">
+        <div class="loi-title-wrap"><div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:5px"><span class="loi-tag tag-urgence">⚡ Urgence</span><span class="loi-tag tag-protect">Protection</span></div><div class="loi-name">Ordonnance de Protection — Article 515-9 du Code Civil</div></div><div class="loi-arr">▾</div>
+      </div>
+      <div class="loi-body">
+        <div class="loi-urgence-badge">⚡ Obtenue en <strong>6 jours</strong> maximum — sans attendre le divorce</div>
+        <div class="loi-text">C'est <strong>l'arme juridique la plus puissante</strong> pour une victime. Elle permet d'obtenir en urgence une protection légale sans attendre un procès.</div>
+        <div class="loi-what"><div class="loi-what-title">Ce qu'elle permet :</div><div class="loi-signs">
+          <div class="loi-sign"><div class="loi-dot"></div>Interdire à l'agresseur de s'approcher de toi et de tes enfants</div>
+          <div class="loi-sign"><div class="loi-dot"></div>Te maintenir dans le logement et expulser l'agresseur — même s'il est propriétaire</div>
+          <div class="loi-sign"><div class="loi-dot"></div>Fixer en urgence la garde des enfants et la pension alimentaire</div>
+          <div class="loi-sign"><div class="loi-dot"></div>Suspendre le droit de visite si les enfants sont en danger</div>
+          <div class="loi-sign"><div class="loi-dot"></div>T'autoriser à quitter le domicile avec les enfants sans être accusée d'enlèvement</div>
+        </div></div>
+        <div class="phrase-cle">"Je demande une ordonnance de protection en référé au Juge aux Affaires Familiales — article 515-9 du Code Civil."</div>
+        <div class="loi-note">Dépose une requête au Tribunal Judiciaire. Le 3919 oriente gratuitement vers un avocat.</div>
+      </div>
+    </div>
+    <div class="loi-card">
+      <div class="loi-header" onclick="toggleLoi(this)">
+        <div class="loi-title-wrap"><div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:5px"><span class="loi-tag tag-urgence">⚡ Urgence</span><span class="loi-tag tag-protect">Protection</span></div><div class="loi-name">Bracelet Anti-Rapprochement (BAR) — Loi du 28 décembre 2019</div></div><div class="loi-arr">▾</div>
+      </div>
+      <div class="loi-body">
+        <div class="loi-text">Dispositif électronique qui déclenche une <strong>alerte automatique aux forces de l'ordre</strong> si l'agresseur s'approche trop de la victime.</div>
+        <div class="loi-what"><div class="loi-what-title">Ce qu'il faut savoir :</div><div class="loi-signs">
+          <div class="loi-sign"><div class="loi-dot"></div>Accordé par le juge dans le cadre d'une ordonnance de protection</div>
+          <div class="loi-sign"><div class="loi-dot"></div>Disponible même sans condamnation pénale préalable</div>
+          <div class="loi-sign"><div class="loi-dot"></div>La victime peut refuser sans que ça lui soit reproché</div>
+        </div></div>
+        <div class="phrase-cle">"Je souhaite demander la mise en place d'un Bracelet Anti-Rapprochement — loi du 28 décembre 2019."</div>
+        <div class="loi-note">Il faut en faire la demande explicitement — ce n'est pas automatique.</div>
+      </div>
+    </div>
+    <div class="loi-card">
+      <div class="loi-header" onclick="toggleLoi(this)">
+        <div class="loi-title-wrap"><div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:5px"><span class="loi-tag tag-urgence">⚡ Urgence</span></div><div class="loi-name">Éviction du conjoint violent — Article 220-1 Code Civil</div></div><div class="loi-arr">▾</div>
+      </div>
+      <div class="loi-body">
+        <div class="loi-text">Même si l'agresseur est propriétaire, <strong>il peut être expulsé du domicile en urgence.</strong> La victime reste dans le logement.</div>
+        <div class="loi-what"><div class="loi-what-title">Conditions :</div><div class="loi-signs">
+          <div class="loi-sign"><div class="loi-dot"></div>Applicable aux couples mariés, pacsés ou en concubinage</div>
+          <div class="loi-sign"><div class="loi-dot"></div>Le juge peut l'ordonner même sans condamnation pénale préalable</div>
+        </div></div>
+        <div class="phrase-cle">"Je demande l'éviction du conjoint violent du domicile conjugal — article 220-1 du Code Civil."</div>
+        <div class="loi-note">En dehors des heures d'ouverture du tribunal, le Parquet peut saisir le juge d'astreinte.</div>
+      </div>
+    </div>
+    <div class="loi-card">
+      <div class="loi-header" onclick="toggleLoi(this)">
+        <div class="loi-title-wrap"><div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:5px"><span class="loi-tag tag-protect">Protection</span></div><div class="loi-name">Signalement sans dépôt de plainte — Article 40 du Code de Procédure Pénale</div></div><div class="loi-arr">▾</div>
+      </div>
+      <div class="loi-body">
+        <div class="loi-text">Tu peux <strong>signaler des faits au Procureur de la République sans déposer plainte.</strong> C'est une étape intermédiaire qui déclenche une enquête sans t'engager immédiatement.</div>
+        <div class="loi-what"><div class="loi-what-title">Pourquoi c'est utile :</div><div class="loi-signs">
+          <div class="loi-sign"><div class="loi-dot"></div>Permet de déclencher une protection sans plainte formelle</div>
+          <div class="loi-sign"><div class="loi-dot"></div>Utile quand tu n'es pas encore prête à porter plainte</div>
+          <div class="loi-sign"><div class="loi-dot"></div>Toute personne peut signaler — pas seulement la victime</div>
+        </div></div>
+        <div class="phrase-cle">"Je souhaite faire un signalement au Procureur de la République — article 40 du CPP — sans déposer plainte à ce stade."</div>
+        <div class="loi-note">Un médecin, une assistante sociale ou un témoin peuvent aussi faire ce signalement à ta place.</div>
+      </div>
+    </div>
+    <div class="droits-category-title">👶 Enfants — garde et protection</div>
+    <div style="background:linear-gradient(135deg,rgba(196,133,122,.08),rgba(201,168,76,.05));border:1px solid rgba(196,133,122,.2);border-radius:14px;padding:16px 18px;margin-bottom:14px">
+      <div style="font-size:13px;font-weight:600;color:var(--rose-d);margin-bottom:6px">⚠️ Ce que trop de mamans ne savent pas</div>
+      <p style="font-size:13px;color:var(--ink2);line-height:1.8">La justice peut accorder la garde à l'agresseur si la victime ne connaît pas ses droits. Ces lois existent pour empêcher ça — utilise-les.</p>
+    </div>
+    <div class="loi-card">
+      <div class="loi-header" onclick="toggleLoi(this)">
+        <div class="loi-title-wrap"><div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:5px"><span class="loi-tag tag-enfant">👶 Enfants</span><span class="loi-tag tag-urgence">⚡ Important</span></div><div class="loi-name">Quitter le domicile avec ses enfants sans être accusée d'enlèvement</div></div><div class="loi-arr">▾</div>
+      </div>
+      <div class="loi-body">
+        <div class="loi-urgence-badge">⚡ Beaucoup de mères ne partent pas par peur d'être accusées d'enlèvement. C'est souvent faux.</div>
+        <div class="loi-what"><div class="loi-what-title">Ce qui vous protège légalement :</div><div class="loi-signs">
+          <div class="loi-sign"><div class="loi-dot"></div>Partir avec les enfants EST légal si vous êtes en danger immédiat</div>
+          <div class="loi-sign"><div class="loi-dot"></div>Déposez une plainte ou main courante <strong>immédiatement après</strong> le départ</div>
+          <div class="loi-sign"><div class="loi-dot"></div>Informez le Procureur de la République dans les 24-48h</div>
+          <div class="loi-sign"><div class="loi-dot"></div>Saisissez le JAF en urgence pour fixer la garde provisoire</div>
+          <div class="loi-sign"><div class="loi-dot"></div>L'ordonnance de protection vous autorise explicitement à partir avec les enfants</div>
+        </div></div>
+        <div class="phrase-cle">"J'ai quitté le domicile avec mes enfants en situation de danger. Je dépose plainte et je saisis le JAF en urgence pour fixer la garde provisoire."</div>
+        <div class="loi-note">Appelez le 3919 avant ou pendant votre départ. Ils peuvent vous conseiller en temps réel.</div>
+      </div>
+    </div>
+    <div class="loi-card">
+      <div class="loi-header" onclick="toggleLoi(this)">
+        <div class="loi-title-wrap"><div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:5px"><span class="loi-tag tag-enfant">👶 Enfants</span><span class="loi-tag tag-protect">Protection</span></div><div class="loi-name">Suspension de l'autorité parentale — Article 378 Code Civil + Loi 21 avril 2021</div></div><div class="loi-arr">▾</div>
+      </div>
+      <div class="loi-body">
+        <div class="loi-text">Un parent condamné pour violences peut se voir <strong>retirer totalement ou partiellement l'autorité parentale.</strong></div>
+        <div class="loi-what"><div class="loi-what-title">Depuis la loi du 21 avril 2021 :</div><div class="loi-signs">
+          <div class="loi-sign"><div class="loi-dot"></div>Retrait automatique en cas de condamnation pour meurtre ou tentative de meurtre du co-parent</div>
+          <div class="loi-sign"><div class="loi-dot"></div>Le JAF peut suspendre le droit de visite même sans condamnation pénale</div>
+          <div class="loi-sign"><div class="loi-dot"></div>Le droit de visite peut être remplacé par un <strong>droit de visite supervisé en espace neutre</strong></div>
+          <div class="loi-sign"><div class="loi-dot"></div>L'intérêt supérieur de l'enfant prime toujours sur les droits du parent</div>
+        </div></div>
+        <div class="phrase-cle">"Je demande la suspension du droit de visite dans l'intérêt supérieur de l'enfant — article 373-2-6 du Code Civil. À défaut, je demande un droit de visite supervisé en espace neutre."</div>
+        <div class="loi-note">Documentez les symptômes de l'enfant — régression, cauchemars, peur — par un médecin ou psychologue scolaire. Ce document pèse lourd devant un juge.</div>
+      </div>
+    </div>
+    <div class="loi-card">
+      <div class="loi-header" onclick="toggleLoi(this)">
+        <div class="loi-title-wrap"><div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:5px"><span class="loi-tag tag-enfant">👶 Enfants</span></div><div class="loi-name">L'enfant témoin = enfant victime — Loi du 9 juillet 2010</div></div><div class="loi-arr">▾</div>
+      </div>
+      <div class="loi-body">
+        <div class="loi-text">Un enfant qui assiste à des violences conjugales est <strong>reconnu comme victime directe</strong>, même sans violence physique sur lui.</div>
+        <div class="loi-what"><div class="loi-what-title">Ce que ça change :</div><div class="loi-signs">
+          <div class="loi-sign"><div class="loi-dot"></div>Les violences commises devant des enfants sont une circonstance aggravante pénale</div>
+          <div class="loi-sign"><div class="loi-dot"></div>Un administrateur ad hoc peut être nommé pour représenter les intérêts de l'enfant</div>
+          <div class="loi-sign"><div class="loi-dot"></div>La parole de l'enfant doit être recueillie par un professionnel formé</div>
+        </div></div>
+        <div class="phrase-cle">"Mon enfant a assisté à des scènes de violence. Il est victime au sens de la loi du 9 juillet 2010. Je demande qu'un administrateur ad hoc soit nommé."</div>
+        <div class="loi-note">Le 119 peut orienter vers des professionnels formés. Le psychologue scolaire peut établir un rapport gratuitement.</div>
+      </div>
+    </div>
+    <div class="droits-category-title">⚖️ Droit pénal — porter plainte</div>
+    <div class="loi-card">
+      <div class="loi-header" onclick="toggleLoi(this)">
+        <div class="loi-title-wrap"><div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:5px"><span class="loi-tag tag-penal">Pénal</span></div><div class="loi-name">Violences conjugales aggravées — Articles 222-1 et suivants Code Pénal</div></div><div class="loi-arr">▾</div>
+      </div>
+      <div class="loi-body">
+        <div class="loi-text">Les violences commises par un conjoint sont <strong>automatiquement punies plus sévèrement.</strong></div>
+        <div class="loi-what"><div class="loi-what-title">Peines encourues :</div><div class="loi-signs">
+          <div class="loi-sign"><div class="loi-dot"></div>Violences sans ITT : jusqu'à <strong>3 ans + 45 000€</strong></div>
+          <div class="loi-sign"><div class="loi-dot"></div>Violences avec ITT sup. à 8 jours : jusqu'à <strong>10 ans + 150 000€</strong></div>
+          <div class="loi-sign"><div class="loi-dot"></div>Commises devant des enfants : <strong>peine automatiquement aggravée</strong></div>
+          <div class="loi-sign"><div class="loi-dot"></div>Féminicide : <strong>réclusion criminelle à perpétuité</strong></div>
+        </div></div>
+        <div class="phrase-cle">"Je porte plainte pour violences volontaires aggravées par la qualité de conjoint — articles 222-1 et suivants du Code Pénal."</div>
+        <div class="loi-note">Tu peux porter plainte sans certificat médical, même si les violences sont anciennes, même sans témoin. Ta parole est une preuve.</div>
+      </div>
+    </div>
+    <div class="loi-card">
+      <div class="loi-header" onclick="toggleLoi(this)">
+        <div class="loi-title-wrap"><div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:5px"><span class="loi-tag tag-penal">Pénal</span></div><div class="loi-name">Harcèlement moral et emprise — Article 222-33-2-1 Code Pénal</div></div><div class="loi-arr">▾</div>
+      </div>
+      <div class="loi-body">
+        <div class="loi-text">Le harcèlement moral au sein du couple est un <strong>délit pénal autonome</strong> depuis 2010 — même sans violence physique.</div>
+        <div class="loi-what"><div class="loi-what-title">Ce qui constitue le délit :</div><div class="loi-signs">
+          <div class="loi-sign"><div class="loi-dot"></div>Actes répétés visant à dégrader les conditions de vie de la victime</div>
+          <div class="loi-sign"><div class="loi-dot"></div>Isolement, humiliation, contrôle, dévalorisation systématique</div>
+          <div class="loi-sign"><div class="loi-dot"></div>Peine : jusqu'à <strong>3 ans + 45 000€</strong>, aggravé si commis devant des enfants</div>
+        </div></div>
+        <div class="phrase-cle">"Je porte plainte pour harcèlement moral au sein du couple — article 222-33-2-1 du Code Pénal."</div>
+        <div class="loi-note">Conservez TOUT : SMS, emails, messages vocaux, captures d'écran datées. Ces preuves sont recevables devant un juge.</div>
+      </div>
+    </div>
+    <div class="loi-card">
+      <div class="loi-header" onclick="toggleLoi(this)">
+        <div class="loi-title-wrap"><div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:5px"><span class="loi-tag tag-penal">Pénal</span></div><div class="loi-name">Viol conjugal — Articles 222-22 et 222-23 Code Pénal</div></div><div class="loi-arr">▾</div>
+      </div>
+      <div class="loi-body">
+        <div class="loi-text">Le viol au sein du couple est un <strong>crime reconnu depuis 1992.</strong> Le mariage ne constitue en aucun cas un consentement permanent.</div>
+        <div class="loi-what"><div class="loi-what-title">Ce que la loi dit :</div><div class="loi-signs">
+          <div class="loi-sign"><div class="loi-dot"></div>Peine de base : <strong>15 ans de réclusion criminelle</strong></div>
+          <div class="loi-sign"><div class="loi-dot"></div>Si commis par un conjoint : jusqu'à <strong>20 ans</strong></div>
+          <div class="loi-sign"><div class="loi-dot"></div>Délai de prescription : <strong>20 ans</strong> à partir des faits</div>
+        </div></div>
+        <div class="phrase-cle">"Je porte plainte pour viol conjugal — articles 222-22 et 222-23 du Code Pénal."</div>
+        <div class="loi-note">Tu peux porter plainte même des années après. Une consultation aux urgences gynécologiques peut établir un constat même sans trace physique récente.</div>
+      </div>
+    </div>
+    <div class="loi-card">
+      <div class="loi-header" onclick="toggleLoi(this)">
+        <div class="loi-title-wrap"><div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:5px"><span class="loi-tag tag-penal">Pénal</span></div><div class="loi-name">Protection des témoins qui signalent — Article 434-1 Code Pénal</div></div><div class="loi-arr">▾</div>
+      </div>
+      <div class="loi-body">
+        <div class="loi-text">Un témoin qui signale des violences conjugales est <strong>protégé par la loi</strong> s'il agit de bonne foi.</div>
+        <div class="loi-what"><div class="loi-what-title">Ce que ça signifie :</div><div class="loi-signs">
+          <div class="loi-sign"><div class="loi-dot"></div>Signaler ce que vous avez vu est un acte civique protégé</div>
+          <div class="loi-sign"><div class="loi-dot"></div>Vous pouvez signaler anonymement au 3919 ou au 119 pour les enfants</div>
+          <div class="loi-sign"><div class="loi-dot"></div>Ne pas signaler une situation de danger peut être considéré comme une non-assistance à personne en danger</div>
+        </div></div>
+        <div class="phrase-cle">"Je souhaite témoigner des faits dont j'ai été témoin. Je comprends que je suis protégé·e en tant que témoin de bonne foi."</div>
+        <div class="loi-note">Votre témoignage peut être décisif pour la victime. Ne pas agir par peur n'est pas une obligation légale.</div>
+      </div>
+    </div>
+    <div class="droits-category-title">💶 Aides financières d'urgence</div>
+    <div class="loi-card">
+      <div class="loi-header" onclick="toggleLoi(this)">
+        <div class="loi-title-wrap"><div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:5px"><span class="loi-tag tag-urgence">⚡ Urgence</span></div><div class="loi-name">Aide financière CAF — versée en 72h (depuis décembre 2023)</div></div><div class="loi-arr">▾</div>
+      </div>
+      <div class="loi-body">
+        <div class="loi-urgence-badge">⚡ Versée en moins de 72 heures sur justificatif</div>
+        <div class="loi-what"><div class="loi-what-title">Montants et conditions :</div><div class="loi-signs">
+          <div class="loi-sign"><div class="loi-dot"></div>Entre <strong>243€ et 1 330€</strong> selon revenus et nombre d'enfants</div>
+          <div class="loi-sign"><div class="loi-dot"></div>Non remboursable si revenus faibles — prêt sans intérêts sinon</div>
+          <div class="loi-sign"><div class="loi-dot"></div>Condition : dépôt de plainte OU ordonnance de protection (moins de 12 mois)</div>
+          <div class="loi-sign"><div class="loi-dot"></div>Disponible pour hommes et femmes, avec ou sans enfants</div>
+        </div></div>
+        <div class="phrase-cle">caf.fr → Mes démarches → Vie personnelle → Aide d'urgence violences conjugales</div>
+        <div class="loi-note">Cette aide est méconnue. Elle peut permettre de partir quand on n'a pas d'argent.</div>
+      </div>
+    </div>
+    <div class="loi-card">
+      <div class="loi-header" onclick="toggleLoi(this)">
+        <div class="loi-title-wrap"><div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:5px"><span class="loi-tag tag-protect">Protection</span></div><div class="loi-name">Aide juridictionnelle — avocat gratuit ou à tarif réduit</div></div><div class="loi-arr">▾</div>
+      </div>
+      <div class="loi-body">
+        <div class="loi-text">Si vos revenus sont faibles, <strong>vous avez droit à un avocat gratuit</strong> payé par l'État.</div>
+        <div class="loi-what"><div class="loi-what-title">Comment l'obtenir :</div><div class="loi-signs">
+          <div class="loi-sign"><div class="loi-dot"></div>Formulaire au Tribunal Judiciaire ou sur justice.fr</div>
+          <div class="loi-sign"><div class="loi-dot"></div>Valable pour les procédures civiles ET pénales</div>
+          <div class="loi-sign"><div class="loi-dot"></div>Le 3919 peut orienter vers une consultation juridique gratuite</div>
+        </div></div>
+        <div class="phrase-cle">"Je souhaite bénéficier de l'aide juridictionnelle pour ma procédure de protection."</div>
+        <div class="loi-note">Ne renoncez jamais à vous défendre par manque d'argent. L'aide juridictionnelle existe précisément pour ça.</div>
+      </div>
+    </div>
+    <div class="loi-card">
+      <div class="loi-header" onclick="toggleLoi(this)">
+        <div class="loi-title-wrap"><div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:5px"><span class="loi-tag tag-protect">Protection</span></div><div class="loi-name">ARIPA — si l'autre parent ne paie pas la pension alimentaire</div></div><div class="loi-arr">▾</div>
+      </div>
+      <div class="loi-body">
+        <div class="loi-text">Si l'agresseur ne paie pas la pension alimentaire, <strong>l'État avance les sommes à ta place</strong> et se retourne contre lui pour les récupérer.</div>
+        <div class="loi-what"><div class="loi-what-title">Ce que l'ARIPA fait :</div><div class="loi-signs">
+          <div class="loi-sign"><div class="loi-dot"></div>Verse la pension alimentaire à ta place dès le premier impayé</div>
+          <div class="loi-sign"><div class="loi-dot"></div>Se retourne contre le parent défaillant pour récupérer les sommes</div>
+          <div class="loi-sign"><div class="loi-dot"></div>Simulateur officiel : pension-alimentaire.caf.fr</div>
+        </div></div>
+        <div class="phrase-cle">Demande sur caf.fr → Mes démarches → Pension alimentaire → Intermédiation financière</div>
+        <div class="loi-note">Tu n'as pas à courir après l'argent toi-même. L'État peut le faire à ta place.</div>
+      </div>
+    </div>
+    <div class="droits-category-title">🌍 Ressources internationales</div>
+    <div style="background:var(--white2);border:1px solid var(--line);border-radius:16px;padding:20px;margin-bottom:14px">
+      <p style="font-size:13px;color:var(--muted);line-height:1.85;margin-bottom:14px">Les lois listées ici sont françaises 🇫🇷. Ce site est accessible dans le monde entier — Google Chrome le traduit automatiquement dans votre langue.</p>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <a href="https://nomoredirectory.org" target="_blank" style="display:flex;align-items:center;gap:12px;padding:12px 14px;background:linear-gradient(135deg,var(--gold-p),var(--rose-p));border:1px solid var(--line);border-radius:12px;text-decoration:none;color:var(--ink2)"><span style="font-size:20px">🌐</span><div><div style="font-size:13px;font-weight:600;color:var(--ink)">NoMoreDirectory.org</div><div style="font-size:11px;color:var(--muted)">Répertoire ONU — ressources juridiques pour 160+ pays</div></div><span style="color:var(--gold-d);margin-left:auto">›</span></a>
+        <button onclick="go('numMonde')" style="display:flex;align-items:center;gap:12px;padding:12px 14px;background:var(--white2);border:1px solid var(--line2);border-radius:12px;font-family:'DM Sans',sans-serif;cursor:pointer;color:var(--ink2);text-align:left;width:100%"><span style="font-size:20px">📞</span><div><div style="font-size:13px;font-weight:600;color:var(--ink)">Numéros d'aide dans 50+ pays</div><div style="font-size:11px;color:var(--muted)">Disponibles sur ce site</div></div><span style="color:var(--gold-d);margin-left:auto">›</span></button>
+      </div>
+    </div>
+    <div class="legal-note">⚖️ Informations à jour en 2025. Pour les dernières mises à jour → <strong>legifrance.gouv.fr</strong> ou appelez le <strong>3919</strong>.<br><br>🌍 Site international — Google Chrome traduit automatiquement cette page dans toutes les langues.</div>
+  </div></div>
+</div>
+
+
+
+<!-- Formulaires Netlify cachés pour détection -->
+<form name="manatoa-messages" netlify netlify-honeypot="bot-field" hidden>
+  <input type="text" name="message" />
+</form>
+<form name="manatoa-enfants" netlify netlify-honeypot="bot-field" hidden>
+  <input type="text" name="message" />
+</form>
+<div class="toast" id="toastEl"></div>
+
+<script>
+// ── Mots du jour ──
+const MOTS=["Tu n'as pas à traverser ça seul·e. Des gens que tu ne connais pas encore pensent à toi et te soutiennent.","Ta douleur est réelle. Ta force l'est aussi — même si tu ne la vois pas encore.","Chaque journée difficile traversée est une preuve de ton courage.","Tu mérites d'être en sécurité, d'être aimé·e, d'être respecté·e.","Demander de l'aide n'est pas une faiblesse. C'est l'acte le plus courageux qui soit.","Quelque part, quelqu'un pense à toi et espère que tu vas bien.","Ta vie a de la valeur. Tu as de la valeur. N'oublie jamais ça."];
+function getMotDuJour(){const el=document.getElementById('motDuJour');if(el)el.textContent=MOTS[new Date().getDate()%MOTS.length]}
+
+// ── Messages ──
+const DEFAULT_MSGS=[];
+function getMsgs(){try{const s=localStorage.getItem('manatoa_f3');return s?JSON.parse(s):[...DEFAULT_MSGS]}catch(e){return[...DEFAULT_MSGS]}}
+function saveMsgs(m){try{localStorage.setItem('manatoa_f3',JSON.stringify(m))}catch(e){}}
+
+// ── Proches ──
+function getContacts(){try{const s=localStorage.getItem('manatoa_contacts');return s?JSON.parse(s):[]}catch(e){return[]}}
+function saveContacts(c){try{localStorage.setItem('manatoa_contacts',JSON.stringify(c))}catch(e){}}
+function renderContacts(listId){
+  const list=document.getElementById(listId);if(!list)return;
+  const contacts=getContacts();
+  if(contacts.length===0){list.innerHTML='<p style="font-size:12px;color:var(--muted);text-align:center;padding:6px 0;margin-bottom:10px">Aucun proche enregistré</p>';return}
+  list.innerHTML=contacts.map((c,i)=>`<div class="contact-item"><div class="contact-info"><div class="contact-name">${c.name}</div><div class="contact-num">${c.num}</div></div><div class="contact-actions"><button class="contact-call" onclick="alertContact(${i})">Alerter</button><button class="contact-del" onclick="deleteContact(${i},'${listId}')">✕</button></div></div>`).join('');
+}
+function addContact(){
+  const n=document.getElementById('contactName').value.trim(),nu=document.getElementById('contactNum').value.trim();
+  if(!n||!nu){toast('Entre un prénom et un numéro');return}
+  const c=getContacts();c.push({name:n,num:nu});saveContacts(c);
+  document.getElementById('contactName').value='';document.getElementById('contactNum').value='';
+  renderContacts('contactList');toast(`✅ ${n} ajouté`);
+}
+function addContactU(){
+  const n=document.getElementById('contactNameU').value.trim(),nu=document.getElementById('contactNumU').value.trim();
+  if(!n||!nu){toast('Entre un prénom et un numéro');return}
+  const c=getContacts();c.push({name:n,num:nu});saveContacts(c);
+  document.getElementById('contactNameU').value='';document.getElementById('contactNumU').value='';
+  renderContacts('contactListUnsafe');toast(`✅ ${n} ajouté`);
+}
+function deleteContact(i,listId){const c=getContacts();c.splice(i,1);saveContacts(c);renderContacts(listId)}
+function alertContact(i){
+  const c=getContacts()[i];
+  const msg=encodeURIComponent('🆘 J\'ai besoin d\'aide. Je ne suis pas en sécurité en ce moment. Merci de me contacter dès que possible.');
+  window.location.href=`sms:${c.num}?body=${msg}`;
+}
+
+// ── Guide témoin ──
+const TEMOIN_DATA={
+  signal:{title:"Tu as vu le Signal d'Alerte — voici quoi faire",steps:["Reste calme, ne montre pas que tu as compris devant l'agresseur","Trouve un prétexte discret pour t'éloigner avec la personne","À l'abri : demande-lui discrètement si elle a besoin d'aide","Si elle confirme : appelle le 17 ou aide-la à quitter les lieux","Si tu ne peux pas l'approcher : appelle le 17 et décris la situation","Ne confronte jamais l'agresseur — ta sécurité et la sienne sont prioritaires"]},
+  physique:{title:"Tu as vu des signes de violences physiques",steps:["Ne confronte pas l'agresseur — ta sécurité est prioritaire","Si la personne est en danger immédiat : appelle le 17","Parle discrètement à la victime si c'est possible et sécurisé","Appelle le 3919 pour avoir des conseils adaptés à la situation","Témoigne si un signalement officiel est fait — ton témoignage compte"]},
+  controle:{title:"Tu observes des comportements de contrôle",steps:["Note ce que tu observes (dates, comportements) sans intervenir directement","Sois présent·e et disponible pour la victime sans la presser","Informe-toi au 3919 — ils conseillent aussi les proches","Propose ton aide concrète : écoute, hébergement temporaire","Respecte son rythme — la victime doit décider elle-même de partir"]},
+  enfant:{title:"Un enfant semble en danger",steps:["Appelle le 119 (Allô Enfance en Danger) — gratuit, anonyme, confidentiel","Tu n'as pas besoin de certitude pour signaler — le doute suffit","Des professionnels évalueront la situation — tu ne décides pas seul·e","Ne confronte pas les parents si tu penses que ça met l'enfant en danger","Ton signalement peut sauver une vie"]},
+  voisin:{title:"Tu entends des cris chez un voisin",steps:["Si danger immédiat (cris de détresse, violence physique) : appelle le 17","Frappe à la porte en disant que tu as entendu du bruit — sans accuser","Si pas de réponse ou si tu as peur : appelle le 17 ou le gardien","Parle à d'autres voisins pour vous coordonner discrètement","Signale au 3919 si ça se répète régulièrement"]}
+};
+function showTemoin(type){
+  const d=TEMOIN_DATA[type];
+  const r=document.getElementById('temoinResult');
+  r.innerHTML=`<div class="temoin-result-title">${d.title}</div>${d.steps.map((s,i)=>`<div class="temoin-step"><div class="temoin-step-num">${i+1}</div><div>${s}</div></div>`).join('')}<div style="margin-top:12px;padding:10px 12px;background:rgba(255,255,255,.6);border-radius:8px;font-size:12px;color:var(--muted);line-height:1.6">💜 Pour aller plus loin : <strong>3919</strong> (gratuit) ou <strong>17</strong> (urgence)</div>`;
+  r.classList.add('show');
+  setTimeout(()=>r.scrollIntoView({behavior:'smooth',block:'nearest'}),100);
+}
+
+// ── Plan sécurité ──
+let planAnswers={};
+function selectPlan(q,ans,e){
+  planAnswers[q]=ans;
+  const card=e.target.closest('.plan-card');
+  card.querySelectorAll('.plan-option').forEach(o=>o.classList.remove('selected'));
+  e.target.classList.add('selected');
+  if(q==='q1')document.getElementById('planQ2').style.display='block';
+  if(q==='q2')document.getElementById('planQ3').style.display='block';
+  if(q==='q3')generatePlan();
+}
+function generatePlan(){
+  const vit=planAnswers.q1==='oui',enfants=planAnswers.q2==='oui',proche=planAnswers.q3==='oui';
+  let steps=[];
+  if(vit){
+    steps.push("Prépare un sac d'urgence discret : documents importants, médicaments, vêtements, argent liquide");
+    steps.push("Mémorise un numéro de secours que tu peux composer rapidement");
+    if(enfants)steps.push("Explique à tes enfants un code secret pour qu'ils sachent quand partir avec toi");
+    if(proche)steps.push("Informe ton proche de confiance — il peut t'héberger en urgence");
+    else steps.push("Appelle le 3919 pour trouver un hébergement d'urgence près de chez toi");
+    steps.push("Identifie à l'avance un lieu sûr : famille, ami·e, hôtel, centre d'hébergement");
+  } else {
+    steps.push("Bloque ou limite le contact sur tous tes réseaux et ton téléphone");
+    if(proche)steps.push("Ton proche peut t'accompagner lors des rencontres obligatoires");
+    steps.push("Dépose une main courante ou une plainte au commissariat");
+    steps.push("Contacte le 3919 pour être accompagné·e dans tes démarches légales");
+  }
+  steps.push("Sauvegarde des preuves : photos, messages, certificats médicaux");
+  steps.push("Le 3919 peut te mettre en contact avec une assistante sociale gratuitement");
+  const r=document.getElementById('planResult');
+  r.innerHTML=`<div class="plan-result-title">✦ Ton plan personnalisé</div>${steps.map((s,i)=>`<div class="plan-step"><div class="plan-step-num">${i+1}</div><div>${s}</div></div>`).join('')}<div style="margin-top:14px;padding:12px 14px;background:rgba(255,255,255,.6);border-radius:12px;font-size:12px;color:var(--muted);line-height:1.6">💜 Ce plan est un point de départ. Le <strong>3919</strong> peut t'aider à l'adapter à ta situation exacte.</div>`;
+  r.classList.add('show');
+  setTimeout(()=>r.scrollIntoView({behavior:'smooth',block:'nearest'}),100);
+}
+
+// ── Accordéon ──
+function toggleAccordion(header){
+  const item=header.parentElement;
+  const isOpen=item.classList.contains('open');
+  document.querySelectorAll('.accordion-item.open').forEach(i=>{if(i!==item)i.classList.remove('open')});
+  item.classList.toggle('open',!isOpen);
+  if(!isOpen)setTimeout(()=>header.scrollIntoView({behavior:'smooth',block:'nearest'}),100);
+}
+
+// ── Respiration ──
+let breathInterval=null,breathPhase='idle',breathSeconds=4;
+function toggleBreath(){
+  const btn=document.getElementById('breathBtn');
+  if(breathInterval){
+    clearInterval(breathInterval);breathInterval=null;
+    document.getElementById('breathCircle').className='breath-circle';
+    document.getElementById('breathInstruction').textContent='Prêt·e ?';
+    document.getElementById('breathCount').textContent='4';
+    btn.textContent='Commencer';
+  } else {
+    btn.textContent='Arrêter';
+    breathPhase='inhale';breathSeconds=4;
+    document.getElementById('breathInstruction').textContent='Inspire…';
+    document.getElementById('breathCircle').className='breath-circle inhale';
+    document.getElementById('breathCount').textContent=4;
+    breathInterval=setInterval(()=>{
+      breathSeconds--;document.getElementById('breathCount').textContent=breathSeconds;
+      if(breathSeconds<=0){
+        if(breathPhase==='inhale'){breathPhase='exhale';breathSeconds=4;document.getElementById('breathInstruction').textContent='Expire doucement…';document.getElementById('breathCircle').className='breath-circle exhale'}
+        else{breathPhase='inhale';breathSeconds=4;document.getElementById('breathInstruction').textContent='Inspire…';document.getElementById('breathCircle').className='breath-circle inhale'}
+      }
+    },1000);
+  }
+}
+
+// ── Filtre & messages ──
+const BAD=['haine','tuer','mort','suicide','nul','inutile','idiot','con ','merde','putain','pute','conne','connasse','connard','pd','enculé','fils de pute','fdp','ta mère','batard','salope'];
+function filterMsg(t){const l=t.toLowerCase();for(const w of BAD)if(l.includes(w))return false;return t.length>=10}
+async function renderMsgs(listId,countId){
+  const msgs = getMsgs();
+  const list=document.getElementById(listId);
+  const count=document.getElementById(countId);
+  if(count)count.textContent=msgs.length+' messages';
+  updateCounts(msgs.length);
+  if(!list)return;
+  const shuffled=[...msgs].sort(()=>Math.random()-.5).slice(0,6);
+  list.innerHTML=shuffled.map((m,i)=>`<div class="msg-card" style="animation-delay:${i*.07}s"><div class="msg-quote">«</div><p class="msg-text">${m}</p><div class="msg-meta"><div class="msg-dot"></div>Porteur·euse Manatoa · Anonyme</div></div>`).join('');
+}
+function updateCounts(n){['msgCount','impactMsgs'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=n})}
+
+// ── Mode discret ──
+function enterDiscret(){document.body.classList.add('discret')}
+function exitDiscret(){document.body.classList.remove('discret')}
+
+// ── Navigation ──
+function go(id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  document.getElementById('back').classList.add('show');
+  if(id==='support'){renderMsgs('supportMsgsList','supportMsgCount');renderContacts('contactList')}
+  if(id==='give')renderMsgs('giveMsgsList','giveMsgCount');
+  if(id==='unsafe')renderContacts('contactListUnsafe');
+  if(breathInterval&&id!=='support'){clearInterval(breathInterval);breathInterval=null;document.getElementById('breathBtn').textContent='Commencer';document.getElementById('breathCircle').className='breath-circle';document.getElementById('breathInstruction').textContent='Prêt·e ?';document.getElementById('breathCount').textContent='4'}
+  window.scrollTo(0,0);
+}
+function goHome(){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById('home').classList.add('active');
+  document.getElementById('back').classList.remove('show');
+  updateCounts(getMsgs().length);
+  window.scrollTo(0,0);
+}
+function setTab(btn,ph){document.querySelectorAll('.wtab').forEach(t=>t.classList.remove('on'));btn.classList.add('on');document.getElementById('writeArea').placeholder=ph}
+async function submitMsg(){
+  const v=document.getElementById('writeArea').value.trim();
+  if(!v||v.length<10){toast('Écris quelque chose de plus long ✨');return}
+  if(!filterMsg(v)){toast('✨ Reformule avec bienveillance — certains mots ne peuvent pas passer.');return}
+  const btn=document.getElementById('writeBtn');
+  btn.disabled=true;btn.innerHTML='<span>Envoi en cours…</span>';
+  try {
+    const formData = new FormData();
+    formData.append('form-name', 'manatoa-messages');
+    formData.append('message', v);
+    const res = await fetch('/', {method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:new URLSearchParams(formData).toString()});
+    if (res.ok) {document.getElementById('writeForm').style.display='none';document.getElementById('successCard').classList.add('show');}
+    else {btn.disabled=false;btn.innerHTML='<span>Envoyer mon message</span><span>→</span>';toast('Une erreur est survenue, réessaie.');}
+  } catch(e) {btn.disabled=false;btn.innerHTML='<span>Envoyer mon message</span><span>→</span>';toast('Erreur de connexion, réessaie.');}
+}
+function toast(msg){const t=document.getElementById('toastEl');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3500)}
+
+
+function submitMsgEnfant(){
+  const v=document.getElementById('writeAreaEnfant').value.trim();
+  if(!v||v.length<10){toast('Écris quelque chose de plus long ✨');return}
+  if(!filterMsg(v)){toast('✨ Reformule avec bienveillance.');return}
+  const formData=new FormData();
+  formData.append('form-name','manatoa-enfants');
+  formData.append('message',v);
+  fetch('/',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:new URLSearchParams(formData).toString()})
+    .then(res=>{
+      if(res.ok){
+        toast('💛 Merci — ton mot va réchauffer un cœur.');
+        document.getElementById('writeAreaEnfant').value='';
+        document.getElementById('wcountEnfant').textContent='0 / 300';
+      } else {toast('Une erreur est survenue, réessaie.');}
+    })
+    .catch(()=>toast('Erreur de connexion, réessaie.'));
+}
+function toggleLoi(header){
+  const item=header.parentElement;
+  const isOpen=item.classList.contains('open');
+  document.querySelectorAll('.loi-card.open').forEach(i=>{if(i!==item)i.classList.remove('open')});
+  item.classList.toggle('open',!isOpen);
+  if(!isOpen)setTimeout(()=>header.scrollIntoView({behavior:'smooth',block:'nearest'}),100);
+}
+
+
+function switchMsgTab(tab){
+  document.getElementById('panelAdulte').style.display = tab==='adulte' ? 'block' : 'none';
+  document.getElementById('panelEnfant').style.display = tab==='enfant' ? 'block' : 'none';
+  document.getElementById('tabAdulte').classList.toggle('on', tab==='adulte');
+  document.getElementById('tabEnfant').classList.toggle('on', tab==='enfant');
+}
+
+getMotDuJour();
+updateCounts(getMsgs().length);
+</script>
+
+<script>
+const LANG_NAMES={fr:'🇫🇷 FR',en:'🇬🇧 EN',es:'🇪🇸 ES',pt:'🇵🇹 PT',de:'🇩🇪 DE',it:'🇮🇹 IT',nl:'🇳🇱 NL',pf:'🇵🇫 Tahiti',zh:'🇨🇳 中文',ar:'🇸🇦 عربي',tr:'🇹🇷 TR'};
+let currentLang='fr';
+function detectLang(){const nav=(navigator.language||'fr').toLowerCase();if(nav.includes('pf')||nav.includes('tahiti'))return'pf';if(nav.startsWith('zh'))return'zh';if(nav.startsWith('ar'))return'ar';if(nav.startsWith('tr'))return'tr';if(nav.startsWith('en'))return'en';if(nav.startsWith('es'))return'es';if(nav.startsWith('pt'))return'pt';if(nav.startsWith('de'))return'de';if(nav.startsWith('it'))return'it';if(nav.startsWith('nl'))return'nl';return'fr';}
+function buildLangBar(){}
+function updateNumbers(code){document.documentElement.setAttribute('dir','ltr');}
+function setLang(code){currentLang=code;try{localStorage.setItem('manatoa_lang',code);}catch(e){}}
+
+const CANDIES=['🍭','🍬','🍫','🍓','🍋','💎','🌈'];
+let tapCount=0,tapTimer=null;
+function buildCandyGrid(){const grid=document.getElementById('candyGrid');if(!grid)return;grid.innerHTML='';for(let i=0;i<49;i++){const cell=document.createElement('div');cell.style.cssText='aspect-ratio:1;background:rgba(255,255,255,.08);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px;cursor:pointer;border:1px solid rgba(255,255,255,.05);transition:transform .15s';cell.textContent=CANDIES[Math.floor(Math.random()*CANDIES.length)];cell.onclick=function(){this.style.transform='scale(.8)';setTimeout(()=>{this.style.transform='';this.textContent=CANDIES[Math.floor(Math.random()*CANDIES.length)];},150);const s=document.getElementById('fakeScore');if(s){const v=parseInt(s.textContent.replace(/\D/g,''))||12480;s.textContent=(v+Math.floor(Math.random()*200+50)).toLocaleString('fr-FR');}};grid.appendChild(cell);}}
+function fakeTap(){buildCandyGrid();const s=document.getElementById('fakeScore');if(s){const v=parseInt(s.textContent.replace(/\D/g,''))||12480;s.textContent=(v+Math.floor(Math.random()*500+200)).toLocaleString('fr-FR');}}
+function scoreTripleTap(){tapCount++;if(tapTimer)clearTimeout(tapTimer);if(tapCount>=3){tapCount=0;exitDiscret();}else tapTimer=setTimeout(()=>{tapCount=0;},800);}
+function enterDiscret(){document.body.classList.add('discret');buildCandyGrid();const msg=document.getElementById('tapMsg');if(msg){msg.style.opacity='1';setTimeout(()=>{msg.style.opacity='0.15';},5000);}}
+function exitDiscret(){document.body.classList.remove('discret');}
+
+document.addEventListener('DOMContentLoaded',function(){
+  const saved=localStorage.getItem('manatoa_lang');
+  currentLang=saved||detectLang();
+  buildLangBar();
+  updateNumbers(currentLang);
+});
+</script>
+
+</body>
+</html>
